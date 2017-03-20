@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<name>testIT | TestUtils</name>
-	<url>https://github.com/Novatec-Consulting-GmbH/testit-testutils</url>
+	<url>https://github.com/nt-ca-aqe/testit-testutils</url>
 	<description>A collection of test-related utility libraries.</description>
 	<inceptionYear>2017</inceptionYear>
 
@@ -26,9 +26,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git@github.com:Novatec-Consulting-GmbH/testit-testutils.git</connection>
-		<developerConnection>scm:git:git@github.com:Novatec-Consulting-GmbH/testit-testutils.git</developerConnection>
-		<url>git@github.com:Novatec-Consulting-GmbH/testit-testutils.git</url>
+		<connection>scm:git:git@github.com:nt-ca-aqe/testit-testutils.git</connection>
+		<developerConnection>scm:git:git@github.com:nt-ca-aqe/testit-testutils.git</developerConnection>
+		<url>git@github.com:nt-ca-aqe/testit-testutils.git</url>
 	</scm>
 
 	<prerequisites>
