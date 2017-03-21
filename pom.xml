@@ -38,6 +38,7 @@
 	<modules>
 		<module>testutils-logrecorder</module>
 		<module>testutils-logrecorder-logback</module>
+		<module>testutils-logsuppressor-logback</module>
 		<module>testutils-mockito</module>
 	</modules>
 

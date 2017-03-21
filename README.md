@@ -10,6 +10,11 @@ A collection of test-related utility libraries.
 - JUnit 4 rule for recording Logback loggers
 - Junit 5 extension for recording Logback loggers
 
+## testutils-logsuppressor-logback
+
+- JUnit 4 rule for suppressing Logback logging for successful tests
+- Junit 5 extension for suppressing Logback logging for successful tests
+
 ## testutils-mockito
 
 - JUnit 5 extension which provides the same functionality of the Mockito JUnit 4 runner.
