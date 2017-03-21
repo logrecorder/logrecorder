@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>info.novatec.testit</groupId>
 		<artifactId>testutils</artifactId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>testutils-logrecorder</artifactId>
