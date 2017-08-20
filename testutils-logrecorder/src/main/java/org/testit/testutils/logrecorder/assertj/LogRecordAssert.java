@@ -1,13 +1,13 @@
 package org.testit.testutils.logrecorder.assertj;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
-import org.testit.testutils.logrecorder.api.LogRecord;
-
 import org.testit.testutils.logrecorder.api.LogEntry;
+import org.testit.testutils.logrecorder.api.LogRecord;
 
 
 /**
@@ -28,7 +28,10 @@ public class LogRecordAssert extends AbstractAssert<LogRecordAssert, LogRecord> 
      * @return the list assertion
      */
     public ListAssert<String> messages() {
-        return Assertions.assertThat(actual.getEntries()).extracting(LogEntry::getMessage);
+        List<String> messages = actual.getEntries()//
+            .map(LogEntry::getMessage)//
+            .collect(Collectors.toList());
+        return Assertions.assertThat(messages);
     }
 
     /**
