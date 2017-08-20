@@ -16,12 +16,12 @@ public abstract class AbstractLogRecorderExtension
     private static final String LOG = "log";
 
     @Override
-    public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         return LogRecord.class.equals(parameterContext.getParameter().getType());
     }
 
     @Override
-    public Object resolve(ParameterContext parameterContext, ExtensionContext context) {
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext context) {
         return getLog(context);
     }
 

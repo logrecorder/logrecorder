@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.slf4j.LoggerFactory;
 import org.testit.testutils.logsuppressor.internal.logback.RecordingAppender;
 
@@ -37,12 +36,12 @@ public class LogbackSuppressorExtension implements BeforeTestExecutionCallback, 
     private static final String REMEMBERING_APPENDER_MAP = "rememberingAppenderMap";
 
     @Override
-    public void beforeTestExecution(TestExtensionContext context) {
+    public void beforeTestExecution(ExtensionContext context) {
         analyzeAndStoreLoggerConfiguration(context);
         replaceAllAppenders(context);
     }
 
-    private void analyzeAndStoreLoggerConfiguration(TestExtensionContext context) {
+    private void analyzeAndStoreLoggerConfiguration(ExtensionContext context) {
         Map<Logger, List<Appender<ILoggingEvent>>> originalStateMap = new HashMap<>();
         Map<Logger, RecordingAppender> rememberingAppenderMap = new HashMap<>();
         LoggerContext loggerContext = getLoggerContext();
@@ -62,7 +61,7 @@ public class LogbackSuppressorExtension implements BeforeTestExecutionCallback, 
         return ( LoggerContext ) LoggerFactory.getILoggerFactory();
     }
 
-    private void replaceAllAppenders(TestExtensionContext context) {
+    private void replaceAllAppenders(ExtensionContext context) {
         Map<Logger, RecordingAppender> rememberingAppenderMap = getRememberingAppenderMap(context);
         getOriginalStateMap(context).forEach((logger, appenders) -> {
             logger.detachAndStopAllAppenders();
@@ -71,16 +70,15 @@ public class LogbackSuppressorExtension implements BeforeTestExecutionCallback, 
     }
 
     @Override
-    public void afterTestExecution(TestExtensionContext context) {
+    public void afterTestExecution(ExtensionContext context) {
         restoreOriginalAppenders(context);
         if (theTestFailed(context)) {
             logAllRecordedEvents(context);
         }
     }
 
-    private void restoreOriginalAppenders(TestExtensionContext context) {
+    private void restoreOriginalAppenders(ExtensionContext context) {
         Map<Logger, List<Appender<ILoggingEvent>>> originalStateMap = getOriginalStateMap(context);
-        Map<Logger, RecordingAppender> rememberingAppenderMap = getRememberingAppenderMap(context);
         originalStateMap.forEach((logger, originalAppenders) -> {
             logger.detachAndStopAllAppenders();
             originalAppenders.stream()//
@@ -89,11 +87,11 @@ public class LogbackSuppressorExtension implements BeforeTestExecutionCallback, 
         });
     }
 
-    private boolean theTestFailed(TestExtensionContext context) {
-        return context.getTestException().isPresent();
+    private boolean theTestFailed(ExtensionContext context) {
+        return context.getExecutionException().isPresent();
     }
 
-    private void logAllRecordedEvents(TestExtensionContext context) {
+    private void logAllRecordedEvents(ExtensionContext context) {
         Map<Logger, List<Appender<ILoggingEvent>>> originalStateMap = getOriginalStateMap(context);
         Map<Logger, RecordingAppender> rememberingAppenderMap = getRememberingAppenderMap(context);
         originalStateMap.forEach((logger, originalAppenders) -> {
@@ -101,27 +99,27 @@ public class LogbackSuppressorExtension implements BeforeTestExecutionCallback, 
         });
     }
 
-    private void storeOriginalStateMap(TestExtensionContext context,
+    private void storeOriginalStateMap(ExtensionContext context,
         Map<Logger, List<Appender<ILoggingEvent>>> originalStateMap) {
         getStore(context).put(ORIGINAL_STATE_MAP, originalStateMap);
     }
 
-    private void storeRememberingAppenderMap(TestExtensionContext context,
+    private void storeRememberingAppenderMap(ExtensionContext context,
         Map<Logger, RecordingAppender> rememberingAppenderMap) {
         getStore(context).put(REMEMBERING_APPENDER_MAP, rememberingAppenderMap);
     }
 
     @SuppressWarnings("unchecked")
-    private Map<Logger, List<Appender<ILoggingEvent>>> getOriginalStateMap(TestExtensionContext context) {
+    private Map<Logger, List<Appender<ILoggingEvent>>> getOriginalStateMap(ExtensionContext context) {
         return ( Map<Logger, List<Appender<ILoggingEvent>>> ) getStore(context).get(ORIGINAL_STATE_MAP);
     }
 
     @SuppressWarnings("unchecked")
-    private Map<Logger, RecordingAppender> getRememberingAppenderMap(TestExtensionContext context) {
+    private Map<Logger, RecordingAppender> getRememberingAppenderMap(ExtensionContext context) {
         return ( Map<Logger, RecordingAppender> ) getStore(context).get(REMEMBERING_APPENDER_MAP);
     }
 
-    private Store getStore(TestExtensionContext context) {
+    private Store getStore(ExtensionContext context) {
         return context.getStore(ExtensionContext.Namespace.create(LogbackSuppressorExtension.class));
     }
 

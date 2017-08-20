@@ -7,7 +7,7 @@
 	<parent>
 		<artifactId>testutils</artifactId>
 		<groupId>info.novatec.testit</groupId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>testutils-logsuppressor-logback</artifactId>

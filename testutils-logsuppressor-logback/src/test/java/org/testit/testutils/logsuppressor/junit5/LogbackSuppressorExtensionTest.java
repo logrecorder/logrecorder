@@ -12,9 +12,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,7 +35,7 @@ class LogbackSuppressorExtensionTest {
     LogbackSuppressorExtension cut;
 
     @Mock
-    TestExtensionContext context;
+    ExtensionContext context;
     @Mock
     Store store;
 
@@ -67,7 +67,7 @@ class LogbackSuppressorExtensionTest {
 
     @Test
     void ifTestIsSuccessfulThereIsNoLog() {
-        doReturn(Optional.empty()).when(context).getTestException();
+        doReturn(Optional.empty()).when(context).getExecutionException();
         InOrder inOrder = inOrder(appender);
 
         cut.beforeTestExecution(context);
@@ -84,7 +84,7 @@ class LogbackSuppressorExtensionTest {
 
     @Test
     void ifTestFailsThereIsALog() {
-        doReturn(Optional.of(new AssertionError())).when(context).getTestException();
+        doReturn(Optional.of(new AssertionError())).when(context).getExecutionException();
         InOrder inOrder = inOrder(appender);
 
         cut.beforeTestExecution(context);
@@ -102,7 +102,7 @@ class LogbackSuppressorExtensionTest {
 
     @Test
     void ifTestHasExceptionThereIsALog() {
-        doReturn(Optional.of(new IllegalStateException())).when(context).getTestException();
+        doReturn(Optional.of(new IllegalStateException())).when(context).getExecutionException();
         InOrder inOrder = inOrder(appender);
 
         cut.beforeTestExecution(context);

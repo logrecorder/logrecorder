@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.slf4j.LoggerFactory;
 import org.testit.testutils.logrecorder.internal.logback.LogbackLogRecorder;
 
@@ -38,17 +37,17 @@ public class LogbackRecorderExtension extends AbstractLogRecorderExtension {
         "no @" + RecordLoggers.class.getSimpleName() + " annotation found on test method!";
 
     @Override
-    public void beforeTestExecution(TestExtensionContext context) {
+    public void beforeTestExecution(ExtensionContext context) {
         initExtensionContext(context);
         getRecorders(context).forEach(LogbackLogRecorder::start);
     }
 
     @Override
-    public void afterTestExecution(TestExtensionContext context) {
+    public void afterTestExecution(ExtensionContext context) {
         getRecorders(context).forEach(LogbackLogRecorder::stop);
     }
 
-    private void initExtensionContext(TestExtensionContext context) {
+    private void initExtensionContext(ExtensionContext context) {
         LogbackLog log = new LogbackLog();
         storeLog(context, log);
         List<LogbackLogRecorder> recorders = getLoggers(context)//
