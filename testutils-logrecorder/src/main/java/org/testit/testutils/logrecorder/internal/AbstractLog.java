@@ -28,29 +28,4 @@ public abstract class AbstractLog<T> implements LogRecord {
         return entries.stream();
     }
 
-    @Override
-    public Stream<LogEntry> getEntries(LogLevel level) {
-        return getEntries().filter(entry -> entry.getLevel().equals(level));
-    }
-
-    @Override
-    public Stream<LogEntry> getEntries(String logger) {
-        return getEntries().filter(entry -> entry.getLoggerName().equals(logger));
-    }
-
-    @Override
-    public Stream<LogEntry> getEntries(Class<?> logger) {
-        return getEntries().filter(entry -> entry.getLoggerName().equals(logger.getName()));
-    }
-
-    @Override
-    public Stream<LogEntry> getEntries(String logger, LogLevel level) {
-        return getEntries(logger).filter(entry -> entry.getLevel().equals(level));
-    }
-
-    @Override
-    public Stream<LogEntry> getEntries(Class<?> logger, LogLevel level) {
-        return getEntries(logger).filter(entry -> entry.getLevel().equals(level));
-    }
-
 }

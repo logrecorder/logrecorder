@@ -1,5 +1,9 @@
 package org.testit.testutils.logrecorder.api;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -15,14 +19,48 @@ public interface LogRecord {
 
     Stream<LogEntry> getEntries();
 
-    Stream<LogEntry> getEntries(LogLevel level);
+    default Stream<LogEntry> getEntries(LogLevel level) {
+        return getEntries().filter(entry -> entry.getLevel().equals(level));
+    }
 
-    Stream<LogEntry> getEntries(String logger);
+    default Stream<LogEntry> getEntries(String logger) {
+        return getEntries().filter(entry -> entry.getLoggerName().equals(logger));
+    }
 
-    Stream<LogEntry> getEntries(Class<?> logger);
+    default Stream<LogEntry> getEntries(Class<?> logger) {
+        return getEntries().filter(entry -> entry.getLoggerName().equals(logger.getName()));
+    }
 
-    Stream<LogEntry> getEntries(String logger, LogLevel level);
+    default Stream<LogEntry> getEntries(String logger, LogLevel level) {
+        return getEntries(logger).filter(entry -> entry.getLevel().equals(level));
+    }
 
-    Stream<LogEntry> getEntries(Class<?> logger, LogLevel level);
+    default Stream<LogEntry> getEntries(Class<?> logger, LogLevel level) {
+        return getEntries(logger).filter(entry -> entry.getLevel().equals(level));
+    }
+
+    default List<String> getMessages() {
+        return getEntries().map(LogEntry::getMessage).collect(toList());
+    }
+
+    default List<String> getMessages(LogLevel level) {
+        return getEntries(level).map(LogEntry::getMessage).collect(toList());
+    }
+
+    default List<String> getMessages(String logger) {
+        return getEntries(logger).map(LogEntry::getMessage).collect(toList());
+    }
+
+    default List<String> getMessages(Class<?> logger) {
+        return getEntries(logger).map(LogEntry::getMessage).collect(toList());
+    }
+
+    default List<String> getMessages(String logger, LogLevel level) {
+        return getEntries(logger, level).map(LogEntry::getMessage).collect(toList());
+    }
+
+    default List<String> getMessages(Class<?> logger, LogLevel level) {
+        return getEntries(logger, level).map(LogEntry::getMessage).collect(toList());
+    }
 
 }
