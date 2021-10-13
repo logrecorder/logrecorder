@@ -5,11 +5,8 @@ import info.novatec.testit.logrecorder.api.LogLevel
 import info.novatec.testit.logrecorder.api.LogLevel.*
 import info.novatec.testit.logrecorder.api.LogRecord
 
-@DslMarker annotation class DslContext
-
-fun assertThat(logRecord: LogRecord, block: LogRecordAssertion.() -> Unit) {
-    LogRecordAssertion(logRecord).apply(block).check()
-}
+@DslMarker
+annotation class DslContext
 
 @DslContext
 class LogRecordAssertion(
@@ -26,6 +23,11 @@ class LogRecordAssertion(
         containsInOrder.check(logRecord)
     }
 
+    companion object {
+        fun assertThat(logRecord: LogRecord, block: LogRecordAssertion.() -> Unit) {
+            LogRecordAssertion(logRecord).apply(block).check()
+        }
+    }
 }
 
 @DslContext
