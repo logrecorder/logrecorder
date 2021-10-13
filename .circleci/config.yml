@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/work
     docker:
-      - image: caaqe/basic-build-environment
+      - image: caaqe/basic-build-environment:2021-10-13
     steps:
       - checkout
       - run:
@@ -13,7 +13,7 @@ jobs:
   build-and-deploy-snapshot:
     working_directory: ~/work
     docker:
-      - image: caaqe/basic-build-environment
+      - image: caaqe/basic-build-environment:2021-10-13
     steps:
       - checkout
       - run:
@@ -26,7 +26,7 @@ jobs:
   build-and-deploy-release:
     working_directory: ~/work
     docker:
-      - image: caaqe/basic-build-environment
+      - image: caaqe/basic-build-environment:2021-10-13
     steps:
       - checkout
       - run:
