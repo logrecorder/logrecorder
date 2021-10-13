@@ -5,7 +5,7 @@
 
 	<groupId>info.novatec.testit</groupId>
 	<artifactId>testutils</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>testIT | TestUtils</name>
@@ -36,155 +36,158 @@
 	</prerequisites>
 
 	<modules>
-		<module>testutils-logrecorder</module>
-		<module>testutils-logrecorder-logback</module>
-		<module>testutils-logsuppressor-logback</module>
-		<module>testutils-mockito</module>
+		<module>logrecorder</module>
 	</modules>
 
 	<properties>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 
-		<junit4.version>4.12</junit4.version>
-		<junit5.jupiter.version>5.0.3</junit5.jupiter.version>
-		<junit5.vintage.version>4.12.3</junit5.vintage.version>
-		<junit5.platform.version>1.0.3</junit5.platform.version>
-
+		<assertj.version>3.21.0</assertj.version>
+		<java.version>11</java.version>
+		<junit.version>5.8.1</junit.version>
+		<kotlin.version>1.5.31</kotlin.version>
+		<dokka.version>1.5.31</dokka.version>
+		<logback.version>1.2.6</logback.version>
+		<slf4j.version>1.7.32</slf4j.version>
 	</properties>
 
 	<dependencies>
-
-		<!-- compile dependencies-->
-
+		<!-- Compile -->
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>provided</scope>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 
-		<!-- test dependencies-->
-
+		<!-- Test -->
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
-
+			<!-- BOMs -->
 			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>1.16.20</version>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-bom</artifactId>
+				<version>${kotlin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.7.25</version>
-			</dependency>
-
+			<!-- Dependencies -->
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
-				<version>1.2.3</version>
+				<version>${logback.version}</version>
 			</dependency>
-
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-api</artifactId>
-				<version>${junit5.jupiter.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit4.version}</version>
-			</dependency>
-
 			<dependency>
 				<groupId>org.assertj</groupId>
 				<artifactId>assertj-core</artifactId>
-				<version>3.9.0</version>
+				<version>${assertj.version}</version>
 			</dependency>
-
 			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>2.15.0</version>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.7.201606060606</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>record-unit-test-coverage</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>record-int-test-coverage</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.3.1</version>
+					<executions>
+						<execution>
+							<phase>verify</phase>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.2.1</version>
+					<executions>
+						<execution>
+							<phase>verify</phase>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jetbrains.kotlin</groupId>
+					<artifactId>kotlin-maven-plugin</artifactId>
+					<version>${kotlin.version}</version>
+					<executions>
+						<execution>
+							<id>compile</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>test-compile</id>
+							<phase>test-compile</phase>
+							<goals>
+								<goal>test-compile</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.jetbrains.dokka</groupId>
+					<artifactId>dokka-maven-plugin</artifactId>
+					<version>${dokka.version}</version>
+					<executions>
+						<execution>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>dokka</goal>
+								<goal>javadoc</goal>
+								<goal>javadocJar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<!-- signing jars plugin -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-gpg-plugin</artifactId>
-					<version>1.6</version>
+					<version>3.0.1</version>
 					<executions>
 						<execution>
 							<id>sign-artifacts</id>
@@ -199,7 +202,7 @@
 				<plugin>
 					<groupId>org.sonatype.plugins</groupId>
 					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>1.6.7</version>
+					<version>1.6.8</version>
 					<extensions>true</extensions>
 					<configuration>
 						<serverId>ossrh</serverId>
@@ -207,13 +210,24 @@
 						<autoReleaseAfterClose>false</autoReleaseAfterClose>
 					</configuration>
 				</plugin>
+				<!-- Site Plugins -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.9.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<profiles>
 		<profile>
-			<id>maven-central</id>
+			<id>deploy-release</id>
 			<build>
 				<plugins>
 					<plugin>

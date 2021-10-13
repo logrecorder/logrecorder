@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>info.novatec.testit</groupId>
+		<artifactId>testutils</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>logrecorder</artifactId>
+	<packaging>pom</packaging>
+	<name>testIT | TestUtils - Log Recorder Parent</name>
+
+	<modules>
+		<module>logrecorder-api</module>
+		<module>logrecorder-assertions</module>
+		<module>logrecorder-logback</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>info.novatec.testit</groupId>
+				<artifactId>logrecorder-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>info.novatec.testit</groupId>
+				<artifactId>logrecorder-assertions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>info.novatec.testit</groupId>
+				<artifactId>logrecorder-logback</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>
