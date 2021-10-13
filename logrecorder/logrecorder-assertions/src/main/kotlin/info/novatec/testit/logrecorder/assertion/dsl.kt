@@ -53,6 +53,8 @@ class ContainsInOrder {
     fun any(message: String) = any(equalTo(message))
     fun any(messageMatcher: MessageMatcher) = addExpectation(messageMatcher, anyLogLevel())
 
+    fun something() = any(matches(".*"))
+
     private fun addExpectation(messageMatcher: MessageMatcher, logLevelMatcher: LogLevelMatcher) {
         expectations.add(ExpectedLogEntry(logLevelMatcher, messageMatcher))
     }

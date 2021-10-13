@@ -165,6 +165,32 @@ internal class LogRecordAssertionTest {
         assertThat(logWith(entry(level = logLevel))) { containsInOrder { any("message") } }
     }
 
+    @Test
+    fun `something matcher matches all log levels and messages`() {
+        val log = logWith(
+            entry(level = INFO, message = "start"),
+
+            entry(level = TRACE, message = "trace message"),
+            entry(level = DEBUG, message = "debug message"),
+            entry(level = INFO, message = "info message"),
+            entry(level = WARN, message = "warn message"),
+            entry(level = ERROR, message = "error message"),
+
+            entry(level = INFO, message = "end")
+        )
+        assertThat(log) {
+            containsInOrder {
+                info("start")
+                something()
+                something()
+                something()
+                something()
+                something()
+                info("end")
+            }
+        }
+    }
+
     @Nested
     @DisplayName("different message matchers work as expected")
     inner class MatcherVariants {
