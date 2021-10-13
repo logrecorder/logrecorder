@@ -81,12 +81,12 @@ internal class LogRecordTest {
 
         @Test fun `Kotlin Class`() {
             val logger = LogRecord.logger(TestLogRecord::class)
-            assertThat(logger).isEqualTo("de.novatec.logrecorder.api.TestLogRecord")
+            assertThat(logger).isEqualTo("info.novatec.testit.logrecorder.api.TestLogRecord")
         }
 
         @Test fun `Java Class`() {
             val logger = LogRecord.logger(TestLogRecord::class.java)
-            assertThat(logger).isEqualTo("de.novatec.logrecorder.api.TestLogRecord")
+            assertThat(logger).isEqualTo("info.novatec.testit.logrecorder.api.TestLogRecord")
         }
 
     }
