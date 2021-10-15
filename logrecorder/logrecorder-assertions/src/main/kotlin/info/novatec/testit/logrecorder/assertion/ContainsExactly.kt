@@ -5,6 +5,12 @@ import info.novatec.testit.logrecorder.api.LogEntry
 @DslContext
 class ContainsExactly : AbstractAssertionBlock() {
 
+    /**
+     * This matcher can be used to skip log messages, that are not of any interest.
+     * It will match any massage with any log level.
+     */
+    fun something() = any()
+
     override fun check(entries: List<LogEntry>, expectations: List<ExpectedLogEntry>): List<MatchingResult> {
         if (expectations.size != entries.size) {
             handleSizeMismatch(entries, expectations)

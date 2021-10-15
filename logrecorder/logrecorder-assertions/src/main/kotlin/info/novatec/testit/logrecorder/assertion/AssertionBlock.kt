@@ -24,8 +24,6 @@ interface AssertionBlock {
     fun any(message: String) = any(equalTo(message))
     fun any(vararg messageMatchers: MessageMatcher) = addExpectation(anyLogLevel(), messageMatchers.toList())
 
-    fun something() = any(matches(".*"))
-
     fun equalTo(message: String) = EqualMessageMatcher(message)
     fun matches(regex: String) = RegexMessageMatcher(regex)
     fun contains(vararg parts: String) = ContainsMessageMatcher(listOf(*parts))
