@@ -36,27 +36,27 @@ class ContainsInOrder {
     private val expectations: MutableList<ExpectedLogEntry> = mutableListOf()
 
     fun trace(message: String) = trace(equalTo(message))
-    fun trace(messageMatcher: MessageMatcher) = addExpectation(messageMatcher, equalTo(TRACE))
+    fun trace(vararg messageMatchers: MessageMatcher) = addExpectation(equalTo(TRACE), messageMatchers.toList())
 
     fun debug(message: String) = debug(equalTo(message))
-    fun debug(messageMatcher: MessageMatcher) = addExpectation(messageMatcher, equalTo(DEBUG))
+    fun debug(vararg messageMatchers: MessageMatcher) = addExpectation(equalTo(DEBUG), messageMatchers.toList())
 
     fun info(message: String) = info(equalTo(message))
-    fun info(messageMatcher: MessageMatcher) = addExpectation(messageMatcher, equalTo(INFO))
+    fun info(vararg messageMatchers: MessageMatcher) = addExpectation(equalTo(INFO), messageMatchers.toList())
 
     fun warn(message: String) = warn(equalTo(message))
-    fun warn(messageMatcher: MessageMatcher) = addExpectation(messageMatcher, equalTo(WARN))
+    fun warn(vararg messageMatchers: MessageMatcher) = addExpectation(equalTo(WARN), messageMatchers.toList())
 
     fun error(message: String) = error(equalTo(message))
-    fun error(messageMatcher: MessageMatcher) = addExpectation(messageMatcher, equalTo(ERROR))
+    fun error(vararg messageMatchers: MessageMatcher) = addExpectation(equalTo(ERROR), messageMatchers.toList())
 
     fun any(message: String) = any(equalTo(message))
-    fun any(messageMatcher: MessageMatcher) = addExpectation(messageMatcher, anyLogLevel())
+    fun any(vararg messageMatchers: MessageMatcher) = addExpectation(anyLogLevel(), messageMatchers.toList())
 
     fun something() = any(matches(".*"))
 
-    private fun addExpectation(messageMatcher: MessageMatcher, logLevelMatcher: LogLevelMatcher) {
-        expectations.add(ExpectedLogEntry(logLevelMatcher, messageMatcher))
+    private fun addExpectation(logLevelMatcher: LogLevelMatcher, messageMatchers: List<MessageMatcher>) {
+        expectations.add(ExpectedLogEntry(logLevelMatcher, messageMatchers))
     }
 
     fun equalTo(message: String) = EqualMessageMatcher(message)
@@ -91,7 +91,7 @@ class ContainsInOrder {
             .append(actual.joinToString("\n") { """${it.level} ${it.message}""" })
             .append("\n\n")
             .append("Expected Entries:\n")
-            .append(expectations.joinToString("\n") { "${it.logLevelMatcher} ${it.messageMatcher}" })
+            .append(expectations.joinToString("\n") { "${it.logLevelMatcher} ${it.messageMatchers}" })
         throw AssertionError(message.toString())
     }
 
@@ -100,7 +100,7 @@ class ContainsInOrder {
             actual = actual,
             expected = expected,
             levelMatches = expected.logLevelMatcher.matches(actual.level),
-            messageMatches = expected.messageMatcher.matches(actual.message)
+            messageMatches = expected.messageMatchers.all { it.matches(actual.message) }
         )
 
     private fun equalTo(logLevel: LogLevel) = LogLevelMatcher(logLevel)
@@ -110,7 +110,7 @@ class ContainsInOrder {
 
 private class ExpectedLogEntry(
     val logLevelMatcher: LogLevelMatcher,
-    val messageMatcher: MessageMatcher
+    val messageMatchers: List<MessageMatcher>
 )
 
 private data class MatchingResult(
@@ -138,7 +138,7 @@ private data class MatchingResult(
         if (messageMatches) {
             return """"${actual.message}""""
         }
-        return """${expected.messageMatcher} > > actual ["${actual.message}"]"""
+        return """${expected.messageMatchers} > > actual ["${actual.message}"]"""
     }
 
 }
