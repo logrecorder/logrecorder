@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/License-Apache%20License%202.0-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
-[![Build Status](https://travis-ci.org/nt-ca-aqe/testit-testutils.svg?branch=master)](https://travis-ci.org/nt-ca-aqe/testit-testutils)
+[![CircleCI](https://circleci.com/gh/nt-ca-aqe/testit-testutils/tree/master.svg?style=svg)](https://circleci.com/gh/nt-ca-aqe/testit-testutils/tree/master)
 
 # testIT TestUtils
 
