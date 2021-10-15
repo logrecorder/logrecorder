@@ -19,7 +19,7 @@ class LogRecordAssertion(
         block(containsInOrder)
     }
 
-    fun check() {
+    private fun check() {
         containsInOrder.check(logRecord)
     }
 
