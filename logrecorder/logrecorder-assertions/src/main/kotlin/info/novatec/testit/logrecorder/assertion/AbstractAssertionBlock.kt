@@ -3,6 +3,11 @@ package info.novatec.testit.logrecorder.assertion
 import info.novatec.testit.logrecorder.api.LogEntry
 import info.novatec.testit.logrecorder.api.LogRecord
 
+/**
+ * Base class for custom assertion blocks for the [LogRecordAssertion] DSL.
+ *
+ * @since 1.1.0
+ */
 abstract class AbstractAssertionBlock : AssertionBlock {
 
     private val expectations: MutableList<ExpectedLogEntry> = mutableListOf()
@@ -22,6 +27,6 @@ abstract class AbstractAssertionBlock : AssertionBlock {
     }
 
     @Throws(AssertionError::class)
-    abstract fun check(entries: List<LogEntry>, expectations: List<ExpectedLogEntry>): List<MatchingResult>
+    protected abstract fun check(entries: List<LogEntry>, expectations: List<ExpectedLogEntry>): List<MatchingResult>
 
 }

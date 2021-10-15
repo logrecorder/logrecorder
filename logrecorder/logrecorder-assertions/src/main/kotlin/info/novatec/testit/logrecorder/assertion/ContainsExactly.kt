@@ -2,6 +2,24 @@ package info.novatec.testit.logrecorder.assertion
 
 import info.novatec.testit.logrecorder.api.LogEntry
 
+/**
+ * Custom assertion blocks for the [LogRecordAssertion] DSL.
+ *
+ * This assertion block requires all expected messages to be specified with an expectation in the correct order.
+ * As an example, it will fail if 5 messages where expected, but only 4 were actually logged.
+ *
+ * **Example:**
+ * ```
+ * assertThat(log) {
+ *     containsExactly {
+ *          info("hello world")
+ *          debug(startsWith("foo")
+ *     }
+ * }
+ * ```
+ *
+ * @since 1.1.0
+ */
 @DslContext
 class ContainsExactly : AbstractAssertionBlock() {
 
@@ -43,5 +61,8 @@ class ContainsExactly : AbstractAssertionBlock() {
 
 }
 
+/**
+ * Define a [ContainsExactly] assertion block.
+ */
 fun LogRecordAssertion.containsExactly(block: ContainsExactly.() -> Unit) =
     addAssertionBlock(ContainsExactly().apply(block))
