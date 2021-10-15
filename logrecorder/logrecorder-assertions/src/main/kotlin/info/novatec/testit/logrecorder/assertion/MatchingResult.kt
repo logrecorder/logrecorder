@@ -28,7 +28,7 @@ data class MatchingResult(
         if (messageMatches) {
             return """"${actual.message}""""
         }
-        return """${expected.messageMatchers} > > actual ["${actual.message}"]"""
+        return """${expected.messageMatchers} >> actual ["${actual.message}"]"""
     }
 
 }

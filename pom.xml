@@ -14,7 +14,7 @@
 	<inceptionYear>2017</inceptionYear>
 
 	<organization>
-		<name>NovaTec Consulting GmbH</name>
+		<name>Novatec Consulting GmbH</name>
 		<url>http://www.novatec-gmbh.de</url>
 	</organization>
 
@@ -241,7 +241,7 @@
 			<id>slu</id>
 			<name>Stefan Ludwig</name>
 			<email>stefan.ludwig@novatec-gmbh.de</email>
-			<organization>NovaTec Consulting GmbH</organization>
+			<organization>Novatec Consulting GmbH</organization>
 			<organizationUrl>http://www.novatec-gmbh.de</organizationUrl>
 			<roles>
 				<role>developer</role>

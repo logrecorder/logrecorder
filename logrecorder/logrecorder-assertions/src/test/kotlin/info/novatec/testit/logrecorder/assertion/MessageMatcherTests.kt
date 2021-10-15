@@ -22,7 +22,7 @@ internal class MessageMatcherTests {
         }
 
         @Test
-        fun `unqueal message does not match`() {
+        fun `unequal message does not match`() {
             assertThat(EqualMessageMatcher("something else").matches(message)).isFalse()
         }
 

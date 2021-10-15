@@ -41,14 +41,14 @@ internal class ContainsExactlyTests {
         )
 
         return listOf(
-            dynamicTest("to few messages") {
+            dynamicTest("too few messages") {
                 assertThrows<AssertionError> {
                     assertThat(log) {
                         containsExactly { any("message #1"); any("message #2"); any("message #3"); any("message #4") }
                     }
                 }
             },
-            dynamicTest("to many messages") {
+            dynamicTest("too many messages") {
                 assertThrows<AssertionError> {
                     assertThat(log) {
                         containsExactly { any("message #1"); any("message #2") }
@@ -165,7 +165,7 @@ internal class ContainsExactlyTests {
     }
 
     @Test
-    fun `something matcher matches all log levels and messages`() {
+    fun `any matcher matches all log levels and messages`() {
         val log = logWith(
             entry(level = INFO, message = "start"),
 
@@ -180,11 +180,11 @@ internal class ContainsExactlyTests {
         assertThat(log) {
             containsExactly {
                 info("start")
-                something()
-                something()
-                something()
-                something()
-                something()
+                anything()
+                anything()
+                anything()
+                anything()
+                anything()
                 info("end")
             }
         }
