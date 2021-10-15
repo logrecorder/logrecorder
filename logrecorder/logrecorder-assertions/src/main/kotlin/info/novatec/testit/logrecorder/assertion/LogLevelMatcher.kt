@@ -2,7 +2,7 @@ package info.novatec.testit.logrecorder.assertion
 
 import info.novatec.testit.logrecorder.api.LogLevel
 
-internal class LogLevelMatcher(
+class LogLevelMatcher(
     val level: LogLevel?
 ) {
     fun matches(actual: LogLevel): Boolean {
