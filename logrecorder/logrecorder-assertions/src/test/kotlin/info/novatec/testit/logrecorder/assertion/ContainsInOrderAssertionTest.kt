@@ -9,9 +9,8 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
-import org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE
 
-internal class LogRecordAssertionTest {
+internal class ContainsInOrderAssertionTest {
 
     @Test
     fun `reference equality check`() {
@@ -60,162 +59,77 @@ internal class LogRecordAssertionTest {
     }
 
     @Nested
-    @DisplayName("TRACE messages are asserted correctly")
-    inner class TraceMessage {
-
-        @Test
-        fun `trace matcher matches TRACE entries`() {
-            val log = logWith(entry(level = TRACE))
-            assertThat(log) { containsInOrder { trace("message") } }
-        }
-
-        @ParameterizedTest(name = "{0} entries")
-        @EnumSource(LogLevel::class, mode = EXCLUDE, names = ["TRACE"])
-        fun `trace matcher does not match`(logLevel: LogLevel) {
-            assertThrows<AssertionError> {
-                assertThat(logWith(entry(level = logLevel))) { containsInOrder { trace("message") } }
-            }
-        }
-
-        @Test
-        fun `trace without matchers matches any message`() {
-            val log = logWith(entry(level = TRACE))
-            assertThat(log) { containsInOrder { trace() } }
-        }
-
-        @Test
-        fun `trace with custom matchers matches matching entries`() {
-            val log = logWith(entry(level = TRACE, message = "hello world!"))
-            assertThat(log) { containsInOrder { trace(startsWith("hello"), endsWith("world!")) } }
-        }
-
+    inner class TraceMessages : AbstractLevelMessage(TRACE) {
+        override fun ContainsInOrder.execute(message: String) = this.trace(message)
+        override fun ContainsInOrder.execute(vararg messageMatchers: MessageMatcher) = this.trace(*messageMatchers)
     }
 
     @Nested
-    @DisplayName("DEBUG messages are asserted correctly")
-    inner class DebugMessage {
-
-        @Test
-        fun `debug matcher matches DEBUG entries`() {
-            val log = logWith(entry(level = DEBUG))
-            assertThat(log) { containsInOrder { debug("message") } }
-        }
-
-        @ParameterizedTest(name = "{0} entries")
-        @EnumSource(LogLevel::class, mode = EXCLUDE, names = ["DEBUG"])
-        fun `debug matcher does not match`(logLevel: LogLevel) {
-            assertThrows<AssertionError> {
-                assertThat(logWith(entry(level = logLevel))) { containsInOrder { debug("message") } }
-            }
-        }
-
-        @Test
-        fun `debug without matchers matches any message`() {
-            val log = logWith(entry(level = DEBUG))
-            assertThat(log) { containsInOrder { debug() } }
-        }
-
-        @Test
-        fun `debug with custom matchers matches matching entries`() {
-            val log = logWith(entry(level = DEBUG, message = "hello world!"))
-            assertThat(log) { containsInOrder { debug(startsWith("hello"), endsWith("world!")) } }
-        }
-
+    inner class DebugMessages : AbstractLevelMessage(DEBUG) {
+        override fun ContainsInOrder.execute(message: String) = this.debug(message)
+        override fun ContainsInOrder.execute(vararg messageMatchers: MessageMatcher) = this.debug(*messageMatchers)
     }
 
     @Nested
-    @DisplayName("INFO messages are asserted correctly")
-    inner class InfoMessage {
-
-        @Test
-        fun `info matcher matches INFO entries`() {
-            val log = logWith(entry(level = INFO))
-            assertThat(log) { containsInOrder { info("message") } }
-        }
-
-        @ParameterizedTest(name = "{0} entries")
-        @EnumSource(LogLevel::class, mode = EXCLUDE, names = ["INFO"])
-        fun `info matcher does not match`(logLevel: LogLevel) {
-            assertThrows<AssertionError> {
-                assertThat(logWith(entry(level = logLevel))) { containsInOrder { info("message") } }
-            }
-        }
-
-        @Test
-        fun `info without matchers matches any message`() {
-            val log = logWith(entry(level = INFO))
-            assertThat(log) { containsInOrder { info() } }
-        }
-
-        @Test
-        fun `info with custom matchers matches matching entries`() {
-            val log = logWith(entry(level = INFO, message = "hello world!"))
-            assertThat(log) { containsInOrder { info(startsWith("hello"), endsWith("world!")) } }
-        }
-
+    inner class InfoMessages : AbstractLevelMessage(INFO) {
+        override fun ContainsInOrder.execute(message: String) = this.info(message)
+        override fun ContainsInOrder.execute(vararg messageMatchers: MessageMatcher) = this.info(*messageMatchers)
     }
 
     @Nested
-    @DisplayName("WARN messages are asserted correctly")
-    inner class WarnMessage {
-
-        @Test
-        fun `warn matcher matches WARN entries`() {
-            val log = logWith(entry(level = WARN))
-            assertThat(log) { containsInOrder { warn("message") } }
-        }
-
-        @ParameterizedTest(name = "{0} entries")
-        @EnumSource(LogLevel::class, mode = EXCLUDE, names = ["WARN"])
-        fun `warn matcher does not match`(logLevel: LogLevel) {
-            assertThrows<AssertionError> {
-                assertThat(logWith(entry(level = logLevel))) { containsInOrder { warn("message") } }
-            }
-        }
-
-        @Test
-        fun `warn without matchers matches any message`() {
-            val log = logWith(entry(level = WARN))
-            assertThat(log) { containsInOrder { warn() } }
-        }
-
-        @Test
-        fun `warn with custom matchers matches matching entries`() {
-            val log = logWith(entry(level = WARN, message = "hello world!"))
-            assertThat(log) { containsInOrder { warn(startsWith("hello"), endsWith("world!")) } }
-        }
-
+    inner class WarnMessages : AbstractLevelMessage(WARN) {
+        override fun ContainsInOrder.execute(message: String) = this.warn(message)
+        override fun ContainsInOrder.execute(vararg messageMatchers: MessageMatcher) = this.warn(*messageMatchers)
     }
 
     @Nested
-    @DisplayName("ERROR messages are asserted correctly")
-    inner class ErrorMessage {
+    inner class ErrorMessages : AbstractLevelMessage(ERROR) {
+        override fun ContainsInOrder.execute(message: String) = this.error(message)
+        override fun ContainsInOrder.execute(vararg messageMatchers: MessageMatcher) = this.error(*messageMatchers)
+    }
+
+    abstract inner class AbstractLevelMessage(private val level: LogLevel) {
 
         @Test
-        fun `error matcher matches ERROR entries`() {
-            val log = logWith(entry(level = ERROR))
-            assertThat(log) { containsInOrder { error("message") } }
+        fun `matches entries with expected log level`() {
+            val log = logWith(entry(level = level))
+            assertThat(log) { containsInOrder { execute("message") } }
         }
 
-        @ParameterizedTest(name = "{0} entries")
-        @EnumSource(LogLevel::class, mode = EXCLUDE, names = ["ERROR"])
-        fun `error matcher does not match`(logLevel: LogLevel) {
+        @TestFactory
+        fun `does not match entries with different log level`() = LogLevel.values()
+            .filter { it != level }
+            .map { example ->
+                dynamicTest("$example") {
+                    assertThrows<AssertionError> {
+                        val log = logWith(entry(level = example))
+                        assertThat(log) { containsInOrder { execute("message") } }
+                    }
+                }
+            }
+
+        @Test
+        fun `matches any message when no message matchers are provided`() {
+            val log = logWith(entry(level = level))
+            assertThat(log) { containsInOrder { execute() } }
+        }
+
+        @Test
+        fun `matches message when provided message matchers all match`() {
+            val log = logWith(entry(level = level, message = "hello world!"))
+            assertThat(log) { containsInOrder { execute(startsWith("hello"), endsWith("world!")) } }
+        }
+
+        @Test
+        fun `does not match message when at least one provided message matcher does not match`() {
+            val log = logWith(entry(level = level, message = "hello world!"))
             assertThrows<AssertionError> {
-                assertThat(logWith(entry(level = logLevel))) { containsInOrder { error("message") } }
+                assertThat(log) { containsInOrder { execute(endsWith("world")) } }
             }
         }
 
-        @Test
-        fun `error without matchers matches any message`() {
-            val log = logWith(entry(level = ERROR))
-            assertThat(log) { containsInOrder { error() } }
-        }
-
-        @Test
-        fun `error with custom matchers matches matching entries`() {
-            val log = logWith(entry(level = ERROR, message = "hello world!"))
-            assertThat(log) { containsInOrder { error(startsWith("hello"), endsWith("world!")) } }
-        }
+        abstract fun ContainsInOrder.execute(message: String)
+        abstract fun ContainsInOrder.execute(vararg messageMatchers: MessageMatcher)
 
     }
 
