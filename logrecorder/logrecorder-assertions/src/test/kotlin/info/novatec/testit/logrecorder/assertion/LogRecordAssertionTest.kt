@@ -77,6 +77,18 @@ internal class LogRecordAssertionTest {
             }
         }
 
+        @Test
+        fun `trace without matchers matches any message`() {
+            val log = logWith(entry(level = TRACE))
+            assertThat(log) { containsInOrder { trace() } }
+        }
+
+        @Test
+        fun `trace with custom matchers matches matching entries`() {
+            val log = logWith(entry(level = TRACE, message = "hello world!"))
+            assertThat(log) { containsInOrder { trace(startsWith("hello"), endsWith("world!")) } }
+        }
+
     }
 
     @Nested
@@ -95,6 +107,18 @@ internal class LogRecordAssertionTest {
             assertThrows<AssertionError> {
                 assertThat(logWith(entry(level = logLevel))) { containsInOrder { debug("message") } }
             }
+        }
+
+        @Test
+        fun `debug without matchers matches any message`() {
+            val log = logWith(entry(level = DEBUG))
+            assertThat(log) { containsInOrder { debug() } }
+        }
+
+        @Test
+        fun `debug with custom matchers matches matching entries`() {
+            val log = logWith(entry(level = DEBUG, message = "hello world!"))
+            assertThat(log) { containsInOrder { debug(startsWith("hello"), endsWith("world!")) } }
         }
 
     }
@@ -117,6 +141,18 @@ internal class LogRecordAssertionTest {
             }
         }
 
+        @Test
+        fun `info without matchers matches any message`() {
+            val log = logWith(entry(level = INFO))
+            assertThat(log) { containsInOrder { info() } }
+        }
+
+        @Test
+        fun `info with custom matchers matches matching entries`() {
+            val log = logWith(entry(level = INFO, message = "hello world!"))
+            assertThat(log) { containsInOrder { info(startsWith("hello"), endsWith("world!")) } }
+        }
+
     }
 
     @Nested
@@ -135,6 +171,18 @@ internal class LogRecordAssertionTest {
             assertThrows<AssertionError> {
                 assertThat(logWith(entry(level = logLevel))) { containsInOrder { warn("message") } }
             }
+        }
+
+        @Test
+        fun `warn without matchers matches any message`() {
+            val log = logWith(entry(level = WARN))
+            assertThat(log) { containsInOrder { warn() } }
+        }
+
+        @Test
+        fun `warn with custom matchers matches matching entries`() {
+            val log = logWith(entry(level = WARN, message = "hello world!"))
+            assertThat(log) { containsInOrder { warn(startsWith("hello"), endsWith("world!")) } }
         }
 
     }
@@ -157,12 +205,44 @@ internal class LogRecordAssertionTest {
             }
         }
 
+        @Test
+        fun `error without matchers matches any message`() {
+            val log = logWith(entry(level = ERROR))
+            assertThat(log) { containsInOrder { error() } }
+        }
+
+        @Test
+        fun `error with custom matchers matches matching entries`() {
+            val log = logWith(entry(level = ERROR, message = "hello world!"))
+            assertThat(log) { containsInOrder { error(startsWith("hello"), endsWith("world!")) } }
+        }
+
     }
 
-    @ParameterizedTest
-    @EnumSource(LogLevel::class)
-    fun `any matcher matches all log levels`(logLevel: LogLevel) {
-        assertThat(logWith(entry(level = logLevel))) { containsInOrder { any("message") } }
+    @Nested
+    @DisplayName("any message matchers are asserted correctly")
+    inner class AnyMessageMatcher {
+
+        @ParameterizedTest
+        @EnumSource(LogLevel::class)
+        fun `any matcher matches all log levels`(logLevel: LogLevel) {
+            assertThat(logWith(entry(level = logLevel))) { containsInOrder { any("message") } }
+        }
+
+        @ParameterizedTest
+        @EnumSource(LogLevel::class)
+        fun `any without matchers matches any message`(logLevel: LogLevel) {
+            val log = logWith(entry(level = logLevel))
+            assertThat(log) { containsInOrder { any() } }
+        }
+
+        @ParameterizedTest
+        @EnumSource(LogLevel::class)
+        fun `any with custom matchers matches matching entries`(logLevel: LogLevel) {
+            val log = logWith(entry(level = logLevel, message = "hello world!"))
+            assertThat(log) { containsInOrder { any(startsWith("hello"), endsWith("world!")) } }
+        }
+
     }
 
     @Test
