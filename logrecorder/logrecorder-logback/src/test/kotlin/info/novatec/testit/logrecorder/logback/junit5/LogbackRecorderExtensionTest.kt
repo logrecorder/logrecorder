@@ -76,6 +76,43 @@ internal class LogbackRecorderExtensionTest {
         )
     }
 
+    @RecordLoggers(TestServiceA::class)
+    @Test fun `extension is registered and log messages are recorded only for TestServiceA`(log: LogRecord) {
+        assertThat(log.entries).isEmpty()
+
+        testServiceA.logSomething()
+        assertThat(log.entries).containsExactly(
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+        )
+
+        testServiceB.logSomething()
+        assertThat(log.entries).containsExactly(
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+        )
+
+        customLogger.trace("trace message c")
+        customLogger.debug("debug message c")
+        customLogger.info("info message c")
+        customLogger.warn("warn message c")
+        customLogger.error("error message c")
+
+        assertThat(log.entries).containsExactly(
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+        )
+    }
+
 }
 
 class TestServiceA {
