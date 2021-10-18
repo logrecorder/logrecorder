@@ -13,6 +13,10 @@ A collection of test-related utility libraries.
 
 - Junit 5 extension for recording Logback loggers
 
+## logrecorder-log4j
+
+- Junit 5 extension for recording [Log4j 2](http://logging.apache.org/log4j/2.x/index.html) loggers
+
 ### Licensing
 TestUtils is licensed under [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 

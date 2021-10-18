@@ -17,6 +17,7 @@
 		<module>logrecorder-api</module>
 		<module>logrecorder-assertions</module>
 		<module>logrecorder-logback</module>
+		<module>logrecorder-log4j</module>
 	</modules>
 
 	<dependencyManagement>
