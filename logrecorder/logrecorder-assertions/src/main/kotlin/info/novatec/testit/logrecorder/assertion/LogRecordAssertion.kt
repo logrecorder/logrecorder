@@ -22,6 +22,7 @@ class LogRecordAssertion(
     }
 
     companion object {
+        @JvmStatic
         fun assertThat(logRecord: LogRecord, block: LogRecordAssertion.() -> Unit) {
             LogRecordAssertion(logRecord).apply(block).check()
         }
