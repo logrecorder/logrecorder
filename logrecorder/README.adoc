@@ -1,0 +1,95 @@
+= LogRecorder
+
+== Usage
+
+=== Logback
+
+The `logrecorder-logback` provides everything you need to start recording any link:https://logback.qos.ch[Logback]-based logging activity.
+
+==== Dependencies
+
+.Gradle
+[source,groovy]
+----
+testImplementation("info.novatec.testit:logrecorder-logback:${logrecorder.version}")
+----
+
+.Maven
+[source,xml]
+----
+<dependency>
+    <groupId>info.novatec.testit</groupId>
+    <artifactId>logrecorder-logback</artifactId>
+    <version>${logrecorder.version}</version>
+</dependency>
+----
+
+==== Example
+
+[source,kotlin]
+----
+import info.novatec.testit.logrecorder.api.LogRecord
+import info.novatec.testit.logrecorder.assertion.LogRecordAssertion.assertThat
+import info.novatec.testit.logrecorder.logback.junit5.RecordLoggers
+
+...
+
+@Test
+@RecordLoggers(MyService::class)
+fun `failures are logged correctly`(log: LogRecord) {
+    doSomethingFailing()
+
+    assertThat(log) {
+        containsExactly {
+            any("trying to do something")
+            error(startsWith("something failed with exception:"))
+        }
+    }
+}
+----
+
+=== Log4j
+
+The `logrecorder-log4j` provides everything you need to start recording any link:https://logging.apache.org/log4j/2.x/[Log4j]-based logging activity.
+
+==== Dependencies
+
+.Gradle
+[source,groovy]
+----
+testImplementation("info.novatec.testit:logrecorder-log4j:${logrecorder.version}")
+----
+
+.Maven
+[source,xml]
+----
+<dependency>
+    <groupId>info.novatec.testit</groupId>
+    <artifactId>logrecorder-log4j</artifactId>
+    <version>${logrecorder.version}</version>
+</dependency>
+----
+
+==== Example
+
+[source,kotlin]
+----
+import info.novatec.testit.logrecorder.api.LogRecord
+import info.novatec.testit.logrecorder.assertion.LogRecordAssertion.assertThat
+import info.novatec.testit.logrecorder.log4j.junit5.RecordLoggers
+
+...
+
+@Test
+@RecordLoggers(MyService::class)
+fun `failures are logged correctly`(log: LogRecord) {
+    doSomethingFailing()
+
+    assertThat(log) {
+        containsExactly {
+            any("trying to do something")
+            error(startsWith("something failed with exception:"))
+        }
+    }
+}
+----
