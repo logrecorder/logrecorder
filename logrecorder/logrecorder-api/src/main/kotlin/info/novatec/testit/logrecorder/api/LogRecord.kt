@@ -86,6 +86,7 @@ interface LogRecord {
          */
         fun logger(clazz: KClass<*>): String = logger(clazz.java)
 
+        @JvmStatic
         fun logger(clazz: Class<*>): String = clazz.name
     }
 
