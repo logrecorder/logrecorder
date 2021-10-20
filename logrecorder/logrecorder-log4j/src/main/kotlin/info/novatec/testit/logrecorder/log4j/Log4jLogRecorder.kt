@@ -59,7 +59,8 @@ internal class Log4jLogRecorder(
             configuration.addLogger(loggerName, newLoggerConfig)
             newCreatedLogger = true
         } else {
-            loggerConfig.appenderRefs.add(appenderRef)
+            loggerConfig.addAppender(appender, null, null)
+            loggerConfig.level = Level.ALL
         }
         updateLoggerContext()
     }
@@ -71,7 +72,7 @@ internal class Log4jLogRecorder(
             configuration.removeLogger(loggerName)
         } else {
             val loggerConfig = getLoggerConfig()
-            loggerConfig.appenderRefs.remove(appenderRef)
+            loggerConfig.removeAppender(appender.name)
             loggerConfig.level = originalLoggerLevel
         }
         updateLoggerContext()
