@@ -36,7 +36,7 @@ import info.novatec.testit.logrecorder.api.LogEntry
  * @since 1.1.0
  */
 @DslContext
-class ContainsExactly : AbstractAssertionBlock() {
+class ContainsExactly internal constructor() : AbstractAssertionBlock() {
 
     /**
      * This matcher can be used to skip log messages, that are not of any interest.
@@ -50,7 +50,7 @@ class ContainsExactly : AbstractAssertionBlock() {
         }
 
         return entries.zip(expectations)
-            .mapIndexed { index, (actual, expected) -> check(index, expected, actual) }
+            .map { (actual, expected) -> check(expected, actual) }
     }
 
     private fun handleSizeMismatch(actual: List<LogEntry>, expectations: List<ExpectedLogEntry>) {
@@ -65,14 +65,42 @@ class ContainsExactly : AbstractAssertionBlock() {
         throw AssertionError(message.toString())
     }
 
-    private fun check(index: Int, expected: ExpectedLogEntry, actual: LogEntry) =
-        MatchingResult(
-            index = index,
+    private fun check(expected: ExpectedLogEntry, actual: LogEntry) =
+        ContainsExactlyMatchingResult(
             actual = actual,
             expected = expected,
             levelMatches = expected.logLevelMatcher.matches(actual.level),
             messageMatches = expected.messageMatchers.all { it.matches(actual.message) }
         )
+
+    private class ContainsExactlyMatchingResult(
+        private val actual: LogEntry,
+        private val expected: ExpectedLogEntry,
+        private val levelMatches: Boolean,
+        private val messageMatches: Boolean
+    ) : MatchingResult {
+
+        override val matches: Boolean
+            get() = levelMatches && messageMatches
+
+        override fun describe() = "[${matchSymbol()}] ${levelPart()} | ${messagePart()}"
+
+        private fun matchSymbol() = if (matches) '\u2713' else '\u2717'
+
+        private fun levelPart(): String {
+            if (levelMatches) {
+                return "${actual.level}"
+            }
+            return "${expected.logLevelMatcher} >> ${actual.level}"
+        }
+
+        private fun messagePart(): String {
+            if (messageMatches) {
+                return """"${actual.message}""""
+            }
+            return """${expected.messageMatchers} >> actual ["${actual.message}"]"""
+        }
+    }
 
 }
 

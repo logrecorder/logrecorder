@@ -20,6 +20,7 @@ import info.novatec.testit.logrecorder.api.LogLevel
 import info.novatec.testit.logrecorder.api.LogLevel.*
 import info.novatec.testit.logrecorder.api.LogRecord
 import info.novatec.testit.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.params.ParameterizedTest
@@ -28,7 +29,7 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class ContainsExactlyTests {
 
     @Test
-    fun `reference equality check`() {
+    fun `reference check - all matched`() {
         val log = logWith(
             entry(level = TRACE, message = "trace message"),
             entry(level = DEBUG, message = "debug message"),
@@ -45,6 +46,30 @@ internal class ContainsExactlyTests {
                 error("error message")
             }
         }
+    }
+
+    @Test
+    fun `reference check - some not matched`() {
+        val log = logWith(
+            entry(level = INFO, message = "message #1"),
+            entry(level = INFO, message = "message #2")
+        )
+
+        val ex = assertThrows<AssertionError> {
+            assertThat(log) {
+                containsExactly {
+                    info("message #1")
+                    info("message #3")
+                }
+            }
+        }
+        assertThat(ex).hasMessage(
+            """
+            Log entries do not match expectation:
+            [✓] INFO | "message #1"
+            [✗] INFO | [equalTo ["message #3"]] >> actual ["message #2"]
+            """.trimIndent()
+        )
     }
 
     @TestFactory

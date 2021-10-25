@@ -24,10 +24,6 @@ class LogRecordAssertion(
 
     private val blocks = mutableListOf<AssertionBlock>()
 
-    @Deprecated("replaced with extension function `containsExactly`")
-    fun containsInOrder(block: ContainsExactly.() -> Unit) =
-        addAssertionBlock(ContainsExactly().apply(block))
-
     fun addAssertionBlock(block: AssertionBlock) {
         blocks.add(block)
     }
