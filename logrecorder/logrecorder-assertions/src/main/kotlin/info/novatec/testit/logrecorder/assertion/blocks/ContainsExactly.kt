@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.blocks
 
 import info.novatec.testit.logrecorder.api.LogEntry
 
@@ -35,14 +35,7 @@ import info.novatec.testit.logrecorder.api.LogEntry
  *
  * @since 1.1.0
  */
-@DslContext
-class ContainsExactly internal constructor() : AbstractAssertionBlock() {
-
-    /**
-     * This matcher can be used to skip log messages, that are not of any interest.
-     * It will match any massage with any log level.
-     */
-    fun anything() = any()
+internal class ContainsExactly : AbstractMessagesAssertionBlock() {
 
     override fun check(entries: List<LogEntry>, expectations: List<ExpectedLogEntry>): List<MatchingResult> {
         if (expectations.size != entries.size) {
@@ -55,7 +48,7 @@ class ContainsExactly internal constructor() : AbstractAssertionBlock() {
 
     private fun handleSizeMismatch(actual: List<LogEntry>, expectations: List<ExpectedLogEntry>) {
         val message = StringBuilder()
-            .append("Amount of log entries does not macth (actual: ${actual.size}; expected: ${expectations.size})\n")
+            .append("Amount of log entries does not match (actual: ${actual.size}; expected: ${expectations.size})\n")
             .append("\n")
             .append("Actual Entries:\n")
             .append(actual.joinToString("\n") { """${it.level} ${it.message}""" })
@@ -103,9 +96,3 @@ class ContainsExactly internal constructor() : AbstractAssertionBlock() {
     }
 
 }
-
-/**
- * Define a [ContainsExactly] assertion block.
- */
-fun LogRecordAssertion.containsExactly(block: ContainsExactly.() -> Unit) =
-    addAssertionBlock(ContainsExactly().apply(block))

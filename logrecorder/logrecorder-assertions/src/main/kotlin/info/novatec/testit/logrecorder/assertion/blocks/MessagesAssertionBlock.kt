@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.blocks
 
 import info.novatec.testit.logrecorder.api.LogLevel
 import info.novatec.testit.logrecorder.api.LogLevel.*
-import info.novatec.testit.logrecorder.api.LogRecord
+import info.novatec.testit.logrecorder.assertion.DslContext
+import info.novatec.testit.logrecorder.assertion.matchers.LogLevelMatcher
+import info.novatec.testit.logrecorder.assertion.matchers.MessageMatcher
+import info.novatec.testit.logrecorder.assertion.matchers.level.AnyLogLevelMatcher
+import info.novatec.testit.logrecorder.assertion.matchers.level.EqualLogLevelMatcher
+import info.novatec.testit.logrecorder.assertion.matchers.message.*
 
-/**
- * Base interface for all assertion blocks for the [LogRecordAssertion] DSL.
- *
- * @since 1.1.0
- */
-interface AssertionBlock {
+@DslContext
+interface MessagesAssertionBlock : AssertionBlock {
 
-    @Throws(AssertionError::class)
-    fun check(logRecord: LogRecord)
+    fun addExpectation(logLevelMatcher: LogLevelMatcher, messageMatchers: List<MessageMatcher>)
 
-    // base DSL building blocks
+    // message expectation factories
 
     /**
      * Define the expectation of a [TRACE] message equal to the provided `message`.
@@ -103,7 +103,11 @@ interface AssertionBlock {
      */
     fun any(vararg messageMatchers: MessageMatcher) = addExpectation(anyLogLevel(), messageMatchers.toList())
 
-    fun addExpectation(logLevelMatcher: LogLevelMatcher, messageMatchers: List<MessageMatcher>)
+    /**
+     * This matcher can be used to skip log messages, that are not of any interest.
+     * It will match any massage with any log level.
+     */
+    fun anything() = any()
 
     // message value matcher factories
 
@@ -112,57 +116,57 @@ interface AssertionBlock {
      *
      * @see EqualMessageMatcher
      */
-    fun equalTo(message: String) = EqualMessageMatcher(message)
+    fun equalTo(message: String): MessageMatcher = EqualMessageMatcher(message)
 
     /**
      * Will match if the actual message matches the provided regular expression.
      *
      * @see RegexMessageMatcher
      */
-    fun matches(regex: String) = RegexMessageMatcher(regex)
+    fun matches(regex: String): MessageMatcher = RegexMessageMatcher(regex)
 
     /**
      * Will match if the actual message contains all the provided parts in _any order_.
      *
      * @see ContainsMessageMatcher
      */
-    fun contains(vararg parts: String) = ContainsMessageMatcher(listOf(*parts))
+    fun contains(vararg parts: String): MessageMatcher = ContainsMessageMatcher(parts.toList())
 
     /**
      * Will match if the actual message contains all the provided parts in that _exact order_.
      *
      * @see ContainsInOrderMessageMatcher
      */
-    fun containsInOrder(vararg parts: String) = ContainsInOrderMessageMatcher(listOf(*parts))
+    fun containsInOrder(vararg parts: String): MessageMatcher = ContainsInOrderMessageMatcher(parts.toList())
 
     /**
      * Will match if the actual message starts with the provided _prefix_.
      *
      * @see StartsWithMessageMatcher
      */
-    fun startsWith(prefix: String) = StartsWithMessageMatcher(prefix)
+    fun startsWith(prefix: String): MessageMatcher = StartsWithMessageMatcher(prefix)
 
     /**
      * Will match if the actual message ends with the provided _suffix_.
      *
      * @see EndsWithMessageMatcher
      */
-    fun endsWith(suffix: String) = EndsWithMessageMatcher(suffix)
+    fun endsWith(suffix: String): MessageMatcher = EndsWithMessageMatcher(suffix)
 
     // log level matcher factories
 
     /**
      * Will match if the actual log level is equal to the expected level.
      *
-     * @see LogLevelMatcher
+     * @see EqualLogLevelMatcher
      */
-    fun equalTo(logLevel: LogLevel) = LogLevelMatcher(logLevel)
+    fun equalTo(logLevel: LogLevel): LogLevelMatcher = EqualLogLevelMatcher(logLevel)
 
     /**
      * Will match for all log levels.
      *
-     * @see LogLevelMatcher
+     * @see AnyLogLevelMatcher
      */
-    fun anyLogLevel() = LogLevelMatcher(null)
+    fun anyLogLevel(): LogLevelMatcher = AnyLogLevelMatcher()
 
 }

@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.blocks
 
 import info.novatec.testit.logrecorder.api.LogEntry
 import info.novatec.testit.logrecorder.api.LogLevel
 import info.novatec.testit.logrecorder.api.LogLevel.*
 import info.novatec.testit.logrecorder.api.LogRecord
 import info.novatec.testit.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import info.novatec.testit.logrecorder.assertion.TestLogRecord
+import info.novatec.testit.logrecorder.assertion.containsExactly
+import info.novatec.testit.logrecorder.assertion.matchers.MessageMatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.DynamicTest.dynamicTest
@@ -67,7 +70,7 @@ internal class ContainsExactlyTests {
             """
             Log entries do not match expectation:
             [✓] INFO | "message #1"
-            [✗] INFO | [equalTo ["message #3"]] >> actual ["message #2"]
+            [✗] INFO | [equal to ["message #3"]] >> actual ["message #2"]
             """.trimIndent()
         )
     }
@@ -100,36 +103,36 @@ internal class ContainsExactlyTests {
 
     @Nested
     inner class TraceMessages : AbstractLevelMessage(TRACE) {
-        override fun ContainsExactly.execute(message: String) = this.trace(message)
-        override fun ContainsExactly.execute(vararg messageMatchers: MessageMatcher) =
+        override fun MessagesAssertionBlock.execute(message: String) = this.trace(message)
+        override fun MessagesAssertionBlock.execute(vararg messageMatchers: MessageMatcher) =
             this.trace(*messageMatchers)
     }
 
     @Nested
     inner class DebugMessages : AbstractLevelMessage(DEBUG) {
-        override fun ContainsExactly.execute(message: String) = this.debug(message)
-        override fun ContainsExactly.execute(vararg messageMatchers: MessageMatcher) =
+        override fun MessagesAssertionBlock.execute(message: String) = this.debug(message)
+        override fun MessagesAssertionBlock.execute(vararg messageMatchers: MessageMatcher) =
             this.debug(*messageMatchers)
     }
 
     @Nested
     inner class InfoMessages : AbstractLevelMessage(INFO) {
-        override fun ContainsExactly.execute(message: String) = this.info(message)
-        override fun ContainsExactly.execute(vararg messageMatchers: MessageMatcher) =
+        override fun MessagesAssertionBlock.execute(message: String) = this.info(message)
+        override fun MessagesAssertionBlock.execute(vararg messageMatchers: MessageMatcher) =
             this.info(*messageMatchers)
     }
 
     @Nested
     inner class WarnMessages : AbstractLevelMessage(WARN) {
-        override fun ContainsExactly.execute(message: String) = this.warn(message)
-        override fun ContainsExactly.execute(vararg messageMatchers: MessageMatcher) =
+        override fun MessagesAssertionBlock.execute(message: String) = this.warn(message)
+        override fun MessagesAssertionBlock.execute(vararg messageMatchers: MessageMatcher) =
             this.warn(*messageMatchers)
     }
 
     @Nested
     inner class ErrorMessages : AbstractLevelMessage(ERROR) {
-        override fun ContainsExactly.execute(message: String) = this.error(message)
-        override fun ContainsExactly.execute(vararg messageMatchers: MessageMatcher) =
+        override fun MessagesAssertionBlock.execute(message: String) = this.error(message)
+        override fun MessagesAssertionBlock.execute(vararg messageMatchers: MessageMatcher) =
             this.error(*messageMatchers)
     }
 
@@ -173,8 +176,8 @@ internal class ContainsExactlyTests {
             }
         }
 
-        abstract fun ContainsExactly.execute(message: String)
-        abstract fun ContainsExactly.execute(vararg messageMatchers: MessageMatcher)
+        abstract fun MessagesAssertionBlock.execute(message: String)
+        abstract fun MessagesAssertionBlock.execute(vararg messageMatchers: MessageMatcher)
 
     }
 

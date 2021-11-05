@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.matchers
 
-interface MatchingResult {
-    val matches: Boolean
-    fun describe(): String
+import info.novatec.testit.logrecorder.api.LogLevel
+
+fun interface LogLevelMatcher {
+    fun matches(actual: LogLevel): Boolean
 }

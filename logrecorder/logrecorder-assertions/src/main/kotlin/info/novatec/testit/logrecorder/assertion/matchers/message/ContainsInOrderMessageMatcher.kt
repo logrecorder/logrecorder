@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.matchers.message
 
-import info.novatec.testit.logrecorder.api.LogLevel
+import info.novatec.testit.logrecorder.assertion.matchers.MessageMatcher
 
-class LogLevelMatcher(
-    val level: LogLevel?
-) {
-    fun matches(actual: LogLevel): Boolean {
-        if (level == null) return true
-        return actual == level
+internal class ContainsInOrderMessageMatcher(
+    private val parts: List<String>
+) : MessageMatcher {
+    override fun matches(actual: String): Boolean {
+        val indices = parts.map { actual.indexOf(it) }
+        if (indices.any { it < 0 }) {
+            return false
+        }
+        return indices == indices.sorted()
     }
 
-    override fun toString(): String = level?.name ?: "ANY"
+    override fun toString(): String = """contains in order [${parts.joinToString { "\"$it\"" }}]"""
 }

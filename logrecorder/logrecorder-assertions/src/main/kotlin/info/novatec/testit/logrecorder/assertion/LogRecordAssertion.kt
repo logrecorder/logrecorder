@@ -16,6 +16,10 @@
 package info.novatec.testit.logrecorder.assertion
 
 import info.novatec.testit.logrecorder.api.LogRecord
+import info.novatec.testit.logrecorder.assertion.blocks.AssertionBlock
+import info.novatec.testit.logrecorder.assertion.blocks.ContainsExactly
+import info.novatec.testit.logrecorder.assertion.blocks.ContainsInOrder
+import info.novatec.testit.logrecorder.assertion.blocks.MessagesAssertionBlock
 
 @DslContext
 class LogRecordAssertion(
@@ -39,3 +43,15 @@ class LogRecordAssertion(
         }
     }
 }
+
+/**
+ * Define a [ContainsExactly] assertion block.
+ */
+fun LogRecordAssertion.containsExactly(block: MessagesAssertionBlock.() -> Unit) =
+    addAssertionBlock(ContainsExactly().apply(block))
+
+/**
+ * Define a [ContainsInOrder] assertion block.
+ */
+fun LogRecordAssertion.containsInOrder(block: MessagesAssertionBlock.() -> Unit) =
+    addAssertionBlock(ContainsInOrder().apply(block))

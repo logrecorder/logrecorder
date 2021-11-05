@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.blocks
 
 import info.novatec.testit.logrecorder.api.LogEntry
 import info.novatec.testit.logrecorder.api.LogLevel
 import info.novatec.testit.logrecorder.api.LogLevel.*
 import info.novatec.testit.logrecorder.api.LogRecord
 import info.novatec.testit.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import info.novatec.testit.logrecorder.assertion.TestLogRecord
+import info.novatec.testit.logrecorder.assertion.containsInOrder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -66,7 +68,7 @@ internal class ContainsInOrderTests {
             """
             Log entries do not match expectation:
             [✓] INFO | "message #1"
-            [✗] did not find entry matching: INFO | [equalTo ["message #42"]]
+            [✗] did not find entry matching: INFO | [equal to ["message #42"]]
             [✓] INFO | "message #99"
             """.trimIndent()
         )
