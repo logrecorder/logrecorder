@@ -1,0 +1,55 @@
+/*
+ * Copyright 2017-2021 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package info.novatec.testit.logrecorder.assertion.matchers.message
+
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class ContainsInOrderMessageMatcherTests {
+
+    @Test
+    fun `message containing all supplied parts in order matches`() {
+        assertThat(matcherFor("Foo", "XUR").matches("Foo bar XUR")).isTrue()
+    }
+
+    @Test
+    fun `message containing all supplied parts but not in order does not match`() {
+        assertThat(matcherFor("XUR", "Foo").matches("Foo bar XUR")).isFalse()
+    }
+
+    @Test
+    fun `matching is done case sensitive`() {
+        assertThat(matcherFor("foo", "xur").matches("Foo bar XUR")).isFalse()
+    }
+
+    @Test
+    fun `message containing non of the parts does not match`() {
+        assertThat(matcherFor("message").matches("Foo bar XUR")).isFalse()
+    }
+
+    @Test
+    fun `message containing only some of the parts does not match`() {
+        assertThat(matcherFor("Foo", "message").matches("Foo bar XUR")).isFalse()
+    }
+
+    @Test
+    fun `has an expressive toString value`() {
+        assertThat(matcherFor("foo", "bar").toString()).isEqualTo("""contains in order ["foo", "bar"]""")
+    }
+
+    fun matcherFor(vararg parts: String) = ContainsInOrderMessageMatcher(parts.toList())
+
+}

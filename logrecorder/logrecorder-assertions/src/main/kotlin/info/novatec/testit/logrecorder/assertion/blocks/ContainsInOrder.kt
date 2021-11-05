@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.blocks
 
 import info.novatec.testit.logrecorder.api.LogEntry
 
@@ -36,8 +36,7 @@ import info.novatec.testit.logrecorder.api.LogEntry
  *
  * @since 1.3.0
  */
-@DslContext
-class ContainsInOrder internal constructor() : AbstractAssertionBlock() {
+internal class ContainsInOrder : AbstractMessagesAssertionBlock() {
 
     override fun check(entries: List<LogEntry>, expectations: List<ExpectedLogEntry>): List<MatchingResult> {
         var indexOfLastMatch = -1
@@ -79,9 +78,3 @@ class ContainsInOrder internal constructor() : AbstractAssertionBlock() {
     }
 
 }
-
-/**
- * Define a [ContainsInOrder] assertion block.
- */
-fun LogRecordAssertion.containsInOrder(block: ContainsInOrder.() -> Unit) =
-    addAssertionBlock(ContainsInOrder().apply(block))

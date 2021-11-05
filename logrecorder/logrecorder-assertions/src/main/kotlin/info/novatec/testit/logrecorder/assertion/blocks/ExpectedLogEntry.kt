@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.blocks
+
+import info.novatec.testit.logrecorder.assertion.matchers.LogLevelMatcher
+import info.novatec.testit.logrecorder.assertion.matchers.MessageMatcher
 
 class ExpectedLogEntry(
     val logLevelMatcher: LogLevelMatcher,

@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.testit.logrecorder.assertion
+package info.novatec.testit.logrecorder.assertion.blocks
 
 import info.novatec.testit.logrecorder.api.LogEntry
 import info.novatec.testit.logrecorder.api.LogRecord
+import info.novatec.testit.logrecorder.assertion.LogRecordAssertion
+import info.novatec.testit.logrecorder.assertion.matchers.LogLevelMatcher
+import info.novatec.testit.logrecorder.assertion.matchers.MessageMatcher
 
 /**
  * Base class for custom assertion blocks for the [LogRecordAssertion] DSL.
  *
  * @since 1.1.0
  */
-abstract class AbstractAssertionBlock : AssertionBlock {
+abstract class AbstractMessagesAssertionBlock : MessagesAssertionBlock {
 
     private val expectations: MutableList<ExpectedLogEntry> = mutableListOf()
 
