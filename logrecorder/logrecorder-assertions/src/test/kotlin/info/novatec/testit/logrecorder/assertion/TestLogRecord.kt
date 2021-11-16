@@ -24,5 +24,5 @@ data class TestLogRecord(override val entries: List<LogEntry>) : LogRecord
 fun logRecord(vararg entries: LogEntry): LogRecord =
     TestLogRecord(listOf(*entries))
 
-fun logEntry(logger: String = "logger", level: LogLevel = LogLevel.INFO, message: String = "message") =
+fun logEntry(level: LogLevel = LogLevel.INFO, message: String = "message", logger: String = "logger") =
     LogEntry(logger, level, message)
