@@ -15,13 +15,11 @@
  */
 package info.novatec.testit.logrecorder.assertion.blocks
 
-import info.novatec.testit.logrecorder.api.LogEntry
-import info.novatec.testit.logrecorder.api.LogLevel
 import info.novatec.testit.logrecorder.api.LogLevel.*
-import info.novatec.testit.logrecorder.api.LogRecord
 import info.novatec.testit.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
-import info.novatec.testit.logrecorder.assertion.TestLogRecord
 import info.novatec.testit.logrecorder.assertion.containsInOrder
+import info.novatec.testit.logrecorder.assertion.logEntry
+import info.novatec.testit.logrecorder.assertion.logRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -30,13 +28,14 @@ internal class ContainsInOrderTests {
 
     @Test
     fun `reference check - all matched`() {
-        val log = logWith(
-            entry(level = TRACE, message = "trace message"),
-            entry(level = DEBUG, message = "debug message"),
-            entry(level = INFO, message = "info message"),
-            entry(level = WARN, message = "warn message"),
-            entry(level = ERROR, message = "error message")
+        val log = logRecord(
+            logEntry(level = TRACE, message = "trace message"),
+            logEntry(level = DEBUG, message = "debug message"),
+            logEntry(level = INFO, message = "info message"),
+            logEntry(level = WARN, message = "warn message"),
+            logEntry(level = ERROR, message = "error message")
         )
+
         assertThat(log) {
             containsInOrder {
                 trace("trace message")
@@ -49,10 +48,10 @@ internal class ContainsInOrderTests {
     }
 
     @Test
-    fun `reference check - some not matched`() {
-        val log = logWith(
-            entry(level = INFO, message = "message #1"),
-            entry(level = INFO, message = "message #99")
+    fun `throws assertion error if at least one expectation was not matched`() {
+        val log = logRecord(
+            logEntry(level = INFO, message = "message #1"),
+            logEntry(level = INFO, message = "message #99")
         )
 
         val ex = assertThrows<AssertionError> {
@@ -64,6 +63,7 @@ internal class ContainsInOrderTests {
                 }
             }
         }
+
         assertThat(ex).hasMessage(
             """
             Log entries do not match expectation:
@@ -73,9 +73,5 @@ internal class ContainsInOrderTests {
             """.trimIndent()
         )
     }
-
-    fun logWith(vararg entries: LogEntry): LogRecord = TestLogRecord(listOf(*entries))
-    fun entry(logger: String = "logger", level: LogLevel = INFO, message: String = "message") =
-        LogEntry(logger, level, message)
 
 }

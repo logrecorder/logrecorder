@@ -16,9 +16,10 @@
 package info.novatec.testit.logrecorder.assertion.blocks
 
 import info.novatec.testit.logrecorder.api.LogEntry
+import info.novatec.testit.logrecorder.assertion.LogRecordAssertion
 
 /**
- * Custom assertion blocks for the [LogRecordAssertion] DSL.
+ * Custom assertion block for the [LogRecordAssertion] DSL.
  *
  * This assertion block requires each specified expected message to be found in order,
  * but allows other messages between those expectations.
