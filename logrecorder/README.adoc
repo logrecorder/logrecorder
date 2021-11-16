@@ -46,6 +46,30 @@ testImplementation("info.novatec.testit:logrecorder-log4j:${logrecorder.version}
 </dependency>
 ----
 
+=== JUL
+
+The `logrecorder-jul` provides everything you need to start recording any link:https://cr.openjdk.java.net/~iris/se/11/latestSpec/api/java.logging/java/util/logging/package-summary.html[JUL]-based logging activity.
+
+Note for quarkus developers. You can't use this extension when your test is annotated with `io.quarkus.test.junit.QuarkusTest`. This is related to the implementation from QuarkusTest Extension. But of course you can use it in any plain unit test inside your quarkus project.
+
+==== Dependencies
+
+.Gradle
+[source,groovy]
+----
+testImplementation("info.novatec.testit:logrecorder-jul:${logrecorder.version}")
+----
+
+.Maven
+[source,xml]
+----
+<dependency>
+    <groupId>info.novatec.testit</groupId>
+    <artifactId>logrecorder-jul</artifactId>
+    <version>${logrecorder.version}</version>
+</dependency>
+----
+
 === Examples
 
 .Example how to use logrecorder
