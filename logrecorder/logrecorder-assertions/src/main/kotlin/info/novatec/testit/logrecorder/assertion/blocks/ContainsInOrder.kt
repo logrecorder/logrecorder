@@ -71,7 +71,7 @@ internal class ContainsInOrder : AbstractMessagesAssertionBlock() {
             get() = actual != null
 
         override fun describe() = if (actual != null) {
-            """[${'\u2713'}] ${actual.level} | "${actual.message}""""
+            """[${'\u2713'}] ${actual.level} | ${actual.message}"""
         } else {
             """[${'\u2717'}] did not find entry matching: ${expected.logLevelMatcher} | ${expected.messageMatchers}"""
         }

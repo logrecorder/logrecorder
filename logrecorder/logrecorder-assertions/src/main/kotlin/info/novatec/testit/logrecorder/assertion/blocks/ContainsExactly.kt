@@ -52,10 +52,10 @@ internal class ContainsExactly : AbstractMessagesAssertionBlock() {
             .append("Amount of log entries does not match (actual: ${actual.size}; expected: ${expectations.size})\n")
             .append("\n")
             .append("Actual Entries:\n")
-            .append(actual.joinToString("\n") { """${it.level} ${it.message}""" })
+            .append(actual.joinToString("\n") { """${it.level} | ${it.message}""" })
             .append("\n\n")
             .append("Expected Entries:\n")
-            .append(expectations.joinToString("\n") { "${it.logLevelMatcher} ${it.messageMatchers}" })
+            .append(expectations.joinToString("\n") { "${it.logLevelMatcher} | ${it.messageMatchers}" })
         throw AssertionError(message.toString())
     }
 
@@ -90,7 +90,7 @@ internal class ContainsExactly : AbstractMessagesAssertionBlock() {
 
         private fun messagePart(): String {
             if (messageMatches) {
-                return """"${actual.message}""""
+                return """${actual.message}"""
             }
             return """${expected.messageMatchers} >> actual ["${actual.message}"]"""
         }
