@@ -16,6 +16,13 @@
 package info.novatec.testit.logrecorder.assertion
 
 import info.novatec.testit.logrecorder.api.LogEntry
+import info.novatec.testit.logrecorder.api.LogLevel
 import info.novatec.testit.logrecorder.api.LogRecord
 
 data class TestLogRecord(override val entries: List<LogEntry>) : LogRecord
+
+fun logRecord(vararg entries: LogEntry): LogRecord =
+    TestLogRecord(listOf(*entries))
+
+fun logEntry(logger: String = "logger", level: LogLevel = LogLevel.INFO, message: String = "message") =
+    LogEntry(logger, level, message)

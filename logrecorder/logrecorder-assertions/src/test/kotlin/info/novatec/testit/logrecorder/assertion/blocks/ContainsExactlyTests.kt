@@ -15,13 +15,12 @@
  */
 package info.novatec.testit.logrecorder.assertion.blocks
 
-import info.novatec.testit.logrecorder.api.LogEntry
 import info.novatec.testit.logrecorder.api.LogLevel
 import info.novatec.testit.logrecorder.api.LogLevel.*
-import info.novatec.testit.logrecorder.api.LogRecord
 import info.novatec.testit.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
-import info.novatec.testit.logrecorder.assertion.TestLogRecord
 import info.novatec.testit.logrecorder.assertion.containsExactly
+import info.novatec.testit.logrecorder.assertion.logEntry
+import info.novatec.testit.logrecorder.assertion.logRecord
 import info.novatec.testit.logrecorder.assertion.matchers.MessageMatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
@@ -33,13 +32,14 @@ internal class ContainsExactlyTests {
 
     @Test
     fun `reference check - all matched`() {
-        val log = logWith(
-            entry(level = TRACE, message = "trace message"),
-            entry(level = DEBUG, message = "debug message"),
-            entry(level = INFO, message = "info message"),
-            entry(level = WARN, message = "warn message"),
-            entry(level = ERROR, message = "error message")
+        val log = logRecord(
+            logEntry(level = TRACE, message = "trace message"),
+            logEntry(level = DEBUG, message = "debug message"),
+            logEntry(level = INFO, message = "info message"),
+            logEntry(level = WARN, message = "warn message"),
+            logEntry(level = ERROR, message = "error message")
         )
+
         assertThat(log) {
             containsExactly {
                 trace("trace message")
@@ -52,10 +52,10 @@ internal class ContainsExactlyTests {
     }
 
     @Test
-    fun `reference check - some not matched`() {
-        val log = logWith(
-            entry(level = INFO, message = "message #1"),
-            entry(level = INFO, message = "message #2")
+    fun `throws assertion error if at least one expectation was not matched`() {
+        val log = logRecord(
+            logEntry(level = INFO, message = "message #1"),
+            logEntry(level = INFO, message = "message #2")
         )
 
         val ex = assertThrows<AssertionError> {
@@ -66,6 +66,7 @@ internal class ContainsExactlyTests {
                 }
             }
         }
+
         assertThat(ex).hasMessage(
             """
             Log entries do not match expectation:
@@ -77,10 +78,10 @@ internal class ContainsExactlyTests {
 
     @TestFactory
     fun `size difference between actual and expected log throws assertion error`(): List<DynamicTest> {
-        val log = logWith(
-            entry(message = "message #1"),
-            entry(message = "message #2"),
-            entry(message = "message #3")
+        val log = logRecord(
+            logEntry(message = "message #1"),
+            logEntry(message = "message #2"),
+            logEntry(message = "message #3")
         )
 
         return listOf(
@@ -140,7 +141,7 @@ internal class ContainsExactlyTests {
 
         @Test
         fun `matches entries with expected log level`() {
-            val log = logWith(entry(level = level))
+            val log = logRecord(logEntry(level = level))
             assertThat(log) { containsExactly { execute("message") } }
         }
 
@@ -150,7 +151,7 @@ internal class ContainsExactlyTests {
             .map { example ->
                 dynamicTest("$example") {
                     assertThrows<AssertionError> {
-                        val log = logWith(entry(level = example))
+                        val log = logRecord(logEntry(level = example))
                         assertThat(log) { containsExactly { execute("message") } }
                     }
                 }
@@ -158,19 +159,19 @@ internal class ContainsExactlyTests {
 
         @Test
         fun `matches any message when no message matchers are provided`() {
-            val log = logWith(entry(level = level))
+            val log = logRecord(logEntry(level = level))
             assertThat(log) { containsExactly { execute() } }
         }
 
         @Test
         fun `matches message when provided message matchers all match`() {
-            val log = logWith(entry(level = level, message = "hello world!"))
+            val log = logRecord(logEntry(level = level, message = "hello world!"))
             assertThat(log) { containsExactly { execute(startsWith("hello"), endsWith("world!")) } }
         }
 
         @Test
         fun `does not match message when at least one provided message matcher does not match`() {
-            val log = logWith(entry(level = level, message = "hello world!"))
+            val log = logRecord(logEntry(level = level, message = "hello world!"))
             assertThrows<AssertionError> {
                 assertThat(log) { containsExactly { execute(endsWith("world")) } }
             }
@@ -188,20 +189,20 @@ internal class ContainsExactlyTests {
         @ParameterizedTest
         @EnumSource(LogLevel::class)
         fun `any matcher matches all log levels`(logLevel: LogLevel) {
-            assertThat(logWith(entry(level = logLevel))) { containsExactly { any("message") } }
+            assertThat(logRecord(logEntry(level = logLevel))) { containsExactly { any("message") } }
         }
 
         @ParameterizedTest
         @EnumSource(LogLevel::class)
         fun `any without matchers matches any message`(logLevel: LogLevel) {
-            val log = logWith(entry(level = logLevel))
+            val log = logRecord(logEntry(level = logLevel))
             assertThat(log) { containsExactly { any() } }
         }
 
         @ParameterizedTest
         @EnumSource(LogLevel::class)
         fun `any with custom matchers matches matching entries`(logLevel: LogLevel) {
-            val log = logWith(entry(level = logLevel, message = "hello world!"))
+            val log = logRecord(logEntry(level = logLevel, message = "hello world!"))
             assertThat(log) { containsExactly { any(startsWith("hello"), endsWith("world!")) } }
         }
 
@@ -209,16 +210,16 @@ internal class ContainsExactlyTests {
 
     @Test
     fun `any matcher matches all log levels and messages`() {
-        val log = logWith(
-            entry(level = INFO, message = "start"),
+        val log = logRecord(
+            logEntry(level = INFO, message = "start"),
 
-            entry(level = TRACE, message = "trace message"),
-            entry(level = DEBUG, message = "debug message"),
-            entry(level = INFO, message = "info message"),
-            entry(level = WARN, message = "warn message"),
-            entry(level = ERROR, message = "error message"),
+            logEntry(level = TRACE, message = "trace message"),
+            logEntry(level = DEBUG, message = "debug message"),
+            logEntry(level = INFO, message = "info message"),
+            logEntry(level = WARN, message = "warn message"),
+            logEntry(level = ERROR, message = "error message"),
 
-            entry(level = INFO, message = "end")
+            logEntry(level = INFO, message = "end")
         )
         assertThat(log) {
             containsExactly {
@@ -237,7 +238,7 @@ internal class ContainsExactlyTests {
     @DisplayName("different message matchers work as expected")
     inner class MatcherVariants {
 
-        val log = logWith(entry(message = "Foo bar XUR"))
+        val log = logRecord(logEntry(message = "Foo bar XUR"))
 
         @Nested
         @DisplayName("equalTo(..)")
@@ -348,9 +349,5 @@ internal class ContainsExactlyTests {
         }
 
     }
-
-    fun logWith(vararg entries: LogEntry): LogRecord = TestLogRecord(listOf(*entries))
-    fun entry(logger: String = "logger", level: LogLevel = INFO, message: String = "message") =
-        LogEntry(logger, level, message)
 
 }
