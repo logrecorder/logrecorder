@@ -48,6 +48,12 @@ fun LogRecordAssertion.isEmpty() =
     addAssertionBlock(IsEmpty())
 
 /**
+ * Define a [Contains] assertion block.
+ */
+fun LogRecordAssertion.contains(block: MessagesAssertionBlock.() -> Unit) =
+    addAssertionBlock(Contains().apply(block))
+
+/**
  * Define a [ContainsExactly] assertion block.
  */
 fun LogRecordAssertion.containsExactly(block: MessagesAssertionBlock.() -> Unit) =
