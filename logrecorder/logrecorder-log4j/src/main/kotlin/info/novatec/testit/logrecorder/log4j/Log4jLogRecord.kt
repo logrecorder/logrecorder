@@ -39,7 +39,8 @@ internal class Log4jLogRecord : LogRecord {
                 Level.ERROR -> LogLevel.ERROR
                 else -> LogLevel.UNKNOWN
             },
-            message = value.message.formattedMessage
+            message = value.message.formattedMessage,
+            marker = value.marker?.toString()
         )
         recordedLogEntries.add(logEntry)
     }

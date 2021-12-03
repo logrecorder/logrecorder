@@ -39,7 +39,8 @@ internal class LogbackLogRecord : LogRecord {
                 Level.ERROR -> LogLevel.ERROR
                 else -> LogLevel.UNKNOWN
             },
-            message = value.formattedMessage
+            message = value.formattedMessage,
+            marker = value.marker?.toString()
         )
         recordedLogEntries.add(logEntry)
     }

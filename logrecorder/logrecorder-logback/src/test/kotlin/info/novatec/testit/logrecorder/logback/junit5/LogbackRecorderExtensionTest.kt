@@ -23,6 +23,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
+import org.slf4j.Marker
+import org.slf4j.helpers.BasicMarker
+import org.slf4j.helpers.BasicMarkerFactory
 
 internal class LogbackRecorderExtensionTest {
 
@@ -42,52 +45,53 @@ internal class LogbackRecorderExtensionTest {
 
         testServiceA.logSomething()
         assertThat(log.entries).containsExactly(
-            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a", "marker a")
         )
 
         testServiceB.logSomething()
         assertThat(log.entries).containsExactly(
-            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a", "marker a"),
 
-            LogEntry(logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
-            LogEntry(logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
-            LogEntry(logger(TestServiceB::class), LogLevel.INFO, "info message b"),
-            LogEntry(logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
-            LogEntry(logger(TestServiceB::class), LogLevel.ERROR, "error message b")
+            LogEntry(logger(TestServiceB::class), LogLevel.TRACE, "trace message b", "marker b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.DEBUG, "debug message b", "marker b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.INFO, "info message b", "marker b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.WARN, "warn message b", "marker b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.ERROR, "error message b", "marker b")
         )
 
-        customLogger.trace("trace message c")
-        customLogger.debug("debug message c")
-        customLogger.info("info message c")
-        customLogger.warn("warn message c")
-        customLogger.error("error message c")
+        val marker = BasicMarkerFactory().getMarker("marker c")
+        customLogger.trace(marker, "trace message c")
+        customLogger.debug(marker, "debug message c")
+        customLogger.info(marker, "info message c")
+        customLogger.warn(marker, "warn message c")
+        customLogger.error(marker, "error message c")
 
         assertThat(log.entries).containsExactly(
-            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a", "marker a"),
 
-            LogEntry(logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
-            LogEntry(logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
-            LogEntry(logger(TestServiceB::class), LogLevel.INFO, "info message b"),
-            LogEntry(logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
-            LogEntry(logger(TestServiceB::class), LogLevel.ERROR, "error message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.TRACE, "trace message b", "marker b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.DEBUG, "debug message b", "marker b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.INFO, "info message b", "marker b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.WARN, "warn message b", "marker b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.ERROR, "error message b", "marker b"),
 
-            LogEntry("custom-logger", LogLevel.TRACE, "trace message c"),
-            LogEntry("custom-logger", LogLevel.DEBUG, "debug message c"),
-            LogEntry("custom-logger", LogLevel.INFO, "info message c"),
-            LogEntry("custom-logger", LogLevel.WARN, "warn message c"),
-            LogEntry("custom-logger", LogLevel.ERROR, "error message c")
+            LogEntry("custom-logger", LogLevel.TRACE, "trace message c", "marker c"),
+            LogEntry("custom-logger", LogLevel.DEBUG, "debug message c", "marker c"),
+            LogEntry("custom-logger", LogLevel.INFO, "info message c", "marker c"),
+            LogEntry("custom-logger", LogLevel.WARN, "warn message c", "marker c"),
+            LogEntry("custom-logger", LogLevel.ERROR, "error message c", "marker c")
         )
     }
 
@@ -97,20 +101,20 @@ internal class LogbackRecorderExtensionTest {
 
         testServiceA.logSomething()
         assertThat(log.entries).containsExactly(
-            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a", "marker a")
         )
 
         testServiceB.logSomething()
         assertThat(log.entries).containsExactly(
-            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a", "marker a")
         )
 
         customLogger.trace("trace message c")
@@ -120,11 +124,11 @@ internal class LogbackRecorderExtensionTest {
         customLogger.error("error message c")
 
         assertThat(log.entries).containsExactly(
-            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a", "marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a", "marker a")
         )
     }
 
@@ -132,22 +136,26 @@ internal class LogbackRecorderExtensionTest {
 
 class TestServiceA {
     private val log = LoggerFactory.getLogger(javaClass)
+    private val marker = BasicMarkerFactory().getMarker("marker a")
+
     fun logSomething() {
-        log.trace("trace message a")
-        log.debug("debug message a")
-        log.info("info message a")
-        log.warn("warn message a")
-        log.error("error message a")
+        log.trace(marker, "trace message a")
+        log.debug(marker, "debug message a")
+        log.info(marker, "info message a")
+        log.warn(marker, "warn message a")
+        log.error(marker, "error message a")
     }
 }
 
 class TestServiceB {
     private val log = LoggerFactory.getLogger(javaClass)
+    private val marker = BasicMarkerFactory().getMarker("marker b")
+
     fun logSomething() {
-        log.trace("trace message b")
-        log.debug("debug message b")
-        log.info("info message b")
-        log.warn("warn message b")
-        log.error("error message b")
+        log.trace(marker, "trace message b")
+        log.debug(marker, "debug message b")
+        log.info(marker, "info message b")
+        log.warn(marker, "warn message b")
+        log.error(marker, "error message b")
     }
 }
