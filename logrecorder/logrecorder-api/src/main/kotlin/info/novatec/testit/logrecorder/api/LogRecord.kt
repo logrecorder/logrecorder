@@ -41,6 +41,15 @@ interface LogRecord {
         get() = entries.map { it.message }
 
     /**
+     * Returns a list of all recorded log markers up to this point.
+     *
+     * @see LogEntry.marker
+     * @since 1.5
+     */
+    val markers: List<String?>
+        get() = entries.map { it.marker }
+
+    /**
      * Returns a list of all recorded [log entries][LogEntry] up to this point.
      *
      * This method allows to filter the returned [log entries][LogEntry] by their logger (name)
@@ -70,10 +79,24 @@ interface LogRecord {
      * @see LogRecord.logger
      * @since 1.0
      */
-    fun messages(logger: String? = null, level: LogLevel? = null): List<String> = entries
-        .filter { if (logger != null) it.logger == logger else true }
-        .filter { if (level != null) it.level == level else true }
+    fun messages(logger: String? = null, level: LogLevel? = null): List<String> = entries(logger, level)
         .map { it.message }
+
+    /**
+     * Returns a list of all recorded log markers up to this point.
+     *
+     * This method allows to filter the returned log messages by their logger (name)
+     * or [log level][LogLevel]. If neither of those are provided, all log messages
+     * will be returned.
+     *
+     * The [LogRecord.logger] methods can be used to generate the matching logger name for a
+     * given class.
+     *
+     * @see LogRecord.logger
+     * @since 1.5
+     */
+    fun markers(logger: String? = null, level: LogLevel? = null): List<String> = entries(logger, level)
+        .mapNotNull { it.marker }
 
     companion object {
         /**

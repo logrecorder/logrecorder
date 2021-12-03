@@ -112,11 +112,21 @@ internal class Log4JRecorderExtensionTest {
             "error message a"
         )
 
+        //check only markers
+        assertThat(log.markers).containsExactly(
+            "trace marker a",
+            null,
+            null,
+            null,
+            null
+        )
+
         // check message and loglevel
         // the next examples show how this can be done easier
         assertThat(log.entries).containsExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "trace marker a"),
+            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", null),
+            // null is default value for markers
             LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
             LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
             LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")

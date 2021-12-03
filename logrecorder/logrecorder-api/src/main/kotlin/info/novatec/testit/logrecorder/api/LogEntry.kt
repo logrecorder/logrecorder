@@ -24,6 +24,7 @@ package info.novatec.testit.logrecorder.api
  * - the name of the logger ([logger])
  * - the [level][LogLevel] on which the entry was logged ([level])
  * - the (formatted) message ([message])
+ * - the optional log marker ([marker])
  *
  * @since 1.0
  * @see LogLevel
@@ -31,5 +32,6 @@ package info.novatec.testit.logrecorder.api
 data class LogEntry(
     val logger: String,
     val level: LogLevel,
-    val message: String
+    val message: String,
+    val marker: String? = null
 )
