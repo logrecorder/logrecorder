@@ -39,10 +39,26 @@ abstract class AbstractMessagesAssertionBlock : MessagesAssertionBlock {
         val results = check(entries, expectations)
 
         if (results.any { !it.matches }) {
-            val description = results.joinToString(separator = "\n", transform = MatchingResult::describe)
-            throw AssertionError("Log entries do not match expectation:\n$description")
+            val message = StringBuilder()
+                .appendLine("Log entries do not match expectation:")
+                .appendLine("---")
+                .appendMatchingResults(results)
+                .appendLine("---")
+                .appendLine()
+                .appendLine("The actual log entries were:")
+                .appendLine("---")
+                .appendActualLogEntries(entries)
+                .appendLine("---")
+                .toString()
+            throw AssertionError(message.trim())
         }
     }
+
+    private fun StringBuilder.appendMatchingResults(results: List<MatchingResult>) =
+        apply { results.forEach { result -> appendLine(result.describe()) } }
+
+    private fun StringBuilder.appendActualLogEntries(entries: List<LogEntry>) =
+        apply { entries.forEach { entry -> appendLine("${entry.level} | ${entry.message}") } }
 
     @Throws(AssertionError::class)
     protected abstract fun check(entries: List<LogEntry>, expectations: List<ExpectedLogEntry>): List<MatchingResult>

@@ -67,9 +67,17 @@ internal class ContainsInOrderTests {
         assertThat(ex).hasMessage(
             """
             Log entries do not match expectation:
+            ---
             [✓] INFO | message #1
             [✗] did not find entry matching: INFO | [equal to ["message #42"]]
             [✓] INFO | message #99
+            ---
+            
+            The actual log entries were:
+            ---
+            INFO | message #1
+            INFO | message #99
+            ---
             """.trimIndent()
         )
     }

@@ -66,8 +66,16 @@ internal class ContainsExactlyTests {
         assertThat(ex).hasMessage(
             """
             Log entries do not match expectation:
+            ---
             [✓] INFO | message #1
             [✗] INFO | [equal to ["message #3"]] >> actual ["message #2"]
+            ---
+            
+            The actual log entries were:
+            ---
+            INFO | message #1
+            INFO | message #2
+            ---
             """.trimIndent()
         )
     }
