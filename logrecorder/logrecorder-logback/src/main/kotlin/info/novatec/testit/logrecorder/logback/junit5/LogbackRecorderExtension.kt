@@ -69,6 +69,7 @@ class LogbackRecorderExtension : BeforeTestExecutionCallback, AfterTestExecution
         context.recorders.forEach { it.stop() }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private var ExtensionContext.recorders: List<LogbackLogRecorder>
         get() = store.get("log-recorders") as List<LogbackLogRecorder>
         set(value) = store.put("log-recorders", value)

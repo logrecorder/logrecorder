@@ -18,13 +18,9 @@ package info.novatec.testit.logrecorder.jul.junit5
 import info.novatec.testit.logrecorder.api.LogRecord
 import info.novatec.testit.logrecorder.jul.JulLogRecord
 import info.novatec.testit.logrecorder.jul.JulLogRecorder
+import org.junit.jupiter.api.extension.*
 import java.util.logging.LogManager
 import java.util.logging.Logger
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
-import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ParameterContext
-import org.junit.jupiter.api.extension.ParameterResolver
 
 /**
  * This extension will record the loggers specified by a [RecordLoggers] annotation and inject the [LogRecord]
@@ -73,6 +69,7 @@ class JulRecorderExtension : BeforeTestExecutionCallback, AfterTestExecutionCall
         context.recorders.forEach { it.stop() }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private var ExtensionContext.recorders: List<JulLogRecorder>
         get() = store.get("log-recorders") as List<JulLogRecorder>
         set(value) = store.put("log-recorders", value)
