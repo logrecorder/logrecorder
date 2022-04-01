@@ -3,14 +3,14 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>info.novatec.testit</groupId>
-	<artifactId>testutils</artifactId>
+	<groupId>io.github.logrecorder</groupId>
+	<artifactId>logrecorder</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>testIT | TestUtils</name>
-	<url>https://github.com/nt-ca-aqe/testit-testutils</url>
-	<description>A collection of test-related utility libraries.</description>
+	<name>LogRecorder</name>
+	<url>https://github.com/logrecorder/logrecorder</url>
+	<description>Library for recording logging behaviour during tests.</description>
 	<inceptionYear>2017</inceptionYear>
 
 	<organization>
@@ -26,9 +26,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git@github.com:nt-ca-aqe/testit-testutils.git</connection>
-		<developerConnection>scm:git:git@github.com:nt-ca-aqe/testit-testutils.git</developerConnection>
-		<url>git@github.com:nt-ca-aqe/testit-testutils.git</url>
+		<connection>scm:git:git@github.com:logrecorder/logrecorder.git</connection>
+		<developerConnection>scm:git:git@github.com:logrecorder/logrecorder.git</developerConnection>
+		<url>git@github.com:logrecorder/logrecorder.git</url>
 	</scm>
 
 	<prerequisites>
@@ -36,7 +36,11 @@
 	</prerequisites>
 
 	<modules>
-		<module>logrecorder</module>
+		<module>logrecorder-api</module>
+		<module>logrecorder-assertions</module>
+		<module>logrecorder-logback</module>
+		<module>logrecorder-log4j</module>
+		<module>logrecorder-jul</module>
 	</modules>
 
 	<properties>
@@ -93,6 +97,23 @@
 				<version>${junit.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+
+			<!-- Internal -->
+			<dependency>
+				<groupId>io.github.logrecorder</groupId>
+				<artifactId>logrecorder-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.logrecorder</groupId>
+				<artifactId>logrecorder-assertions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.logrecorder</groupId>
+				<artifactId>logrecorder-logback</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 
 			<!-- Dependencies -->
