@@ -1,5 +1,9 @@
 name: CI Build
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,4 +15,4 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: Verify
-        run: mvn --batch-mode clean verify
+        run: mvn --no-transfer-progress --batch-mode clean verify
