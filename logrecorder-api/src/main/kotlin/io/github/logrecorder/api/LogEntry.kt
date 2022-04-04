@@ -29,7 +29,7 @@ package io.github.logrecorder.api
  * @since 1.0
  * @see LogLevel
  */
-data class LogEntry(
+data class LogEntry @JvmOverloads constructor(
     val logger: String,
     val level: LogLevel,
     val message: String,
