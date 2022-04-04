@@ -1,0 +1,134 @@
+= Introduction to LogRecorder 2.0
+
+A few of years ago I wrote a small library `testutils-logrecorder-logback` capable of recording logging activity for _Spring Boot's_ default logging framework _Logback_.
+It was published under one of our (Novatec Consulting GmbH) umbrella open-source group IDs `info.novatec.testit`.
+There were several early access release version, up to version `0.3.4`.
+Those early versions provided a basic JUnit 5 extension for configuring and bootstrapping the recording of specific loggers, but not much else.
+
+This version of the library lay dormant for a couple of years.
+As far as I was aware, it was being used in my own customer's project and by a couple of showcases I created.
+But that was not quite true.
+Over time a couple of colleagues and independent developers started using the library in their own projects as well.
+
+Late last year (2021) I was contacted by a colleague about extending the library with support for other logging frameworks.
+The first new modules added support for Log4J followed by Java Utils Logging (JUL).
+We also took the opportunity of increased interest to move the whole codebase to Kotlin.
+Which in turn allowed us to add a new powerful DSL for asserting the recorded log entries.
+
+These additions coupled with changes to package names as well as removing the `testutils-` prefix from the artifacts were delivered with versions `1.0.0` through `1.7.0`.
+
+Last week (1st of April 2022) marked the latest big move for the library.
+We decided to move the code repository into its own GitHub organisation (https://github.com/logrecorder).
+With that we also changed the names and base packages once more, hopefully for the last time.
+The _LogRecorder_ is now available in version `2.0.2` with the following artifacts, and a base package of `io.github.logrecorder.**`:
+
+- `io.github.logrecorder:logrecorder-api`
+- `io.github.logrecorder:logrecorder-assertions`
+- `io.github.logrecorder:logrecorder-logback`
+- `io.github.logrecorder:logrecorder-log4j`
+- `io.github.logrecorder:logrecorder-jul`
+
+== How to Use LogRecorder
+
+Using _LogRecorder_ is rather simple.
+Just choose the appropriate library binding (e.g. `logrecorder-logback`).
+If you are using Kotlin, you'll also want to add the `logback-assertions` module to your test classpath.
+
+After that you simply configure the _LogRecorder_ extension and assert the logged messages:
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.containsExactly
+import io.github.logrecorder.logback.junit5.RecordLoggers
+
+...
+
+internal class BookCollectionTest {
+
+    ...
+
+    val cut = BookCollection(idGenerator, repository, eventPublisher)
+
+    @Test
+    @RecordLoggers(BookCollection::class) // (1)
+    fun `logs whether a book was actually deleted`(log: LogRecord) { // (2)
+        every { repository.deleteById(id_cleanCode) } returns true
+        every { repository.deleteById(id_cleanArchitecture) } returns false
+
+        cut.delete(id_cleanCode)
+        cut.delete(id_cleanArchitecture)
+
+        assertThat(log) { // (3)
+            containsExactly {
+                info("trying to delete book with ID '$id_cleanCode'")
+                debug("book with ID '$id_cleanCode' was deleted")
+                info("trying to delete book with ID '$id_cleanArchitecture'")
+                debug("book with ID '$id_cleanArchitecture' was not deleted")
+            }
+        }
+    }
+}
+----
+
+1. With `@RecordLoggers(..)` the JUnit 5 extension for recording _Logback_ logs is registered and configured for this test method.
+In this case all logging activity for the logger corresponding to the `BookCollection` class will be recorded.
+While in this example only one class is configured, the extension also allows for multiple loggers to be recorded, as well as defining them by their String name instead of a class reference.
+2. With the JUnit 5 extension being active, a `LogRecord` reference can be injected into the test method.
+Using this interface allows for at-the-moment access to the currently recorded logs.
+Meaning multiple calls to get all recorded messages at separate points within the test method will always return all messages recorded up to that point in time.
+3. Using the DSL provided by our `logrecorder-assertions` module we define our expectations for the log messages after the class under test (`cut`) was called twice.
+In this case the expectations are very specific regarding the log level (e.g. `info(..)`) as well as the contents of the messages.
+This is the simplest way of asserting the log's contents.
+But by far not the only way, as we'll see in later examples.
+
+== Asserting Log Messages
+
+As seen above the `logrecorder-assertions` module provides a simple DSL for asserting that what you expect to be logged was actually logged.
+Writing these kinds of tests over the last couple of years though has shown us that simple is often times not enough.
+Sometimes you don't care about the log-level or don't need an equality check.
+This is why there is a lot more to the DSL than the above example shows.
+
+In addition to the `containsExactly { .. }` assertion block, there are also:
+
+- `isEmpty()` if you want to assert that nothing was logged at all.
+- `containsInOrder { .. }` if the order of messages is relevant, but you don't want to assert each one of them.
+- `contains { .. }` if you only want to check that specific messages were logged but don't care about their order.
+
+For assertion blocks that check actual messages there are a number of options regarding log-level and content:
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.contains
+
+...
+
+assertThat(log) {
+    contains {
+        any("some message with any log-level") // (1)
+        info(startsWith("some message"), endsWith("info log-level")) // (2)
+    }
+}
+----
+
+1. If you don't care about the log level, you can use `any(..)` to just assert the log message's content.
+2. Each of the message related methods defaults to an equality check if just a String is provided.
+But they all also support custom matchers like `startsWith(..)` and `endsWith(..)`.
+
+Other message matchers include:
+
+- `equalTo(..)` - the default
+- `matches(..)` for regular expression matching
+- `contains(..)` to check for the existence of parts of a message without considering their order
+- `containsInOrder(..)` to check for the existence of parts of a message in a specific order
+
+All parts of the assertion DSL can be extended using Kotlin extension functions and implementing certain interfaces.
+For more on that take a look at the module's link:https://github.com/logrecorder/logrecorder/tree/master/logrecorder-assertions[documentation].
+
+== Conclusion
+
+If you want to check logging activities in your automated tests, you should give _LogRecorder_ a try.
+We are always open for feedback and ideas for new and exciting features.
