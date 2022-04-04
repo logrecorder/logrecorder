@@ -19,11 +19,6 @@
 			<artifactId>logrecorder-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>io.github.logrecorder</groupId>
-			<artifactId>logrecorder-assertions</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
