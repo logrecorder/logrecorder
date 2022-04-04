@@ -1,12 +1,32 @@
 = LogRecorder
 
-== Usage
+== Artifacts
 
-=== Logback
+=== API
+
+The `logrecorder-api` artifacts provides the basic components and interfaces for implementing a LogRecord.
+On its own this artifact does not provide any functionality.
+It must be coupled with an actual implementation.
+
+.Gradle
+[source,groovy]
+----
+implementation("io.github.logrecorder:logrecorder-api:${logrecorder.version}")
+----
+
+.Maven
+[source,xml]
+----
+<dependency>
+    <groupId>io.github.logrecorder</groupId>
+    <artifactId>logrecorder-api</artifactId>
+    <version>${logrecorder.version}</version>
+</dependency>
+----
+
+=== Implementation: Logback
 
 The `logrecorder-logback` provides everything you need to start recording any link:https://logback.qos.ch[Logback]-based logging activity.
-
-==== Dependencies
 
 .Gradle
 [source,groovy]
@@ -24,11 +44,9 @@ testImplementation("io.github.logrecorder:logrecorder-logback:${logrecorder.vers
 </dependency>
 ----
 
-=== Log4j
+=== Implementation: Log4j
 
 The `logrecorder-log4j` provides everything you need to start recording any link:https://logging.apache.org/log4j/2.x/[Log4j]-based logging activity.
-
-==== Dependencies
 
 .Gradle
 [source,groovy]
@@ -46,13 +64,9 @@ testImplementation("io.github.logrecorder:logrecorder-log4j:${logrecorder.versio
 </dependency>
 ----
 
-=== JUL
+=== Implementation: Java Util Logging (JUL)
 
 The `logrecorder-jul` provides everything you need to start recording any link:https://cr.openjdk.java.net/~iris/se/11/latestSpec/api/java.logging/java/util/logging/package-summary.html[JUL]-based logging activity.
-
-Note for quarkus developers. You can't use this extension when your test is annotated with `io.quarkus.test.junit.QuarkusTest`. This is related to the implementation from QuarkusTest Extension. But of course you can use it in any plain unit test inside your quarkus project.
-
-==== Dependencies
 
 .Gradle
 [source,groovy]
@@ -70,35 +84,49 @@ testImplementation("io.github.logrecorder:logrecorder-jul:${logrecorder.version}
 </dependency>
 ----
 
-=== Examples
+=== Assertions
 
-.Example how to use logrecorder
+The `logrecorder-assertions` artifacts provides a Kotlin based DSL for asserting the content of log recordings.
+
+.Gradle
+[source,groovy]
+----
+testImplementation("io.github.logrecorder:logrecorder-assertions:${logrecorder.version}")
+----
+
+.Maven
+[source,xml]
+----
+<dependency>
+    <groupId>io.github.logrecorder</groupId>
+    <artifactId>logrecorder-assertions</artifactId>
+    <version>${logrecorder.version}</version>
+</dependency>
+----
+
+== Usage Examples
+
+=== Kotlin
+
+.Example how to use LogRecorder in Kotlin
 [source,kotlin]
 ----
-package io.github.logrecorder.log4j.junit5
-
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.api.LogRecord.Companion.logger
 import io.github.logrecorder.logback.junit5.RecordLoggers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class Log4JRecorderExtensionTest {
+internal class LogRecorderExtensionTest {
 
     private val testServiceA = TestServiceA()
 
-    @BeforeEach
-    fun logSomethingBeforeTest() {
-        testServiceA.logSomething()
-    }
-
-    @RecordLoggers(TestServiceA::class) // define from which class you want to test log messages
     @Test
-    fun `extension is registered and log messages are recorded`(
-        log: LogRecord
-    ) {
+    @RecordLoggers(TestServiceA::class) // define from which class you want to test log messages
+    fun `extension is registered and log messages are recorded`(log: LogRecord) {
         assertThat(log.entries).isEmpty()
 
         testServiceA.logSomething()
@@ -121,27 +149,27 @@ internal class Log4JRecorderExtensionTest {
             null
         )
 
-        // check message and loglevel
-        // the next examples show how this can be done easier
+        // check message, log level and markers
+        // the next example will show how this can be done a lot easier using the assertion DSL
         assertThat(log.entries).containsExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "trace marker a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", null),
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "trace marker a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", null),
             // null is default value for markers
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
     }
 }
 
 ----
 
-.Example for logrecorder assertions
+.Example for LogRecorder assertions in Kotlin
 [source,kotlin]
 ----
 import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.assertion.LogRecordAssertion.assertThat
-import io.github.logrecorder.log4j.junit5.RecordLoggers
+import io.github.logrecorder.logback.junit5.RecordLoggers
 
 ...
 
@@ -161,7 +189,9 @@ fun `failures are logged correctly`(log: LogRecord) {
 }
 ----
 
-.Example for logrecorder java
+=== Java
+
+.Example for LogRecorder in native Java
 [source,java]
 ----
 package io.github.logrecorder.example;
@@ -169,37 +199,28 @@ package io.github.logrecorder.example;
 import io.github.logrecorder.api.LogEntry;
 import io.github.logrecorder.api.LogLevel;
 import io.github.logrecorder.api.LogRecord;
+import io.github.logrecorder.api.LogRecord.Companion.logger;
 import io.github.logrecorder.assertion.AssertionBlock;
 import io.github.logrecorder.assertion.ContainsExactly;
-import io.github.logrecorder.log4j.junit5.RecordLoggers;
-import org.assertj.core.api.Assertions;
+import io.github.logrecorder.logback.junit5.RecordLoggers;
+import org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LogRecorderTest {
+public class LogRecorderExtensionTest {
 
   private TestServiceA serviceA = new TestServiceA();
 
-  private TestServiceB serviceB = new TestServiceB();
-
-  @BeforeEach
-  public void beforeEach() {
-    serviceA.logSomething();
-    serviceB.logSomething();
-  }
-
   @Test
-  @RecordLoggers({TestServiceA.class}) // we want to check the logs only from TestServiceA
+  @RecordLoggers({TestServiceA.class}) // define from which class you want to test log messages
   public void testLoggingServiceA(LogRecord log) {
-    Assertions.assertThat(log.getEntries()).isEmpty();
+    assertThat(log.getEntries()).isEmpty();
 
     // TestServiceA and TestServiceB produces logs
     serviceA.logSomething();
-    serviceB.logSomething();
 
-    // in our LogRecord only messages from TestServicesA occurs
-    // this way you can only check for message values and don't care about the loglevel
-    Assertions.assertThat(log.getMessages()).containsExactly(
+    // check only messages
+    assertThat(log.getMessages()).containsExactly(
         "trace message a",
         "debug message a",
         "info message a",
@@ -207,97 +228,24 @@ public class LogRecorderTest {
         "error message a"
     );
 
-    // more fine grained way to test the log messages based on the loglevel
-    Assertions.assertThat(log.getEntries()).containsExactly(
-        new LogEntry(LogRecord.logger(TestServiceA.class), LogLevel.TRACE, "trace message a"),
-        new LogEntry(LogRecord.logger(TestServiceA.class), LogLevel.DEBUG, "debug message a"),
-        new LogEntry(LogRecord.logger(TestServiceA.class), LogLevel.INFO, "info message a"),
-        new LogEntry(LogRecord.logger(TestServiceA.class), LogLevel.WARN, "warn message a"),
-        new LogEntry(LogRecord.logger(TestServiceA.class), LogLevel.ERROR, "error message a")
+    //check only markers
+    assertThat(log.markers).containsExactly(
+        "trace marker a",
+        null,
+        null,
+        null,
+        null
+    );
+
+    // check message, log level and markers
+    assertThat(log.getEntries()).containsExactly(
+        new LogEntry(logger(TestServiceA.class), LogLevel.TRACE, "trace message a", "trace marker a"),
+        new LogEntry(logger(TestServiceA.class), LogLevel.DEBUG, "debug message a", null),
+        // null is default value for markers
+        new LogEntry(logger(TestServiceA.class), LogLevel.INFO, "info message a"),
+        new LogEntry(logger(TestServiceA.class), LogLevel.WARN, "warn message a"),
+        new LogEntry(logger(TestServiceA.class), LogLevel.ERROR, "error message a")
     );
   }
-
-  @Test
-  @RecordLoggers(names = {"custom-logger"}) // we only want to test all log messages from loggername custom-logger
-  public void testLoggingCustomLogger(LogRecord log) {
-    Assertions.assertThat(log.getEntries()).isEmpty();
-
-    // TestServiceA and TestServiceB (with custom-logger) produces logs
-    serviceA.logSomething();
-    serviceB.logSomething();
-
-    // in our LogRecord only messages from Logger with name custom-logger occurs
-    Assertions.assertThat(log.getMessages()).containsExactly(
-        "trace message b",
-        "debug message b",
-        "info message b",
-        "warn message b",
-        "error message b"
-    );
-
-    // more fine grained way to test the log messages based on the loglevel
-    Assertions.assertThat(log.getEntries()).containsExactly(
-        new LogEntry("custom-logger", LogLevel.TRACE,"trace message b"),
-        new LogEntry("custom-logger", LogLevel.DEBUG,"debug message b"),
-        new LogEntry("custom-logger", LogLevel.INFO, "info message b"),
-        new LogEntry("custom-logger", LogLevel.WARN, "warn message b"),
-        new LogEntry("custom-logger", LogLevel.ERROR,"error message b")
-    );
-
-  }
-
-  @Test
-  @RecordLoggers(value = {TestServiceA.class}, names = {"custom-logger"}) // combining Loggers based on classname and custom logger names
-  public void testLoggingBothServices(LogRecord log) {
-    Assertions.assertThat(log.getEntries()).isEmpty();
-
-    serviceA.logSomething();
-
-    Assertions.assertThat(log.getMessages()).containsExactly(
-        "trace message a",
-        "debug message a",
-        "info message a",
-        "warn message a",
-        "error message a"
-    );
-
-    Assertions.assertThat(log.getEntries()).containsExactly(
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.TRACE, "trace message a"),
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.DEBUG, "debug message a"),
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.INFO, "info message a"),
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.WARN, "warn message a"),
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.ERROR, "error message a")
-    );
-
-    serviceB.logSomething();
-
-    Assertions.assertThat(log.getMessages()).containsExactly(
-        "trace message a",
-        "debug message a",
-        "info message a",
-        "warn message a",
-        "error message a",
-        "trace message b",
-        "debug message b",
-        "info message b",
-        "warn message b",
-        "error message b"
-    );
-
-    Assertions.assertThat(log.getEntries()).containsExactly(
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.TRACE, "trace message a"),
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.DEBUG, "debug message a"),
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.INFO, "info message a"),
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.WARN, "warn message a"),
-        new LogEntry(LogRecord.Companion.logger(TestServiceA.class), LogLevel.ERROR, "error message a"),
-        new LogEntry("custom-logger", LogLevel.TRACE,"trace message b"),
-        new LogEntry("custom-logger", LogLevel.DEBUG,"debug message b"),
-        new LogEntry("custom-logger", LogLevel.INFO, "info message b"),
-        new LogEntry("custom-logger", LogLevel.WARN, "warn message b"),
-        new LogEntry("custom-logger", LogLevel.ERROR,"error message b")
-    );
-  }
-
 }
-
 ----
