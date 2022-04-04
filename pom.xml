@@ -31,10 +31,6 @@
 		<url>git@github.com:logrecorder/logrecorder.git</url>
 	</scm>
 
-	<prerequisites>
-		<maven>3.0.4</maven>
-	</prerequisites>
-
 	<modules>
 		<module>logrecorder-api</module>
 		<module>logrecorder-assertions</module>
