@@ -17,21 +17,22 @@ package io.github.logrecorder.logback
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
+import io.github.logrecorder.common.junit5.LogRecorder
 
 internal class LogbackLogRecorder(
     private val logger: Logger,
     logRecord: LogbackLogRecord
-) {
+) : LogRecorder {
 
     private val originalLevel = logger.effectiveLevel
     private val appender = CallbackAppender(name(), logRecord::record)
 
-    fun start() {
+    override fun start() {
         logger.level = Level.ALL
         logger.addAppender(appender)
     }
 
-    fun stop() {
+    override fun stop() {
         logger.detachAppender(appender)
         logger.level = originalLevel
     }

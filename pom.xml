@@ -34,9 +34,10 @@
 	<modules>
 		<module>logrecorder-api</module>
 		<module>logrecorder-assertions</module>
-		<module>logrecorder-logback</module>
-		<module>logrecorder-log4j</module>
+		<module>logrecorder-common-junit5</module>
 		<module>logrecorder-jul</module>
+		<module>logrecorder-log4j</module>
+		<module>logrecorder-logback</module>
 	</modules>
 
 	<properties>
@@ -101,12 +102,7 @@
 			</dependency>
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-assertions</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-logback</artifactId>
+				<artifactId>logrecorder-common-junit5</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

@@ -17,17 +17,18 @@ package io.github.logrecorder.jul
 
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
-import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.api.MutableLogRecord
 import java.util.logging.Level
+import java.util.logging.LogRecord
 
-internal class JulLogRecord : LogRecord {
+internal class JulLogRecord : MutableLogRecord<LogRecord> {
 
     private val recordedLogEntries: MutableList<LogEntry> = mutableListOf()
 
     override val entries: List<LogEntry>
         get() = ArrayList(recordedLogEntries)
 
-    fun record(value: java.util.logging.LogRecord) {
+    override fun record(value: LogRecord) {
         val logEntry = LogEntry(
             logger = value.loggerName,
             level = when (value.level) {

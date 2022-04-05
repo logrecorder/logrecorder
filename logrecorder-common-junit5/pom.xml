@@ -9,24 +9,17 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>logrecorder-log4j</artifactId>
+	<artifactId>logrecorder-common-junit5</artifactId>
 	<packaging>jar</packaging>
-	<name>LogRecorder - Log4J</name>
+	<name>LogRecorder - Common JUnit 5</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.github.logrecorder</groupId>
 			<artifactId>logrecorder-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.github.logrecorder</groupId>
-			<artifactId>logrecorder-common-junit5</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
