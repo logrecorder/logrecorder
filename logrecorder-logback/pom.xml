@@ -17,7 +17,10 @@
 		<dependency>
 			<groupId>io.github.logrecorder</groupId>
 			<artifactId>logrecorder-api</artifactId>
-			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.logrecorder</groupId>
+			<artifactId>logrecorder-common-junit5</artifactId>
 		</dependency>
 
 		<dependency>

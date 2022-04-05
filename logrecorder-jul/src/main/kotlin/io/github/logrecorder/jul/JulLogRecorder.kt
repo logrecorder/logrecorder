@@ -15,25 +15,27 @@
  */
 package io.github.logrecorder.jul
 
+import io.github.logrecorder.common.junit5.LogRecorder
 import java.util.logging.Level
 import java.util.logging.Logger
 
 internal class JulLogRecorder(
     private val logger: Logger,
     private val julLogRecord: JulLogRecord
-) {
+) : LogRecorder {
 
     private val originalLogLevel = logger.level
 
     private val callbackHandler = CallbackHandler(julLogRecord::record)
 
-    fun start() {
+    override fun start() {
         logger.level = Level.FINER
         logger.addHandler(callbackHandler)
     }
 
-    fun stop() {
+    override fun stop() {
         logger.level = originalLogLevel
         logger.removeHandler(callbackHandler)
     }
+
 }

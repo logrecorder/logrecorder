@@ -15,6 +15,7 @@
  */
 package io.github.logrecorder.log4j
 
+import io.github.logrecorder.common.junit5.LogRecorder
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -26,7 +27,7 @@ import org.apache.logging.log4j.core.layout.PatternLayout
 internal class Log4jLogRecorder(
     logger: Logger,
     logRecord: Log4jLogRecord
-) {
+) : LogRecorder {
     private val loggerName = logger.name
     private val originalLoggerLevel = logger.level
 
@@ -40,7 +41,7 @@ internal class Log4jLogRecorder(
     private val appenderRefs = arrayOf(appenderRef)
 
 
-    fun start() {
+    override fun start() {
         appender.start()
         configuration.addAppender(appender)
         val loggerConfig = getLoggerConfig()
@@ -65,7 +66,7 @@ internal class Log4jLogRecorder(
         updateLoggerContext()
     }
 
-    fun stop() {
+    override fun stop() {
         appender.stop()
         configuration.appenders.remove(appenderName)
         if (newCreatedLogger) {

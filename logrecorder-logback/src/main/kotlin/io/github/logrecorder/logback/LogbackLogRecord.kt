@@ -19,16 +19,16 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi.ILoggingEvent
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
-import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.api.MutableLogRecord
 
-internal class LogbackLogRecord : LogRecord {
+internal class LogbackLogRecord : MutableLogRecord<ILoggingEvent> {
 
     private val recordedLogEntries: MutableList<LogEntry> = mutableListOf()
 
     override val entries: List<LogEntry>
         get() = ArrayList(recordedLogEntries)
 
-    fun record(value: ILoggingEvent) {
+    override fun record(value: ILoggingEvent) {
         val logEntry = LogEntry(
             logger = value.loggerName,
             level = when (value.level) {

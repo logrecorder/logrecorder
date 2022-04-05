@@ -16,15 +16,12 @@
 package io.github.logrecorder.log4j.junit5
 
 import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.common.junit5.AbstractLogRecorderExtension
 import io.github.logrecorder.log4j.Log4jLogRecord
 import io.github.logrecorder.log4j.Log4jLogRecorder
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
-import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ParameterContext
-import org.junit.jupiter.api.extension.ParameterResolver
+import java.lang.reflect.Method
 
 /**
  * This extension will record the loggers specified by a [RecordLoggers] annotation and inject the [LogRecord]
@@ -37,50 +34,16 @@ import org.junit.jupiter.api.extension.ParameterResolver
  * @see LogRecord
  * @since 1.1
  */
-class Log4jRecorderExtension : BeforeTestExecutionCallback, AfterTestExecutionCallback,
-    ParameterResolver {
+internal class Log4jRecorderExtension : AbstractLogRecorderExtension<Logger, Log4jLogRecord>() {
 
-    private val namespace = ExtensionContext.Namespace.create(javaClass)
-
-    override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
-        return LogRecord::class.java == parameterContext.parameter.type
-    }
-
-    override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
-        return extensionContext.logRecord
-    }
-
-    override fun beforeTestExecution(context: ExtensionContext) {
-        val annotation = context.requiredTestMethod.getAnnotation(RecordLoggers::class.java)
+    override fun getLoggers(testMethod: Method): Set<Logger> {
+        val annotation = testMethod.getAnnotation(RecordLoggers::class.java)
             ?: error("no @RecordLoggers annotation found on test method!")
         val fromClasses = annotation.value.map { LogManager.getLogger(it.java) }
         val fromNames = annotation.names.map { LogManager.getLogger(it) }
-
-        val logRecord = Log4jLogRecord()
-        context.logRecord = logRecord
-
-        val recorders = (fromClasses + fromNames)
-            .distinct()
-            .map { it as Logger }
-            .map { Log4jLogRecorder(it, logRecord) }
-            .onEach { it.start() }
-        context.recorders = recorders
+        return (fromClasses + fromNames).toSet()
     }
 
-    override fun afterTestExecution(context: ExtensionContext) {
-        context.recorders.forEach { it.stop() }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private var ExtensionContext.recorders: List<Log4jLogRecorder>
-        get() = store.get("log-recorders") as List<Log4jLogRecorder>
-        set(value) = store.put("log-recorders", value)
-
-    private var ExtensionContext.logRecord: Log4jLogRecord
-        get() = store.get("log-record", Log4jLogRecord::class.java)
-        set(value) = store.put("log-record", value)
-
-    private val ExtensionContext.store: ExtensionContext.Store
-        get() = getStore(namespace)
-
+    override fun createLogRecord() = Log4jLogRecord()
+    override fun createLogRecorder(logger: Logger, logRecord: Log4jLogRecord) = Log4jLogRecorder(logger, logRecord)
 }
