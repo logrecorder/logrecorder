@@ -19,7 +19,7 @@ import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.assertion.DslContext
 
 /**
- * Base interface for all assertion blocks for the [LogRecordAssertion] DSL.
+ * Base interface for all assertion blocks for the assertion DSL.
  *
  * @since 1.1.0
  */

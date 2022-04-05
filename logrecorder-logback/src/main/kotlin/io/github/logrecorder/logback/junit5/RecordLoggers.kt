@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
  * Annotating any test method with this annotation will start the recording of
  * log messages while the test method is executed.
  *
- * Only those loggers configured with this annotation - either by it's class or
+ * Only those loggers configured with this annotation - either by its class or
  * name - will be recorded! Multiple loggers can be set by either method and
  * combinations between class and explicit names are possible as well.
  *
@@ -36,7 +36,7 @@ import kotlin.reflect.KClass
 annotation class RecordLoggers(
 
     /**
-     * Classes who's name should be used to identify loggers to record.
+     * Classes whose name should be used to identify loggers to record.
      */
     vararg val value: KClass<*> = [],
 
