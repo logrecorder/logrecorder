@@ -39,68 +39,21 @@ internal class CallbackAppender(
         eventConsumer(event)
     }
 
-    override fun setContext(context: Context) {
-
-    }
-
-    override fun getContext(): Context? {
-        return null
-    }
-
-    override fun addStatus(status: Status) {
-
-    }
-
-    override fun addInfo(msg: String) {
-
-    }
-
-    override fun addInfo(msg: String, ex: Throwable) {
-
-    }
-
-    override fun addWarn(msg: String) {
-
-    }
-
-    override fun addWarn(msg: String, ex: Throwable) {
-
-    }
-
-    override fun addError(msg: String) {
-
-    }
-
-    override fun addError(msg: String, ex: Throwable) {
-
-    }
-
-    override fun addFilter(newFilter: Filter<ILoggingEvent>) {
-
-    }
-
-    override fun clearAllFilters() {
-
-    }
-
-    override fun getCopyOfAttachedFiltersList(): List<Filter<ILoggingEvent>>? {
-        return null
-    }
-
-    override fun getFilterChainDecision(event: ILoggingEvent): FilterReply? {
-        return null
-    }
-
-    override fun start() {
-
-    }
-
-    override fun stop() {
-
-    }
-
-    override fun isStarted(): Boolean {
-        return false
-    }
+    override fun setContext(context: Context) = Unit
+    override fun getContext(): Context? = null
+    override fun addStatus(status: Status) = Unit
+    override fun addInfo(msg: String) = Unit
+    override fun addInfo(msg: String, ex: Throwable) = Unit
+    override fun addWarn(msg: String) = Unit
+    override fun addWarn(msg: String, ex: Throwable) = Unit
+    override fun addError(msg: String) = Unit
+    override fun addError(msg: String, ex: Throwable) = Unit
+    override fun addFilter(newFilter: Filter<ILoggingEvent>) = Unit
+    override fun clearAllFilters() = Unit
+    override fun getCopyOfAttachedFiltersList(): List<Filter<ILoggingEvent>>? = null
+    override fun getFilterChainDecision(event: ILoggingEvent): FilterReply? = null
+    override fun start() = Unit
+    override fun stop() = Unit
+    override fun isStarted(): Boolean = false
 
 }

@@ -90,7 +90,7 @@ internal class ContainsExactly : AbstractMessagesAssertionBlock() {
 
         private fun messagePart(): String {
             if (messageMatches) {
-                return """${actual.message}"""
+                return actual.message
             }
             return """${expected.messageMatchers} >> actual ["${actual.message}"]"""
         }
