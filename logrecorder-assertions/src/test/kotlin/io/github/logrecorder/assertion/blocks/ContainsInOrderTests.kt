@@ -40,14 +40,12 @@ internal class ContainsInOrderTests {
             logEntry(level = ERROR, message = "error message")
         )
 
-        assertThat(log) {
-            containsInOrder {
-                trace("trace message")
-                debug("debug message")
-                info("info message")
-                warn("warn message")
-                error("error message")
-            }
+        assertThat(log) containsInOrder {
+            trace("trace message")
+            debug("debug message")
+            info("info message")
+            warn("warn message")
+            error("error message")
         }
     }
 
@@ -59,12 +57,10 @@ internal class ContainsInOrderTests {
         )
 
         val ex = assertThrows<AssertionError> {
-            assertThat(log) {
-                containsInOrder {
-                    info("message #1")
-                    info("message #42")
-                    info("message #99")
-                }
+            assertThat(log) containsInOrder {
+                info("message #1")
+                info("message #42")
+                info("message #99")
             }
         }
 

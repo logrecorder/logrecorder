@@ -36,15 +36,13 @@ internal class ContainsTests {
             logEntry(level = LogLevel.ERROR, message = "error message")
         )
 
-        assertThat(log) {
-            contains {
-                // random order but all are contained
-                info("info message")
-                error("error message")
-                debug("debug message")
-                warn("warn message")
-                trace("trace message")
-            }
+        assertThat(log) contains {
+            // random order but all are contained
+            info("info message")
+            error("error message")
+            debug("debug message")
+            warn("warn message")
+            trace("trace message")
         }
     }
 
@@ -66,12 +64,10 @@ internal class ContainsTests {
         }
 
         val ex = assertThrows<AssertionError> {
-            assertThat(log) {
-                contains {
-                    any(startsWith("message"))
-                    any(startsWith("message"))
-                    any(startsWith("message"))
-                }
+            assertThat(log) contains {
+                any(startsWith("message"))
+                any(startsWith("message"))
+                any(startsWith("message"))
             }
         }
 
@@ -101,12 +97,10 @@ internal class ContainsTests {
         )
 
         val ex = assertThrows<AssertionError> {
-            assertThat(log) {
-                contains {
-                    info("message #99")
-                    info("message #42")
-                    info("message #1")
-                }
+            assertThat(log) contains {
+                info("message #99")
+                info("message #42")
+                info("message #1")
             }
         }
 

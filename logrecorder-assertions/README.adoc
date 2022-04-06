@@ -58,7 +58,7 @@ fun someTest2(log: LogRecord) {
     assertThat(log) { isEmpty() }
 }
 
-fun LogRecordAssertion.isEmpty() = addAssertionBlock(IsEmptyAssertionBlock())
+fun LogRecordAssertion.isEmpty() = assertBlock(IsEmptyAssertionBlock())
 
 class IsEmptyAssertionBlock : AssertionBlock {
     override fun check(logRecord: LogRecord) {
