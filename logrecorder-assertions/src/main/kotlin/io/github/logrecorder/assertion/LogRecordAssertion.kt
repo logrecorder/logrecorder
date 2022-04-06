@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,29 +20,33 @@ import io.github.logrecorder.assertion.blocks.AssertionBlock
 import io.github.logrecorder.assertion.blocks.Contains
 import io.github.logrecorder.assertion.blocks.ContainsExactly
 import io.github.logrecorder.assertion.blocks.ContainsInOrder
+import io.github.logrecorder.assertion.blocks.ContainsOnly
 import io.github.logrecorder.assertion.blocks.IsEmpty
 import io.github.logrecorder.assertion.blocks.MessagesAssertionBlock
 
 @DslContext
-class LogRecordAssertion(
+class LogRecordAssertion private constructor(
     private val logRecord: LogRecord
 ) {
 
-    private val blocks = mutableListOf<AssertionBlock>()
-
+    @Deprecated("replaced with assertBlock(..)", ReplaceWith("assertBlock(block)"))
     fun addAssertionBlock(block: AssertionBlock) {
-        blocks.add(block)
+        assertBlock(block)
     }
 
-    private fun check() {
-        blocks.forEach { it.check(logRecord) }
+    fun assertBlock(block: AssertionBlock): LogRecordAssertion {
+        block.check(logRecord)
+        return this
     }
 
     companion object {
         @JvmStatic
         fun assertThat(logRecord: LogRecord, block: LogRecordAssertion.() -> Unit) {
-            LogRecordAssertion(logRecord).apply(block).check()
+            LogRecordAssertion(logRecord).apply(block)
         }
+
+        @JvmStatic
+        fun assertThat(logRecord: LogRecord) = LogRecordAssertion(logRecord)
     }
 }
 
@@ -50,22 +54,28 @@ class LogRecordAssertion(
  * Define an [IsEmpty] assertion block.
  */
 fun LogRecordAssertion.isEmpty() =
-    addAssertionBlock(IsEmpty())
+    assertBlock(IsEmpty())
 
 /**
  * Define a [Contains] assertion block.
  */
-fun LogRecordAssertion.contains(block: MessagesAssertionBlock.() -> Unit) =
-    addAssertionBlock(Contains().apply(block))
+infix fun LogRecordAssertion.contains(block: MessagesAssertionBlock.() -> Unit) =
+    assertBlock(Contains().apply(block))
+
+/**
+ * Define a [ContainsOnly] assertion block.
+ */
+infix fun LogRecordAssertion.containsOnly(block: MessagesAssertionBlock.() -> Unit) =
+    assertBlock(ContainsOnly().apply(block))
 
 /**
  * Define a [ContainsExactly] assertion block.
  */
-fun LogRecordAssertion.containsExactly(block: MessagesAssertionBlock.() -> Unit) =
-    addAssertionBlock(ContainsExactly().apply(block))
+infix fun LogRecordAssertion.containsExactly(block: MessagesAssertionBlock.() -> Unit) =
+    assertBlock(ContainsExactly().apply(block))
 
 /**
  * Define a [ContainsInOrder] assertion block.
  */
-fun LogRecordAssertion.containsInOrder(block: MessagesAssertionBlock.() -> Unit) =
-    addAssertionBlock(ContainsInOrder().apply(block))
+infix fun LogRecordAssertion.containsInOrder(block: MessagesAssertionBlock.() -> Unit) =
+    assertBlock(ContainsInOrder().apply(block))

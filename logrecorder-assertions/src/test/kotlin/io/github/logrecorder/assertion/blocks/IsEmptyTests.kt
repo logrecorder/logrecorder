@@ -31,7 +31,7 @@ internal class IsEmptyTests {
     fun `reference check - empty`() {
         val emptyLog = logRecord()
 
-        assertThat(emptyLog) { isEmpty() }
+        assertThat(emptyLog).isEmpty()
     }
 
     @Test
@@ -42,7 +42,7 @@ internal class IsEmptyTests {
         )
 
         val ex = assertThrows<AssertionError> {
-            assertThat(log) { isEmpty() }
+            assertThat(log).isEmpty()
         }
 
         assertThat(ex).hasMessage(
