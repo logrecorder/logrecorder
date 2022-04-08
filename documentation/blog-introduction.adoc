@@ -20,7 +20,7 @@ These additions coupled with changes to package names as well as removing the `t
 Last week (1st of April 2022) marked the latest big move for the library.
 We decided to move the code repository into its own GitHub organisation (https://github.com/logrecorder).
 With that we also changed the names and base packages once more, hopefully for the last time.
-The _LogRecorder_ is now available in version `2.0.2` with the following artifacts, and a base package of `io.github.logrecorder.**`:
+The _LogRecorder_ is now available in version `2.1.0` with the following artifacts, and a base package of `io.github.logrecorder.**`:
 
 - `io.github.logrecorder:logrecorder-api`
 - `io.github.logrecorder:logrecorder-assertions`
