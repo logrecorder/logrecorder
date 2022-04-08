@@ -32,22 +32,24 @@ interface LogRecord {
     val entries: List<LogEntry>
 
     /**
-     * Returns a list of all recorded log messages up to this point.
+     * Returns a list of all recorded [log entries][LogEntry] up to this point
+     * for a specific logger (name).
      *
-     * @see LogEntry.message
-     * @since 1.0
+     * The [LogRecord.logger] methods can be used to generate the matching logger name for a
+     * given class.
+     *
+     * @see LogRecord.logger
+     * @since 2.2
      */
-    val messages: List<String>
-        get() = entries.map { it.message }
+    fun getEntries(logger: String): List<LogEntry> = getEntries(logger, null)
 
     /**
-     * Returns a list of all recorded log markers up to this point.
+     * Returns a list of all recorded [log entries][LogEntry] up to this point
+     * with a specific [log level][LogLevel].
      *
-     * @see LogEntry.marker
-     * @since 1.5
+     * @since 2.2
      */
-    val markers: List<String?>
-        get() = entries.map { it.marker }
+    fun getEntries(level: LogLevel): List<LogEntry> = getEntries(null, level)
 
     /**
      * Returns a list of all recorded [log entries][LogEntry] up to this point.
@@ -60,11 +62,40 @@ interface LogRecord {
      * given class.
      *
      * @see LogRecord.logger
-     * @since 1.0
+     * @since 2.2
      */
-    fun entries(logger: String? = null, level: LogLevel? = null): List<LogEntry> = entries
+    fun getEntries(logger: String?, level: LogLevel?): List<LogEntry> = entries
         .filter { if (logger != null) it.logger == logger else true }
         .filter { if (level != null) it.level == level else true }
+
+    /**
+     * Returns a list of all recorded log messages up to this point.
+     *
+     * @see LogEntry.message
+     * @since 1.0
+     */
+    val messages: List<String>
+        get() = entries.map { it.message }
+
+    /**
+     * Returns a list of all recorded log messages up to this point
+     * for a specific logger (name).
+     *
+     * The [LogRecord.logger] methods can be used to generate the matching logger name for a
+     * given class.
+     *
+     * @see LogRecord.logger
+     * @since 2.2
+     */
+    fun getMessages(logger: String): List<String> = getMessages(logger, null)
+
+    /**
+     * Returns a list of all recorded log messages up to this point
+     * with a specific [log level][LogLevel].
+     *
+     * @since 2.2
+     */
+    fun getMessages(level: LogLevel): List<String> = getMessages(null, level)
 
     /**
      * Returns a list of all recorded log messages up to this point.
@@ -77,10 +108,39 @@ interface LogRecord {
      * given class.
      *
      * @see LogRecord.logger
-     * @since 1.0
+     * @since 2.2
      */
-    fun messages(logger: String? = null, level: LogLevel? = null): List<String> = entries(logger, level)
+    fun getMessages(logger: String?, level: LogLevel?): List<String> = getEntries(logger, level)
         .map { it.message }
+
+    /**
+     * Returns a list of all recorded log markers up to this point.
+     *
+     * @see LogEntry.marker
+     * @since 1.5
+     */
+    val markers: List<String?>
+        get() = entries.map { it.marker }
+
+    /**
+     * Returns a list of all recorded log markers up to this point
+     * for a specific logger (name).
+     *
+     * The [LogRecord.logger] methods can be used to generate the matching logger name for a
+     * given class.
+     *
+     * @see LogRecord.logger
+     * @since 2.2
+     */
+    fun getMarkers(logger: String): List<String> = getMarkers(logger, null)
+
+    /**
+     * Returns a list of all recorded log markers up to this point
+     * with a specific [log level][LogLevel].
+     *
+     * @since 2.2
+     */
+    fun getMarkers(level: LogLevel): List<String> = getMarkers(null, level)
 
     /**
      * Returns a list of all recorded log markers up to this point.
@@ -93,10 +153,19 @@ interface LogRecord {
      * given class.
      *
      * @see LogRecord.logger
-     * @since 1.5
+     * @since 2.2
      */
-    fun markers(logger: String? = null, level: LogLevel? = null): List<String> = entries(logger, level)
+    fun getMarkers(logger: String?, level: LogLevel?): List<String> = getEntries(logger, level)
         .mapNotNull { it.marker }
+
+    @Deprecated("use getEntries(..)", ReplaceWith("getEntries(logger, level)"))
+    fun entries(logger: String? = null, level: LogLevel? = null): List<LogEntry> = getEntries(logger, level)
+
+    @Deprecated("use getMessages(..)", ReplaceWith("getMessages(logger, level)"))
+    fun messages(logger: String? = null, level: LogLevel? = null): List<String> = getMessages(logger, level)
+
+    @Deprecated("use getMarkers(..)", ReplaceWith("getMarkers(logger, level)"))
+    fun markers(logger: String? = null, level: LogLevel? = null): List<String> = getMarkers(logger, level)
 
     companion object {
         /**
