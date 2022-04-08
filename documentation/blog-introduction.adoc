@@ -60,13 +60,11 @@ internal class BookCollectionTest {
         cut.delete(id_cleanCode)
         cut.delete(id_cleanArchitecture)
 
-        assertThat(log) { // (3)
-            containsExactly {
-                info("trying to delete book with ID '$id_cleanCode'")
-                debug("book with ID '$id_cleanCode' was deleted")
-                info("trying to delete book with ID '$id_cleanArchitecture'")
-                debug("book with ID '$id_cleanArchitecture' was not deleted")
-            }
+        assertThat(log) containsExactly { // (3)
+            info("trying to delete book with ID '$id_cleanCode'")
+            debug("book with ID '$id_cleanCode' was deleted")
+            info("trying to delete book with ID '$id_cleanArchitecture'")
+            debug("book with ID '$id_cleanArchitecture' was not deleted")
         }
     }
 }
@@ -106,11 +104,9 @@ import io.github.logrecorder.assertion.contains
 
 ...
 
-assertThat(log) {
-    contains {
-        any("some message with any log-level") // (1)
-        info(startsWith("some message"), endsWith("info log-level")) // (2)
-    }
+assertThat(log) contains {
+    any("some message with any log-level") // (1)
+    info(startsWith("some message"), endsWith("info log-level")) // (2)
 }
 ----
 
