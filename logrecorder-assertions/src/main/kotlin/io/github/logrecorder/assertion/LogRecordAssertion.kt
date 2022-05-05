@@ -40,10 +40,19 @@ class LogRecordAssertion private constructor(
     }
 
     companion object {
+
+        @JvmStatic
+        fun assertThatLog(logRecord: LogRecord, block: LogRecordAssertion.() -> Unit) {
+            assertThat(logRecord, block)
+        }
+
         @JvmStatic
         fun assertThat(logRecord: LogRecord, block: LogRecordAssertion.() -> Unit) {
             LogRecordAssertion(logRecord).apply(block)
         }
+
+        @JvmStatic
+        fun assertThatLog(logRecord: LogRecord) = LogRecordAssertion(logRecord)
 
         @JvmStatic
         fun assertThat(logRecord: LogRecord) = LogRecordAssertion(logRecord)

@@ -18,6 +18,7 @@ package io.github.logrecorder.assertion
 import io.github.logrecorder.api.LogLevel.DEBUG
 import io.github.logrecorder.api.LogLevel.INFO
 import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThatLog
 import org.junit.jupiter.api.Test
 
 class LogRecorderAssertionTests {
@@ -38,6 +39,16 @@ class LogRecorderAssertionTests {
                 info(matches("[a-z]+ #1"))
             }
         }
+        assertThatLog(log) {
+            containsExactly {
+                info("message #1")
+                debug(startsWith("message"), endsWith("#2"))
+            }
+            contains {
+                info(matches("[a-z]+ #1"))
+            }
+        }
+
     }
 
     @Test
@@ -50,10 +61,19 @@ class LogRecorderAssertionTests {
             .contains {
                 info(matches("[a-z]+ #1"))
             }
+        assertThatLog(log)
+            .containsExactly {
+                info("message #1")
+                debug(startsWith("message"), endsWith("#2"))
+            }
+            .contains {
+                info(matches("[a-z]+ #1"))
+            }
     }
 
     @Test
     fun `example - infix usage`() {
         assertThat(log) contains { info("message #1") }
+        assertThatLog(log) contains { info("message #1") }
     }
 }
