@@ -46,7 +46,7 @@ internal class ContainsOnly : AbstractMessagesAssertionBlock() {
         val remainingEntries = entries.toMutableList()
         return expectations
             .map { expectation ->
-                val matchedIndex = remainingEntries.indexOfFirst { matches(expectation, it) }
+                val matchedIndex = remainingEntries.indexOfFirst { expectation matches it }
                 if (matchedIndex != -1) {
                     val entry = remainingEntries.removeAt(matchedIndex)
                     ContainsOnlyMatchingResult(entry, expectation)
@@ -68,26 +68,12 @@ internal class ContainsOnly : AbstractMessagesAssertionBlock() {
         throw AssertionError(message.toString())
     }
 
-    private fun matches(expected: ExpectedLogEntry, actual: LogEntry): Boolean {
-        val levelMatches = expected.logLevelMatcher.matches(actual.level)
-        val messageMatches = expected.messageMatchers.all { it.matches(actual.message) }
-        return levelMatches && messageMatches
-    }
-
     private class ContainsOnlyMatchingResult(
         private val actual: LogEntry?,
         private val expected: ExpectedLogEntry
     ) : MatchingResult {
-
-        override val matches: Boolean
-            get() = actual != null
-
-        override fun describe() = if (actual != null) {
-            """[${'\u2713'}] ${actual.level} | ${actual.message}"""
-        } else {
-            """[${'\u2717'}] did not find entry matching: ${expected.logLevelMatcher} | ${expected.messageMatchers}"""
-        }
-
+        override val matches: Boolean = actual != null
+        override fun describe() = if (actual != null) describeMatch(actual) else describeNothingMatches(expected)
     }
 
 }

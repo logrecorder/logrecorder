@@ -15,10 +15,23 @@
  */
 package io.github.logrecorder.assertion.blocks
 
+import io.github.logrecorder.api.LogEntry
+import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.assertion.matchers.LogLevelMatcher
 import io.github.logrecorder.assertion.matchers.MessageMatcher
 
 class ExpectedLogEntry(
     val logLevelMatcher: LogLevelMatcher,
-    val messageMatchers: List<MessageMatcher>
-)
+    val messageMatchers: List<MessageMatcher> = emptyList()
+) {
+
+    infix fun matches(actual: LogEntry): Boolean =
+        matches(actual.level) && matches(actual.message)
+
+    infix fun matches(actual: LogLevel): Boolean =
+        logLevelMatcher matches actual
+
+    infix fun matches(actual: String): Boolean =
+        messageMatchers.all { it matches actual }
+
+}
