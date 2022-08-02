@@ -60,7 +60,7 @@ internal class ContainsOnlyTests {
     }
 
     @Test
-    fun `throws assertion error if at least one expectation was not matched`() {
+    fun `throws assertion error if at least one expectation was not matched - simple message matching`() {
         val log = logRecord(
             logEntry(level = LogLevel.INFO, message = "message #1"),
             logEntry(level = LogLevel.INFO, message = "message #99")
@@ -85,6 +85,37 @@ internal class ContainsOnlyTests {
             ---
             INFO | message #1
             INFO | message #99
+            ---
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `throws assertion error if at least one expectation was not matched - property matching`() {
+        val log = logRecord(
+            logEntry(level = LogLevel.INFO, message = "message #1", properties = mapOf("foo" to "bar")),
+            logEntry(level = LogLevel.INFO, message = "message #99", properties = mapOf("foo" to "bar"))
+        )
+
+        val ex = assertThrows<AssertionError> {
+            assertThat(log) containsOnly {
+                info(message = "message #1", properties = listOf(containsProperty("foo", "bar")))
+                info(message = "message #99", properties = listOf(doesNotContainProperty("foo")))
+            }
+        }
+
+        assertThat(ex).hasMessage(
+            """
+            Log entries do not match expectation:
+            ---
+            [✓] INFO | message #1 | {foo=bar}
+            [✗] did not find entry matching: INFO | [equal to ["message #99"]] | [does not contain property with key [foo]]
+            ---
+            
+            The actual log entries were:
+            ---
+            INFO | message #1 | {foo=bar}
+            INFO | message #99 | {foo=bar}
             ---
             """.trimIndent()
         )

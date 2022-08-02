@@ -50,7 +50,7 @@ internal class ContainsExactlyTests {
     }
 
     @Test
-    fun `throws assertion error if at least one expectation was not matched`() {
+    fun `throws assertion error if at least one expectation was not matched - simple message matching`() {
         val log = logRecord(
             logEntry(level = INFO, message = "message #1"),
             logEntry(level = INFO, message = "message #2")
@@ -75,6 +75,37 @@ internal class ContainsExactlyTests {
             ---
             INFO | message #1
             INFO | message #2
+            ---
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `throws assertion error if at least one expectation was not matched - property matching`() {
+        val log = logRecord(
+            logEntry(level = INFO, message = "message #1", properties = mapOf("foo" to "bar")),
+            logEntry(level = INFO, message = "message #2", properties = mapOf("foo" to "bar"))
+        )
+
+        val ex = assertThrows<AssertionError> {
+            assertThat(log) containsExactly {
+                info(message = "message #1", properties = listOf(containsProperty("foo", "bar")))
+                info(message = "message #2", properties = listOf(doesNotContainProperty("foo")))
+            }
+        }
+
+        assertThat(ex).hasMessage(
+            """
+            Log entries do not match expectation:
+            ---
+            [✓] INFO | message #1 | {foo=bar}
+            [✗] INFO | message #2 | [does not contain property with key [foo]] >> actual {foo=bar}
+            ---
+            
+            The actual log entries were:
+            ---
+            INFO | message #1 | {foo=bar}
+            INFO | message #2 | {foo=bar}
             ---
             """.trimIndent()
         )
