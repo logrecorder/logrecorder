@@ -40,7 +40,8 @@ internal class LogbackLogRecord : MutableLogRecord<ILoggingEvent> {
                 else -> LogLevel.UNKNOWN
             },
             message = value.formattedMessage,
-            marker = value.marker?.toString()
+            marker = value.marker?.toString(),
+            properties = value.mdcPropertyMap.toMap()
         )
         recordedLogEntries.add(logEntry)
     }

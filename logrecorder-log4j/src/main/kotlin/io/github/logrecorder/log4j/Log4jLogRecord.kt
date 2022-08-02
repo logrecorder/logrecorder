@@ -40,7 +40,8 @@ internal class Log4jLogRecord : MutableLogRecord<LogEvent> {
                 else -> LogLevel.UNKNOWN
             },
             message = value.message.formattedMessage,
-            marker = value.marker?.toString()
+            marker = value.marker?.toString(),
+            properties = value.contextData.toMap()
         )
         recordedLogEntries.add(logEntry)
     }

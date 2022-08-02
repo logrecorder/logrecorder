@@ -20,9 +20,11 @@ import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.api.LogRecord.Companion.logger
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.slf4j.helpers.BasicMarkerFactory
 
 internal class LogbackRecorderExtensionTest {
@@ -32,13 +34,20 @@ internal class LogbackRecorderExtensionTest {
     val testServiceA = TestServiceA()
     val testServiceB = TestServiceB()
 
-    @BeforeEach fun logSomethingBeforeTest() {
+    @BeforeEach
+    fun logSomethingBeforeTest() {
         testServiceA.logSomething()
         testServiceB.logSomething()
     }
 
+    @AfterEach
+    fun cleanup() {
+        MDC.clear()
+    }
+
+    @Test
     @RecordLoggers(TestServiceA::class, TestServiceB::class, names = ["custom-logger"])
-    @Test fun `extension is registered and log messages are recorded`(log: LogRecord) {
+    fun `extension is registered and log messages are recorded`(log: LogRecord) {
         assertThat(log.entries).isEmpty()
 
         testServiceA.logSomething()
@@ -93,8 +102,9 @@ internal class LogbackRecorderExtensionTest {
         )
     }
 
+    @Test
     @RecordLoggers(TestServiceA::class)
-    @Test fun `extension is registered and log messages are recorded only for TestServiceA`(log: LogRecord) {
+    fun `extension is registered and log messages are recorded only for TestServiceA`(log: LogRecord) {
         assertThat(log.entries).isEmpty()
 
         testServiceA.logSomething()
@@ -130,6 +140,38 @@ internal class LogbackRecorderExtensionTest {
         )
     }
 
+    @Test
+    @RecordLoggers(TestServiceA::class)
+    fun `MDC properties are recorded`(log: LogRecord) {
+        MDC.put("custom#1", "foo")
+        MDC.put("custom#2", "bar")
+        testServiceA.logSingleInfo()
+        MDC.remove("custom#2")
+        testServiceA.logSingleInfo()
+
+        assertThat(log.entries).containsExactly(
+            LogEntry(
+                logger = logger(TestServiceA::class),
+                level = LogLevel.INFO,
+                message = "info message a",
+                marker = "marker a",
+                properties = mapOf(
+                    "custom#1" to "foo",
+                    "custom#2" to "bar"
+                )
+            ),
+            LogEntry(
+                logger = logger(TestServiceA::class),
+                level = LogLevel.INFO,
+                message = "info message a",
+                marker = "marker a",
+                properties = mapOf(
+                    "custom#1" to "foo"
+                )
+            )
+        )
+    }
+
 }
 
 class TestServiceA {
@@ -142,6 +184,10 @@ class TestServiceA {
         log.info(marker, "info message a")
         log.warn(marker, "warn message a")
         log.error(marker, "error message a")
+    }
+
+    fun logSingleInfo() {
+        log.info(marker, "info message a")
     }
 }
 
