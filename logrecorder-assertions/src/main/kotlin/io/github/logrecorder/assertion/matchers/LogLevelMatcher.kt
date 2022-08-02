@@ -18,5 +18,5 @@ package io.github.logrecorder.assertion.matchers
 import io.github.logrecorder.api.LogLevel
 
 fun interface LogLevelMatcher {
-    fun matches(actual: LogLevel): Boolean
+    infix fun matches(actual: LogLevel): Boolean
 }

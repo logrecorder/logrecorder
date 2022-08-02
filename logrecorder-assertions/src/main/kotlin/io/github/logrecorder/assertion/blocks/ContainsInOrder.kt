@@ -46,7 +46,7 @@ internal class ContainsInOrder : AbstractMessagesAssertionBlock() {
                 var result: ContainsInOrderMatchingResult? = null
                 entries.forEachIndexed { i, entry ->
                     if (i > indexOfLastMatch && result == null) {
-                        if (matches(expectation, entry)) {
+                        if (expectation matches entry) {
                             result = ContainsInOrderMatchingResult(entry, expectation)
                             indexOfLastMatch = i
                         }
@@ -56,26 +56,12 @@ internal class ContainsInOrder : AbstractMessagesAssertionBlock() {
             }
     }
 
-    private fun matches(expected: ExpectedLogEntry, actual: LogEntry): Boolean {
-        val levelMatches = expected.logLevelMatcher.matches(actual.level)
-        val messageMatches = expected.messageMatchers.all { it.matches(actual.message) }
-        return levelMatches && messageMatches
-    }
-
     private class ContainsInOrderMatchingResult(
         private val actual: LogEntry?,
         private val expected: ExpectedLogEntry
     ) : MatchingResult {
-
-        override val matches: Boolean
-            get() = actual != null
-
-        override fun describe() = if (actual != null) {
-            """[${'\u2713'}] ${actual.level} | ${actual.message}"""
-        } else {
-            """[${'\u2717'}] did not find entry matching: ${expected.logLevelMatcher} | ${expected.messageMatchers}"""
-        }
-
+        override val matches: Boolean = actual != null
+        override fun describe() = if (actual != null) describeMatch(actual) else describeNothingMatches(expected)
     }
 
 }

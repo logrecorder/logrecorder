@@ -16,5 +16,5 @@
 package io.github.logrecorder.assertion.matchers
 
 fun interface MessageMatcher {
-    fun matches(actual: String): Boolean
+    infix fun matches(actual: String): Boolean
 }

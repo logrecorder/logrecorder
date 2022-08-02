@@ -62,38 +62,15 @@ internal class ContainsExactly : AbstractMessagesAssertionBlock() {
     private fun check(expected: ExpectedLogEntry, actual: LogEntry) =
         ContainsExactlyMatchingResult(
             actual = actual,
-            expected = expected,
-            levelMatches = expected.logLevelMatcher.matches(actual.level),
-            messageMatches = expected.messageMatchers.all { it.matches(actual.message) }
+            expected = expected
         )
 
     private class ContainsExactlyMatchingResult(
         private val actual: LogEntry,
-        private val expected: ExpectedLogEntry,
-        private val levelMatches: Boolean,
-        private val messageMatches: Boolean
+        private val expected: ExpectedLogEntry
     ) : MatchingResult {
-
-        override val matches: Boolean
-            get() = levelMatches && messageMatches
-
-        override fun describe() = "[${matchSymbol()}] ${levelPart()} | ${messagePart()}"
-
-        private fun matchSymbol() = if (matches) '\u2713' else '\u2717'
-
-        private fun levelPart(): String {
-            if (levelMatches) {
-                return "${actual.level}"
-            }
-            return "${expected.logLevelMatcher} >> ${actual.level}"
-        }
-
-        private fun messagePart(): String {
-            if (messageMatches) {
-                return actual.message
-            }
-            return """${expected.messageMatchers} >> actual ["${actual.message}"]"""
-        }
+        override val matches: Boolean = expected matches actual
+        override fun describe() = if (matches) describeMatch(actual) else describeMismatch(actual, expected)
     }
 
 }
