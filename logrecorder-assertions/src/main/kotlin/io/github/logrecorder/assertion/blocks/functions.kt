@@ -24,7 +24,8 @@ private const val MISMATCH_SYMBOL = '\u2717'
 internal fun describeMatch(actual: LogEntry): String {
     val details = listOf(
         actual.level.toString(),
-        actual.message
+        actual.message,
+        actual.properties.takeIf { it.isNotEmpty() }?.toString()
     )
     return "[$MATCH_SYMBOL] ${join(details)}"
 }
@@ -32,7 +33,8 @@ internal fun describeMatch(actual: LogEntry): String {
 internal fun describeNothingMatches(expected: ExpectedLogEntry): String {
     val details = listOf(
         expected.logLevelMatcher.toString(),
-        expected.messageMatchers.toString()
+        expected.messageMatchers.toString(),
+        expected.propertyMatchers.takeIf { it.isNotEmpty() }?.toString()
     )
     return "[$MISMATCH_SYMBOL] did not find entry matching: ${join(details)}"
 }
@@ -40,7 +42,8 @@ internal fun describeNothingMatches(expected: ExpectedLogEntry): String {
 internal fun describeMismatch(actual: LogEntry, expected: ExpectedLogEntry): String {
     val details = listOf(
         levelPart(actual, expected),
-        messagePart(actual, expected)
+        messagePart(actual, expected),
+        propertiesPart(actual, expected)
     )
     return "[$MISMATCH_SYMBOL] ${join(details)}"
 }
@@ -57,6 +60,19 @@ private fun messagePart(actual: LogEntry, expected: ExpectedLogEntry): String {
         return actual.message
     }
     return """${expected.messageMatchers} >> actual ["${actual.message}"]"""
+}
+
+private fun propertiesPart(actual: LogEntry, expected: ExpectedLogEntry): String? {
+    val matches = expected matches actual.properties
+    val hasProperties = actual.properties.isNotEmpty()
+    val hasPropertyMatchers = expected.propertyMatchers.isNotEmpty()
+
+    if (matches && hasProperties) {
+        return "${actual.properties}"
+    } else if (!matches && hasPropertyMatchers) {
+        return """${expected.propertyMatchers} >> actual ${actual.properties}"""
+    }
+    return null
 }
 
 private fun join(data: List<String?>) = data.filterNotNull().joinToString(separator = " | ")

@@ -13,21 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.logrecorder.assertion
+package io.github.logrecorder.assertion.matchers
 
-import io.github.logrecorder.api.LogEntry
-import io.github.logrecorder.api.LogLevel
-import io.github.logrecorder.api.LogRecord
-
-data class TestLogRecord(override val entries: List<LogEntry>) : LogRecord
-
-fun logRecord(vararg entries: LogEntry): LogRecord =
-    TestLogRecord(listOf(*entries))
-
-fun logEntry(
-    level: LogLevel = LogLevel.INFO,
-    message: String = "message",
-    logger: String = "logger",
-    marker: String? = null,
-    properties: Map<String, String> = emptyMap()
-) = LogEntry(logger, level, message, marker, properties)
+fun interface PropertyMatcher {
+    infix fun matches(actual: Map<String, String>): Boolean
+}

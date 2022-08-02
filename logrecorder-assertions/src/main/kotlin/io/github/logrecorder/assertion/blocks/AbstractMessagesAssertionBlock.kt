@@ -20,6 +20,7 @@ import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.assertion.LogRecordAssertion
 import io.github.logrecorder.assertion.matchers.LogLevelMatcher
 import io.github.logrecorder.assertion.matchers.MessageMatcher
+import io.github.logrecorder.assertion.matchers.PropertyMatcher
 
 /**
  * Base class for custom assertion blocks for the [LogRecordAssertion] DSL.
@@ -30,8 +31,12 @@ abstract class AbstractMessagesAssertionBlock : MessagesAssertionBlock {
 
     private val expectations: MutableList<ExpectedLogEntry> = mutableListOf()
 
-    override fun addExpectation(logLevelMatcher: LogLevelMatcher, messageMatchers: List<MessageMatcher>) {
-        expectations.add(ExpectedLogEntry(logLevelMatcher, messageMatchers))
+    override fun addExpectation(
+        logLevelMatcher: LogLevelMatcher,
+        messageMatchers: List<MessageMatcher>,
+        propertyMatchers: List<PropertyMatcher>
+    ) {
+        expectations.add(ExpectedLogEntry(logLevelMatcher, messageMatchers, propertyMatchers))
     }
 
     override fun check(logRecord: LogRecord) {
@@ -58,7 +63,16 @@ abstract class AbstractMessagesAssertionBlock : MessagesAssertionBlock {
         apply { results.forEach { result -> appendLine(result.describe()) } }
 
     private fun StringBuilder.appendActualLogEntries(entries: List<LogEntry>) =
-        apply { entries.forEach { entry -> appendLine("${entry.level} | ${entry.message}") } }
+        apply {
+            entries.forEach { entry ->
+                val details = listOf(
+                    entry.level.toString(),
+                    entry.message,
+                    entry.properties.takeIf { it.isNotEmpty() }?.toString()
+                )
+                appendLine(details.filterNotNull().joinToString(separator = " | "))
+            }
+        }
 
     @Throws(AssertionError::class)
     protected abstract fun check(entries: List<LogEntry>, expectations: List<ExpectedLogEntry>): List<MatchingResult>
