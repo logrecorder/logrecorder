@@ -19,7 +19,9 @@ import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.ThreadContext
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -36,8 +38,13 @@ internal class Log4JRecorderExtensionTest {
         testServiceB.logSomething()
     }
 
-    @RecordLoggers(TestServiceA::class, TestServiceB::class, names = ["custom-logger"])
+    @AfterEach
+    fun cleanup() {
+        ThreadContext.clearAll()
+    }
+
     @Test
+    @RecordLoggers(TestServiceA::class, TestServiceB::class, names = ["custom-logger"])
     fun `extension is registered and log messages are recorded`(log: LogRecord) {
         assertThat(log.entries).isEmpty()
 
@@ -92,8 +99,8 @@ internal class Log4JRecorderExtensionTest {
         )
     }
 
-    @RecordLoggers(TestServiceA::class)
     @Test
+    @RecordLoggers(TestServiceA::class)
     fun `extension is registered and log messages are recorded from ServiceA`(log: LogRecord) {
         assertThat(log.entries).isEmpty()
 
@@ -130,16 +137,51 @@ internal class Log4JRecorderExtensionTest {
         )
     }
 
+    @Test
+    @RecordLoggers(TestServiceA::class)
+    fun `MDC properties are recorded`(log: LogRecord) {
+        ThreadContext.put("custom#1", "foo")
+        ThreadContext.put("custom#2", "bar")
+        testServiceA.logSingleInfo()
+        ThreadContext.remove("custom#2")
+        testServiceA.logSingleInfo()
+
+        assertThat(log.entries).containsExactly(
+            LogEntry(
+                logger = LogRecord.logger(TestServiceA::class),
+                level = LogLevel.INFO,
+                message = "info message a",
+                properties = mapOf(
+                    "custom#1" to "foo",
+                    "custom#2" to "bar"
+                )
+            ),
+            LogEntry(
+                logger = LogRecord.logger(TestServiceA::class),
+                level = LogLevel.INFO,
+                message = "info message a",
+                properties = mapOf(
+                    "custom#1" to "foo"
+                )
+            )
+        )
+    }
+
 }
 
 class TestServiceA {
     private val log = LogManager.getLogger(TestServiceA::class.java)
+
     fun logSomething() {
         log.trace("trace message a")
         log.debug("debug message a")
         log.info("info message a")
         log.warn("warn message a")
         log.error("error message a")
+    }
+
+    fun logSingleInfo() {
+        log.info("info message a")
     }
 }
 

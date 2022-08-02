@@ -25,6 +25,7 @@ package io.github.logrecorder.api
  * - the [level][LogLevel] on which the entry was logged ([level])
  * - the (formatted) message ([message])
  * - the optional log marker ([marker])
+ * - the optional MDC context [properties]
  *
  * @since 1.0
  * @see LogLevel
@@ -33,5 +34,6 @@ data class LogEntry @JvmOverloads constructor(
     val logger: String,
     val level: LogLevel,
     val message: String,
-    val marker: String? = null
+    val marker: String? = null,
+    val properties: Map<String, String> = emptyMap()
 )
