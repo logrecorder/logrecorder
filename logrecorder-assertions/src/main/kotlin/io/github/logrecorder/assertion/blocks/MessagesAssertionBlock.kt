@@ -15,7 +15,6 @@
  */
 package io.github.logrecorder.assertion.blocks
 
-import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogLevel.DEBUG
 import io.github.logrecorder.api.LogLevel.ERROR
 import io.github.logrecorder.api.LogLevel.INFO
@@ -25,19 +24,13 @@ import io.github.logrecorder.assertion.DslContext
 import io.github.logrecorder.assertion.matchers.LogLevelMatcher
 import io.github.logrecorder.assertion.matchers.MessageMatcher
 import io.github.logrecorder.assertion.matchers.PropertyMatcher
-import io.github.logrecorder.assertion.matchers.level.AnyLogLevelMatcher
-import io.github.logrecorder.assertion.matchers.level.EqualLogLevelMatcher
-import io.github.logrecorder.assertion.matchers.message.ContainsInOrderMessageMatcher
-import io.github.logrecorder.assertion.matchers.message.ContainsMessageMatcher
-import io.github.logrecorder.assertion.matchers.message.EndsWithMessageMatcher
-import io.github.logrecorder.assertion.matchers.message.EqualMessageMatcher
-import io.github.logrecorder.assertion.matchers.message.RegexMessageMatcher
-import io.github.logrecorder.assertion.matchers.message.StartsWithMessageMatcher
-import io.github.logrecorder.assertion.matchers.properties.ContainsPropertyMatcher
-import io.github.logrecorder.assertion.matchers.properties.DoesNotContainPropertyMatcher
+import io.github.logrecorder.assertion.matchers.level.LogLevelMatcherFactory
+import io.github.logrecorder.assertion.matchers.message.MessageMatcherFactory
+import io.github.logrecorder.assertion.matchers.properties.PropertyMatcherFactory
 
 @DslContext
-interface MessagesAssertionBlock : AssertionBlock {
+interface MessagesAssertionBlock : AssertionBlock,
+    MessageMatcherFactory, PropertyMatcherFactory, LogLevelMatcherFactory {
 
     fun addExpectation(
         logLevelMatcher: LogLevelMatcher,
@@ -45,7 +38,7 @@ interface MessagesAssertionBlock : AssertionBlock {
         propertyMatchers: List<PropertyMatcher> = emptyList()
     )
 
-    // message expectation factories
+    // TRACE
 
     /**
      * Define the expectation of a [TRACE] message equal to the provided `message`
@@ -70,6 +63,8 @@ interface MessagesAssertionBlock : AssertionBlock {
     fun trace(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
         addExpectation(equalTo(TRACE), message, properties)
 
+    // DEBUG
+
     /**
      * Define the expectation of a [DEBUG] message equal to the provided `message`
      * and properties matching the given [PropertyMatcher].
@@ -92,6 +87,8 @@ interface MessagesAssertionBlock : AssertionBlock {
      */
     fun debug(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
         addExpectation(equalTo(DEBUG), message, properties)
+
+    // INFO
 
     /**
      * Define the expectation of a [INFO] message equal to the provided `message`
@@ -116,6 +113,8 @@ interface MessagesAssertionBlock : AssertionBlock {
     fun info(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
         addExpectation(equalTo(INFO), message, properties)
 
+    // WARN
+
     /**
      * Define the expectation of a [WARN] message equal to the provided `message`
      * and properties matching the given [PropertyMatcher].
@@ -139,6 +138,8 @@ interface MessagesAssertionBlock : AssertionBlock {
     fun warn(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
         addExpectation(equalTo(WARN), message, properties)
 
+    // ERROR
+
     /**
      * Define the expectation of a [ERROR] message equal to the provided `message`
      * and properties matching the given [PropertyMatcher].
@@ -161,6 +162,8 @@ interface MessagesAssertionBlock : AssertionBlock {
      */
     fun error(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
         addExpectation(equalTo(ERROR), message, properties)
+
+    // ANY
 
     /**
      * Define the expectation of a message, with any log level, a value equal to the provided `message`
@@ -190,81 +193,5 @@ interface MessagesAssertionBlock : AssertionBlock {
      * It will match any massage with any log level.
      */
     fun anything() = any()
-
-    // message value matcher factories
-
-    /**
-     * Will match if the actual message is equal to the expected message.
-     *
-     * @see EqualMessageMatcher
-     */
-    fun equalTo(message: String): MessageMatcher = EqualMessageMatcher(message)
-
-    /**
-     * Will match if the actual message matches the provided regular expression.
-     *
-     * @see RegexMessageMatcher
-     */
-    fun matches(regex: String): MessageMatcher = RegexMessageMatcher(regex)
-
-    /**
-     * Will match if the actual message contains all the provided parts in _any order_.
-     *
-     * @see ContainsMessageMatcher
-     */
-    fun contains(vararg parts: String): MessageMatcher = ContainsMessageMatcher(parts.toList())
-
-    /**
-     * Will match if the actual message contains all the provided parts in that _exact order_.
-     *
-     * @see ContainsInOrderMessageMatcher
-     */
-    fun containsInOrder(vararg parts: String): MessageMatcher = ContainsInOrderMessageMatcher(parts.toList())
-
-    /**
-     * Will match if the actual message starts with the provided _prefix_.
-     *
-     * @see StartsWithMessageMatcher
-     */
-    fun startsWith(prefix: String): MessageMatcher = StartsWithMessageMatcher(prefix)
-
-    /**
-     * Will match if the actual message ends with the provided _suffix_.
-     *
-     * @see EndsWithMessageMatcher
-     */
-    fun endsWith(suffix: String): MessageMatcher = EndsWithMessageMatcher(suffix)
-
-    // properties expectation factories
-
-    /**
-     * Will match if the actual properties contains the exact key-value pair.
-     *
-     * @see ContainsPropertyMatcher
-     */
-    fun containsProperty(key: String, value: String): PropertyMatcher = ContainsPropertyMatcher(key, value)
-
-    /**
-     * Will match if the actual properties does not contain any value with the given key.
-     *
-     * @see DoesNotContainPropertyMatcher
-     */
-    fun doesNotContainProperty(key: String): PropertyMatcher = DoesNotContainPropertyMatcher(key)
-
-    // log level matcher factories
-
-    /**
-     * Will match if the actual log level is equal to the expected level.
-     *
-     * @see EqualLogLevelMatcher
-     */
-    fun equalTo(logLevel: LogLevel): LogLevelMatcher = EqualLogLevelMatcher(logLevel)
-
-    /**
-     * Will match for all log levels.
-     *
-     * @see AnyLogLevelMatcher
-     */
-    fun anyLogLevel(): LogLevelMatcher = AnyLogLevelMatcher()
 
 }
