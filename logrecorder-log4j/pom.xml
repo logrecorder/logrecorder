@@ -21,6 +21,7 @@
 		<dependency>
 			<groupId>io.github.logrecorder</groupId>
 			<artifactId>logrecorder-common-junit5</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -30,6 +31,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-runner-junit5-jvm</artifactId>
+			<version>5.4.2</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
