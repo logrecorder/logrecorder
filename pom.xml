@@ -34,6 +34,7 @@
     <modules>
         <module>logrecorder-api</module>
         <module>logrecorder-assertions</module>
+        <module>logrecorder-kotest-common</module>
         <module>logrecorder-common-junit5</module>
         <module>logrecorder-jul</module>
         <module>logrecorder-log4j</module>
@@ -49,8 +50,8 @@
         <assertj.version>3.22.0</assertj.version>
         <java.version>11</java.version>
         <junit.version>5.8.2</junit.version>
-        <kotlin.version>1.5.32</kotlin.version>
-        <dokka.version>1.5.31</dokka.version>
+        <kotlin.version>1.6.21</kotlin.version>
+        <dokka.version>1.6.21</dokka.version>
         <logback.version>1.2.10</logback.version>
         <log4j.version>2.17.1</log4j.version>
         <slf4j.version>1.7.33</slf4j.version>
