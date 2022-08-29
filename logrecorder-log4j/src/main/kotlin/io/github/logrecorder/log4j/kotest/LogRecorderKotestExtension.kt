@@ -26,12 +26,12 @@ abstract class LogRecorderKotestExtension<L : Any, LR : MutableLogRecord<*>> {
     }
 }
 
-fun <L : Any, LR : MutableLogRecord<*>> withRecordLoggers(
+fun <T : Any, L : Any, LR : MutableLogRecord<*>> withRecordLoggers(
     classes: Array<out KClass<*>>,
     names: Array<out String>,
     extension: LogRecorderKotestExtension<L, LR>,
-    block: (LogRecord) -> Unit
-) {
+    block: (LogRecord) -> T
+): T {
     val logRecord = extension.createLogRecord()
     val recorders = extension.getLoggers(classes, names)
         .map { extension.createLogRecorder(it, logRecord) }
