@@ -1,14 +1,14 @@
 package io.github.logrecorder.log4j.kotest
 
 import io.github.logrecorder.api.LogEntry
-import io.github.logrecorder.api.LogLevel
-import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.api.LogLevel.*
+import io.github.logrecorder.api.LogRecord.Companion.logger
 import io.github.logrecorder.log4j.junit5.TestServiceA
 import io.github.logrecorder.log4j.junit5.TestServiceB
 import io.kotest.core.spec.style.FunSpec
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.ThreadContext
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 
 class Log4jRecorderextensionTests : FunSpec({
 
@@ -28,30 +28,30 @@ class Log4jRecorderextensionTests : FunSpec({
 
     test("log messages are recorded") {
         withRecordLoggers(arrayOf(TestServiceA::class, TestServiceB::class), arrayOf("custom-logger")) { log ->
-            Assertions.assertThat(log.entries).isEmpty()
+            assertThat(log.entries).isEmpty()
 
             testServiceA.logSomething()
-            Assertions.assertThat(log.entries).containsExactly(
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            assertThat(log.entries).containsExactly(
+                LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
+                LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
+                LogEntry(logger(TestServiceA::class), INFO, "info message a"),
+                LogEntry(logger(TestServiceA::class), WARN, "warn message a"),
+                LogEntry(logger(TestServiceA::class), ERROR, "error message a")
             )
 
             testServiceB.logSomething()
-            Assertions.assertThat(log.entries).containsExactly(
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
+            assertThat(log.entries).containsExactly(
+                LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
+                LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
+                LogEntry(logger(TestServiceA::class), INFO, "info message a"),
+                LogEntry(logger(TestServiceA::class), WARN, "warn message a"),
+                LogEntry(logger(TestServiceA::class), ERROR, "error message a"),
 
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.INFO, "info message b"),
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.ERROR, "error message b")
+                LogEntry(logger(TestServiceB::class), TRACE, "trace message b"),
+                LogEntry(logger(TestServiceB::class), DEBUG, "debug message b"),
+                LogEntry(logger(TestServiceB::class), INFO, "info message b"),
+                LogEntry(logger(TestServiceB::class), WARN, "warn message b"),
+                LogEntry(logger(TestServiceB::class), ERROR, "error message b")
             )
 
             customLogger.trace("trace message c")
@@ -60,48 +60,48 @@ class Log4jRecorderextensionTests : FunSpec({
             customLogger.warn("warn message c")
             customLogger.error("error message c")
 
-            Assertions.assertThat(log.entries).containsExactly(
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
+            assertThat(log.entries).containsExactly(
+                LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
+                LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
+                LogEntry(logger(TestServiceA::class), INFO, "info message a"),
+                LogEntry(logger(TestServiceA::class), WARN, "warn message a"),
+                LogEntry(logger(TestServiceA::class), ERROR, "error message a"),
 
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.INFO, "info message b"),
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
-                LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.ERROR, "error message b"),
+                LogEntry(logger(TestServiceB::class), TRACE, "trace message b"),
+                LogEntry(logger(TestServiceB::class), DEBUG, "debug message b"),
+                LogEntry(logger(TestServiceB::class), INFO, "info message b"),
+                LogEntry(logger(TestServiceB::class), WARN, "warn message b"),
+                LogEntry(logger(TestServiceB::class), ERROR, "error message b"),
 
-                LogEntry("custom-logger", LogLevel.TRACE, "trace message c"),
-                LogEntry("custom-logger", LogLevel.DEBUG, "debug message c"),
-                LogEntry("custom-logger", LogLevel.INFO, "info message c"),
-                LogEntry("custom-logger", LogLevel.WARN, "warn message c"),
-                LogEntry("custom-logger", LogLevel.ERROR, "error message c")
+                LogEntry("custom-logger", TRACE, "trace message c"),
+                LogEntry("custom-logger", DEBUG, "debug message c"),
+                LogEntry("custom-logger", INFO, "info message c"),
+                LogEntry("custom-logger", WARN, "warn message c"),
+                LogEntry("custom-logger", ERROR, "error message c")
             )
         }
     }
 
     test("log messages are recorded from ServiceA") {
         withRecordLoggers(TestServiceA::class) { log ->
-            Assertions.assertThat(log.entries).isEmpty()
+            assertThat(log.entries).isEmpty()
 
             testServiceA.logSomething()
-            Assertions.assertThat(log.entries).containsExactly(
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            assertThat(log.entries).containsExactly(
+                LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
+                LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
+                LogEntry(logger(TestServiceA::class), INFO, "info message a"),
+                LogEntry(logger(TestServiceA::class), WARN, "warn message a"),
+                LogEntry(logger(TestServiceA::class), ERROR, "error message a")
             )
 
             testServiceB.logSomething()
-            Assertions.assertThat(log.entries).containsExactly(
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            assertThat(log.entries).containsExactly(
+                LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
+                LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
+                LogEntry(logger(TestServiceA::class), INFO, "info message a"),
+                LogEntry(logger(TestServiceA::class), WARN, "warn message a"),
+                LogEntry(logger(TestServiceA::class), ERROR, "error message a")
             )
 
             customLogger.trace("trace message c")
@@ -110,12 +110,12 @@ class Log4jRecorderextensionTests : FunSpec({
             customLogger.warn("warn message c")
             customLogger.error("error message c")
 
-            Assertions.assertThat(log.entries).containsExactly(
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-                LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            assertThat(log.entries).containsExactly(
+                LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
+                LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
+                LogEntry(logger(TestServiceA::class), INFO, "info message a"),
+                LogEntry(logger(TestServiceA::class), WARN, "warn message a"),
+                LogEntry(logger(TestServiceA::class), ERROR, "error message a")
             )
         }
     }
@@ -128,10 +128,10 @@ class Log4jRecorderextensionTests : FunSpec({
             ThreadContext.remove("custom#2")
             testServiceA.logSingleInfo()
 
-            Assertions.assertThat(log.entries).containsExactly(
+            assertThat(log.entries).containsExactly(
                 LogEntry(
-                    logger = LogRecord.logger(TestServiceA::class),
-                    level = LogLevel.INFO,
+                    logger = logger(TestServiceA::class),
+                    level = INFO,
                     message = "info message a",
                     properties = mapOf(
                         "custom#1" to "foo",
@@ -139,8 +139,8 @@ class Log4jRecorderextensionTests : FunSpec({
                     )
                 ),
                 LogEntry(
-                    logger = LogRecord.logger(TestServiceA::class),
-                    level = LogLevel.INFO,
+                    logger = logger(TestServiceA::class),
+                    level = INFO,
                     message = "info message a",
                     properties = mapOf(
                         "custom#1" to "foo"
@@ -149,7 +149,6 @@ class Log4jRecorderextensionTests : FunSpec({
             )
         }
     }
-
 })
 
 
