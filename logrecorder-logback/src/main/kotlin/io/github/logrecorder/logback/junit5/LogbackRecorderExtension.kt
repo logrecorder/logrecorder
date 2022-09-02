@@ -23,6 +23,7 @@ import io.github.logrecorder.logback.LogbackLogRecord
 import io.github.logrecorder.logback.LogbackLogRecorder
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Method
+import kotlin.reflect.KClass
 
 /**
  * This extension will record the loggers specified by a [RecordLoggers] annotation and inject the [LogRecord]
@@ -36,13 +37,13 @@ import java.lang.reflect.Method
  * @since 1.0
  */
 internal class LogbackRecorderExtension : AbstractLogRecorderExtension<Logger, LogbackLogRecord>() {
+    override val loggerFromKClass = { source: KClass<*> -> LoggerFactory.getLogger(source.java) as Logger }
+    override val loggerFromName = { name: String -> LoggerFactory.getLogger(name) as Logger }
 
     override fun getLoggers(testMethod: Method): Set<Logger> {
         val annotation = testMethod.getAnnotation(RecordLoggers::class.java)
             ?: error("no @RecordLoggers annotation found on test method!")
-        val fromClasses = annotation.value.mapNotNull { LoggerFactory.getLogger(it.java) as? Logger }
-        val fromNames = annotation.names.mapNotNull { LoggerFactory.getLogger(it) as? Logger }
-        return (fromClasses + fromNames).toSet()
+        return getLoggers(annotation.value, annotation.names).toSet()
     }
 
     override fun createLogRecord() = LogbackLogRecord()

@@ -1,47 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>io.github.logrecorder</groupId>
 		<artifactId>logrecorder</artifactId>
+		<groupId>io.github.logrecorder</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>logrecorder-log4j</artifactId>
+	<artifactId>logrecorder-common</artifactId>
 	<packaging>jar</packaging>
-	<name>LogRecorder - Log4J</name>
+	<name>LogRecorder - Common</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.github.logrecorder</groupId>
 			<artifactId>logrecorder-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.github.logrecorder</groupId>
-			<artifactId>logrecorder-common-junit5</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.github.logrecorder</groupId>
-			<artifactId>logrecorder-common-kotest</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.kotest</groupId>
-			<artifactId>kotest-framework-api-jvm</artifactId>
-			<scope>provided</scope>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -65,5 +42,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

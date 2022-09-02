@@ -22,6 +22,7 @@ import io.github.logrecorder.jul.JulLogRecorder
 import java.lang.reflect.Method
 import java.util.logging.LogManager
 import java.util.logging.Logger
+import kotlin.reflect.KClass
 
 /**
  * This extension will record the loggers specified by a [RecordLoggers] annotation and inject the [LogRecord]
@@ -35,13 +36,13 @@ import java.util.logging.Logger
  * @since 1.5
  */
 internal class JulRecorderExtension : AbstractLogRecorderExtension<Logger, JulLogRecord>() {
+    override val loggerFromKClass = { source: KClass<*> -> LogManager.getLogManager().getLogger(source.java.name) }
+    override val loggerFromName = { name: String -> LogManager.getLogManager().getLogger(name) }
 
     override fun getLoggers(testMethod: Method): Set<Logger> {
         val annotation = testMethod.getAnnotation(RecordLoggers::class.java)
             ?: error("no @RecordLoggers annotation found on test method!")
-        val fromClasses = annotation.value.map { LogManager.getLogManager().getLogger(it.java.name) }
-        val fromNames = annotation.names.map { LogManager.getLogManager().getLogger(it) }
-        return (fromClasses + fromNames).toSet()
+        return getLoggers(annotation.value, annotation.names).toSet()
     }
 
     override fun createLogRecord() = JulLogRecord()

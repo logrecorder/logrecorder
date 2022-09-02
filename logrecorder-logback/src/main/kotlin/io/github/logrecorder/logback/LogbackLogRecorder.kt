@@ -17,7 +17,7 @@ package io.github.logrecorder.logback
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
-import io.github.logrecorder.common.junit5.LogRecorder
+import io.github.logrecorder.common.LogRecorder
 
 internal class LogbackLogRecorder(
     private val logger: Logger,

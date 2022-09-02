@@ -1,4 +1,4 @@
-package io.github.logrecorder.log4j.kotest
+package io.github.logrecorder.log4j.programmatic
 
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel.*
@@ -6,32 +6,33 @@ import io.github.logrecorder.api.LogRecord.Companion.logger
 import io.github.logrecorder.log4j.junit5.TestServiceA
 import io.github.logrecorder.log4j.junit5.TestServiceB
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.ThreadContext
-import org.assertj.core.api.Assertions.assertThat
 
-class Log4jRecorderextensionTests : FunSpec({
+class Log4jRecorderProgrammaticTests : FunSpec({
 
     val customLogger = LogManager.getLogger("custom-logger")
 
     val testServiceA = TestServiceA()
     val testServiceB = TestServiceB()
 
-    beforeAny {
+    beforeEach {
         testServiceA.logSomething()
         testServiceB.logSomething()
     }
 
-    afterAny {
+    afterEach {
         ThreadContext.clearAll()
     }
 
     test("log messages are recorded") {
-        withRecordLoggers(arrayOf(TestServiceA::class, TestServiceB::class), arrayOf("custom-logger")) { log ->
-            assertThat(log.entries).isEmpty()
+        withRecordLoggers(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")) { log ->
+            log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()
-            assertThat(log.entries).containsExactly(
+            log.entries.shouldContainExactly(
                 LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
                 LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
                 LogEntry(logger(TestServiceA::class), INFO, "info message a"),
@@ -40,7 +41,7 @@ class Log4jRecorderextensionTests : FunSpec({
             )
 
             testServiceB.logSomething()
-            assertThat(log.entries).containsExactly(
+            log.entries.shouldContainExactly(
                 LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
                 LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
                 LogEntry(logger(TestServiceA::class), INFO, "info message a"),
@@ -60,7 +61,7 @@ class Log4jRecorderextensionTests : FunSpec({
             customLogger.warn("warn message c")
             customLogger.error("error message c")
 
-            assertThat(log.entries).containsExactly(
+            log.entries.shouldContainExactly(
                 LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
                 LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
                 LogEntry(logger(TestServiceA::class), INFO, "info message a"),
@@ -84,10 +85,10 @@ class Log4jRecorderextensionTests : FunSpec({
 
     test("log messages are recorded from ServiceA") {
         withRecordLoggers(TestServiceA::class) { log ->
-            assertThat(log.entries).isEmpty()
+            log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()
-            assertThat(log.entries).containsExactly(
+            log.entries.shouldContainExactly(
                 LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
                 LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
                 LogEntry(logger(TestServiceA::class), INFO, "info message a"),
@@ -96,7 +97,7 @@ class Log4jRecorderextensionTests : FunSpec({
             )
 
             testServiceB.logSomething()
-            assertThat(log.entries).containsExactly(
+            log.entries.shouldContainExactly(
                 LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
                 LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
                 LogEntry(logger(TestServiceA::class), INFO, "info message a"),
@@ -110,7 +111,7 @@ class Log4jRecorderextensionTests : FunSpec({
             customLogger.warn("warn message c")
             customLogger.error("error message c")
 
-            assertThat(log.entries).containsExactly(
+            log.entries.shouldContainExactly(
                 LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
                 LogEntry(logger(TestServiceA::class), DEBUG, "debug message a"),
                 LogEntry(logger(TestServiceA::class), INFO, "info message a"),
@@ -128,7 +129,7 @@ class Log4jRecorderextensionTests : FunSpec({
             ThreadContext.remove("custom#2")
             testServiceA.logSingleInfo()
 
-            assertThat(log.entries).containsExactly(
+            log.entries.shouldContainExactly(
                 LogEntry(
                     logger = logger(TestServiceA::class),
                     level = INFO,
@@ -146,6 +147,24 @@ class Log4jRecorderextensionTests : FunSpec({
                         "custom#1" to "foo"
                     )
                 )
+            )
+        }
+    }
+
+    test("log messages are recorded for only String logger") {
+        withRecordLoggers("custom-logger") { log ->
+            customLogger.trace("trace message c")
+            customLogger.debug("debug message c")
+            customLogger.info("info message c")
+            customLogger.warn("warn message c")
+            customLogger.error("error message c")
+
+            log.entries.shouldContainExactly(
+                LogEntry("custom-logger", TRACE, "trace message c"),
+                LogEntry("custom-logger", DEBUG, "debug message c"),
+                LogEntry("custom-logger", INFO, "info message c"),
+                LogEntry("custom-logger", WARN, "warn message c"),
+                LogEntry("custom-logger", ERROR, "error message c")
             )
         }
     }

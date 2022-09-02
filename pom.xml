@@ -33,9 +33,10 @@
 
     <modules>
         <module>logrecorder-api</module>
-        <module>logrecorder-assertions</module>
-        <module>logrecorder-kotest-common</module>
+        <module>logrecorder-common</module>
         <module>logrecorder-common-junit5</module>
+        <module>logrecorder-common-kotest</module>
+        <module>logrecorder-assertions</module>
         <module>logrecorder-jul</module>
         <module>logrecorder-log4j</module>
         <module>logrecorder-logback</module>
@@ -50,6 +51,7 @@
         <assertj.version>3.22.0</assertj.version>
         <java.version>11</java.version>
         <junit.version>5.8.2</junit.version>
+        <kotest.version>5.4.2</kotest.version>
         <kotlin.version>1.6.21</kotlin.version>
         <dokka.version>1.6.21</dokka.version>
         <logback.version>1.2.10</logback.version>
@@ -73,6 +75,11 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-runner-junit5-jvm</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -103,7 +110,17 @@
             </dependency>
             <dependency>
                 <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
                 <artifactId>logrecorder-common-junit5</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-common-kotest</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -122,6 +139,16 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.kotest</groupId>
+                <artifactId>kotest-framework-api-jvm</artifactId>
+                <version>${kotest.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.kotest</groupId>
+                <artifactId>kotest-runner-junit5-jvm</artifactId>
+                <version>${kotest.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -164,6 +191,7 @@
                         <excludedScopes>test</excludedScopes>
                         <includedLicenses>
                             <includedLicense>Apache License, Version 2.0</includedLicense>
+                            <includedLicense>Apache-2.0</includedLicense>
                             <includedLicense>The Apache License, Version 2.0</includedLicense>
                             <includedLicense>The Apache Software License, Version 2.0</includedLicense>
                             <includedLicense>Eclipse Public License v2.0</includedLicense>

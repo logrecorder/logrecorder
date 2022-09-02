@@ -22,6 +22,7 @@ import io.github.logrecorder.log4j.Log4jLogRecorder
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.lang.reflect.Method
+import kotlin.reflect.KClass
 
 /**
  * This extension will record the loggers specified by a [RecordLoggers] annotation and inject the [LogRecord]
@@ -35,13 +36,13 @@ import java.lang.reflect.Method
  * @since 1.1
  */
 internal class Log4jRecorderExtension : AbstractLogRecorderExtension<Logger, Log4jLogRecord>() {
+    override val loggerFromKClass = { source: KClass<*> -> LogManager.getLogger(source.java) }
+    override val loggerFromName = { name: String -> LogManager.getLogger(name) }
 
     override fun getLoggers(testMethod: Method): Set<Logger> {
         val annotation = testMethod.getAnnotation(RecordLoggers::class.java)
             ?: error("no @RecordLoggers annotation found on test method!")
-        val fromClasses = annotation.value.map { LogManager.getLogger(it.java) }
-        val fromNames = annotation.names.map { LogManager.getLogger(it) }
-        return (fromClasses + fromNames).toSet()
+        return getLoggers(annotation.value, annotation.names)
     }
 
     override fun createLogRecord() = Log4jLogRecord()
