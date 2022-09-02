@@ -15,7 +15,7 @@
  */
 package io.github.logrecorder.log4j
 
-import io.github.logrecorder.common.junit5.LogRecorder
+import io.github.logrecorder.common.LogRecorder
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger

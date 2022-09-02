@@ -2,16 +2,14 @@ package io.github.logrecorder.common.junit5
 
 import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.api.MutableLogRecord
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
-import org.junit.jupiter.api.extension.ExtensionContext
+import io.github.logrecorder.common.LogRecorder
+import io.github.logrecorder.common.LogRecorderExecutionBase
+import org.junit.jupiter.api.extension.*
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace
 import org.junit.jupiter.api.extension.ExtensionContext.Store
-import org.junit.jupiter.api.extension.ParameterContext
-import org.junit.jupiter.api.extension.ParameterResolver
 import java.lang.reflect.Method
 
-abstract class AbstractLogRecorderExtension<L : Any, LR: MutableLogRecord<*>> :
+abstract class AbstractLogRecorderExtension<L : Any, LR : MutableLogRecord<*>> : LogRecorderExecutionBase<L, LR>(),
     BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
 
     private val namespace = Namespace.create(javaClass)
@@ -33,8 +31,6 @@ abstract class AbstractLogRecorderExtension<L : Any, LR: MutableLogRecord<*>> :
     }
 
     protected abstract fun getLoggers(testMethod: Method): Set<L>
-    protected abstract fun createLogRecord(): LR
-    protected abstract fun createLogRecorder(logger: L, logRecord: LR): LogRecorder
 
     override fun afterTestExecution(context: ExtensionContext) {
         context.recorders.forEach { it.stop() }
