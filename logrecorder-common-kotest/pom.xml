@@ -18,6 +18,7 @@
 		<dependency>
 			<groupId>io.github.logrecorder</groupId>
 			<artifactId>logrecorder-common</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
