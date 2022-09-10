@@ -18,12 +18,13 @@ package io.github.logrecorder.jul.junit5
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.jul.util.TestServiceA
+import io.github.logrecorder.jul.util.TestServiceB
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.logging.Level
 import java.util.logging.Logger
-
 
 internal class JulRecorderExtensionTest {
 
@@ -133,26 +134,4 @@ internal class JulRecorderExtensionTest {
         )
     }
 
-}
-
-class TestServiceA {
-    private val log = Logger.getLogger(TestServiceA::class.java.name)
-    fun logSomething() {
-        log.finer("trace message a")
-        log.fine("debug message a")
-        log.info("info message a")
-        log.warning("warn message a")
-        log.severe("error message a")
-    }
-}
-
-class TestServiceB {
-    private val log = Logger.getLogger(TestServiceB::class.java.name)
-    fun logSomething() {
-        log.finer("trace message b")
-        log.fine("debug message b")
-        log.info("info message b")
-        log.warning("warn message b")
-        log.severe("error message b")
-    }
 }

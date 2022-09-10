@@ -22,10 +22,20 @@
 			<groupId>io.github.logrecorder</groupId>
 			<artifactId>logrecorder-common-junit5</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.github.logrecorder</groupId>
+			<artifactId>logrecorder-common-kotest</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-framework-api-jvm</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

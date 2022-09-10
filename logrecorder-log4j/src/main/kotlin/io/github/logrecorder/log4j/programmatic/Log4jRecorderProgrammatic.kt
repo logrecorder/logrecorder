@@ -9,16 +9,33 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import kotlin.reflect.KClass
 
-fun <T : Any> withRecordLoggers(
+/**
+ * This support function will wrap the execution block and record the loggers specified by the parameters
+ * classes and/or names and provide the [LogRecord] to the execution block.
+ *
+ * Recording a logger will set its log level to [org.apache.logging.log4j.Level.ALL] for the duration of the test.
+ * After the test was executed, the log level will be restored to whatever it was before.
+ *
+ * @param classes [KClass] whose name should be used to identify loggers to record.
+ * @param names String names of the [Logger] instances to record
+ * @see withRecordLoggers
+ * @see LogRecord
+ * @since 2.4
+ */
+fun <T : Any> recordLog4j(
     vararg classes: KClass<*>,
     names: Array<out String> = emptyArray(),
     block: (LogRecord) -> T
 ) = withRecordLoggers(classes, names, Log4jRecorderProgrammatic(), block)
 
-fun <T : Any> withRecordLoggers(
+/**
+ * @see recordLog4j
+ * @since 2.4
+ */
+fun <T : Any> recordLog4j(
     vararg names: String,
     block: (LogRecord) -> T
-) = withRecordLoggers(emptyArray(), names, Log4jRecorderProgrammatic(), block)
+) = recordLog4j(classes = emptyArray(), names = names, block)
 
 internal class Log4jRecorderProgrammatic : LogRecorderExecutionBase<Logger, Log4jLogRecord>() {
     override val loggerFromKClass = { source: KClass<*> -> LogManager.getLogger(source.java) }

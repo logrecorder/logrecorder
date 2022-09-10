@@ -18,6 +18,8 @@ package io.github.logrecorder.log4j.junit5
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.log4j.util.TestServiceA
+import io.github.logrecorder.log4j.util.TestServiceB
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.ThreadContext
 import org.assertj.core.api.Assertions.assertThat
@@ -25,7 +27,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class Log4JRecorderExtensionTest {
+internal class Log4jRecorderExtensionTest {
 
     private val customLogger = LogManager.getLogger("custom-logger")
 
@@ -167,31 +169,4 @@ internal class Log4JRecorderExtensionTest {
         )
     }
 
-}
-
-class TestServiceA {
-    private val log = LogManager.getLogger(TestServiceA::class.java)
-
-    fun logSomething() {
-        log.trace("trace message a")
-        log.debug("debug message a")
-        log.info("info message a")
-        log.warn("warn message a")
-        log.error("error message a")
-    }
-
-    fun logSingleInfo() {
-        log.info("info message a")
-    }
-}
-
-class TestServiceB {
-    private val log = LogManager.getLogger(TestServiceB::class.java)
-    fun logSomething() {
-        log.trace("trace message b")
-        log.debug("debug message b")
-        log.info("info message b")
-        log.warn("warn message b")
-        log.error("error message b")
-    }
 }

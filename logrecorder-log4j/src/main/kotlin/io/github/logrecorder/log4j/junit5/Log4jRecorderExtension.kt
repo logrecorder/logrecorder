@@ -28,8 +28,8 @@ import kotlin.reflect.KClass
  * This extension will record the loggers specified by a [RecordLoggers] annotation and inject the [LogRecord]
  * as a parameter into the test method.
  *
- * Recording a logger will set its log level to [org.apache.logging.log4j.Level.ALL] for the duration of the test. After the
- * test was executed, the log level will be restored to whatever it was before.
+ * Recording a logger will set its log level to [org.apache.logging.log4j.Level.ALL] for the duration of the test.
+ * After the test was executed, the log level will be restored to whatever it was before.
  *
  * @see RecordLoggers
  * @see LogRecord

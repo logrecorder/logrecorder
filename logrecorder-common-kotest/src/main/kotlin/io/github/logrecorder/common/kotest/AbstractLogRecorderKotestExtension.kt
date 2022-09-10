@@ -17,7 +17,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 import kotlin.reflect.KClass
 
-class LogRecordContextCoroutineContextElement(val value: LogRecord) : AbstractCoroutineContextElement(Key) {
+internal class LogRecordContextCoroutineContextElement(val value: LogRecord) : AbstractCoroutineContextElement(Key) {
     companion object Key : CoroutineContext.Key<LogRecordContextCoroutineContextElement>
 }
 
@@ -26,7 +26,7 @@ private val CoroutineContext.internalLogRecord: LogRecord
         ?: error("No LogRecord defined in this coroutine context")
 
 /**
- * Returns the [LogRecord] from a test.
+ * Returns the [LogRecord] from the coroutine context of the test.
  */
 val TestScope.logRecord: LogRecord
     get() = coroutineContext.internalLogRecord
