@@ -22,8 +22,7 @@ import kotlin.reflect.KClass
  * @see LogbackRecorderKotestExtension
  * @since 2.4
  */
-@PublishedApi
-internal fun recordLogs(
+fun recordLogs(
     vararg classes: KClass<*>,
     names: Array<out String> = emptyArray()
 ) = LogbackRecorderKotestExtension(classes, names)
@@ -32,12 +31,11 @@ internal fun recordLogs(
  * @see recordLogs
  * @since 2.4
  */
-@PublishedApi
-internal fun recordLogs(
+fun recordLogs(
     vararg names: String,
 ) = recordLogs(classes = emptyArray(), names = names)
 
-internal class LogbackRecorderKotestExtension(
+class LogbackRecorderKotestExtension(
     classes: Array<out KClass<*>>,
     names: Array<out String>
 ) : AbstractLogRecorderKotestExtension<Logger, LogbackLogRecord>(classes, names) {

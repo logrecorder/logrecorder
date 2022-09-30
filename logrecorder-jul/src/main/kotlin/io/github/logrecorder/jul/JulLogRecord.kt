@@ -21,7 +21,7 @@ import io.github.logrecorder.api.MutableLogRecord
 import java.util.logging.Level
 import java.util.logging.LogRecord
 
-internal class JulLogRecord : MutableLogRecord<LogRecord> {
+class JulLogRecord : MutableLogRecord<LogRecord> {
 
     private val recordedLogEntries: MutableList<LogEntry> = mutableListOf()
 
