@@ -37,8 +37,6 @@ import kotlin.reflect.KClass
  * @since 1.0
  */
 internal class LogbackRecorderExtension : AbstractLogRecorderExtension<Logger, LogbackLogRecord>() {
-    override val loggerFromKClass = { source: KClass<*> -> LoggerFactory.getLogger(source.java) as Logger }
-    override val loggerFromName = { name: String -> LoggerFactory.getLogger(name) as Logger }
 
     override fun getLoggers(testMethod: Method): Set<Logger> {
         val annotation = testMethod.getAnnotation(RecordLoggers::class.java)
@@ -46,6 +44,8 @@ internal class LogbackRecorderExtension : AbstractLogRecorderExtension<Logger, L
         return getLoggers(annotation.value, annotation.names).toSet()
     }
 
+    override fun loggerFromKClass(kClass: KClass<*>): Logger = LoggerFactory.getLogger(kClass.java) as Logger
+    override fun loggerFromName(name: String): Logger = LoggerFactory.getLogger(name) as Logger
     override fun createLogRecord() = LogbackLogRecord()
     override fun createLogRecorder(logger: Logger, logRecord: LogbackLogRecord) = LogbackLogRecorder(logger, logRecord)
 
