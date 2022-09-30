@@ -28,7 +28,7 @@ class Log4jRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded") {
-        recordLog4j(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")) { log ->
+        recordLoggers(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")) { log ->
             log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()
@@ -84,7 +84,7 @@ class Log4jRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded from ServiceA") {
-        recordLog4j(TestServiceA::class) { log ->
+        recordLoggers(TestServiceA::class) { log ->
             log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()
@@ -122,7 +122,7 @@ class Log4jRecorderProgrammaticTests : FunSpec({
     }
 
     test("MDC properties are recorded") {
-        recordLog4j(TestServiceA::class) { log ->
+        recordLoggers(TestServiceA::class) { log ->
             ThreadContext.put("custom#1", "foo")
             ThreadContext.put("custom#2", "bar")
             testServiceA.logSingleInfo()
@@ -152,7 +152,7 @@ class Log4jRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded for String logger") {
-        recordLog4j("custom-logger") { log ->
+        recordLoggers("custom-logger") { log ->
             customLogger.trace("trace message c")
             customLogger.debug("debug message c")
             customLogger.info("info message c")
