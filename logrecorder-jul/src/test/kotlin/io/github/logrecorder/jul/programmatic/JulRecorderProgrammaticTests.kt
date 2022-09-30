@@ -25,7 +25,7 @@ class JulRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded") {
-        recordJul(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")) { log ->
+        recordLoggers(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")) { log ->
             log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()
@@ -81,7 +81,7 @@ class JulRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded from ServiceA") {
-        recordJul(TestServiceA::class) { log ->
+        recordLoggers(TestServiceA::class) { log ->
             log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()
@@ -119,7 +119,7 @@ class JulRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded for String logger") {
-        recordJul("custom-logger") { log ->
+        recordLoggers("custom-logger") { log ->
             customLogger.finer("trace message c")
             customLogger.fine("debug message c")
             customLogger.info("info message c")

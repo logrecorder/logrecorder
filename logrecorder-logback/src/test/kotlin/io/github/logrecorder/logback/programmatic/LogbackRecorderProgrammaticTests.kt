@@ -31,7 +31,7 @@ class LogbackRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded") {
-        recordLogback(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")) { log ->
+        recordLoggers(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")) { log ->
             log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()
@@ -88,7 +88,7 @@ class LogbackRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded from ServiceA") {
-        recordLogback(TestServiceA::class) { log ->
+        recordLoggers(TestServiceA::class) { log ->
             log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()
@@ -157,7 +157,7 @@ class LogbackRecorderProgrammaticTests : FunSpec({
     }
 
     test("log messages are recorded for String logger") {
-        recordLogback("custom-logger") { log ->
+        recordLoggers("custom-logger") { log ->
             val marker = BasicMarkerFactory().getMarker("marker c")
             customLogger.trace(marker, "trace message c")
             customLogger.debug(marker, "debug message c")

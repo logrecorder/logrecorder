@@ -23,20 +23,20 @@ import kotlin.reflect.KClass
  * @see LogRecord
  * @since 2.4
  */
-fun <T : Any> recordLogback(
+fun <T : Any> recordLoggers(
     vararg classes: KClass<*>,
     names: Array<out String> = emptyArray(),
     block: (LogRecord) -> T
 ) = withRecordLoggers(classes, names, LogbackRecorderProgrammatic(), block)
 
 /**
- * @see recordLogback
+ * @see recordLoggers
  * @since 2.4
  */
-fun <T : Any> recordLogback(
+fun <T : Any> recordLoggers(
     vararg names: String,
     block: (LogRecord) -> T
-) = recordLogback(classes = emptyArray(), names = names, block)
+) = recordLoggers(classes = emptyArray(), names = names, block)
 
 internal class LogbackRecorderProgrammatic : LogRecorderExecutionBase<Logger, LogbackLogRecord>() {
     override val loggerFromKClass = { source: KClass<*> -> LoggerFactory.getLogger(source.java) as Logger }
