@@ -4,8 +4,8 @@ import io.github.logrecorder.api.MutableLogRecord
 import kotlin.reflect.KClass
 
 abstract class LogRecorderExecutionBase<L : Any, LR : MutableLogRecord<*>> {
-    abstract val loggerFromKClass: (KClass<*>) -> L
-    abstract val loggerFromName: (String) -> L
+    abstract fun loggerFromKClass(kClass: KClass<*>): L
+    abstract fun loggerFromName(name: String): L
     abstract fun createLogRecord(): LR
     abstract fun createLogRecorder(logger: L, logRecord: LR): LogRecorder
 

@@ -38,8 +38,8 @@ fun <T : Any> recordLoggers(
 ) = recordLoggers(classes = emptyArray(), names = names, block)
 
 internal class Log4jRecorderProgrammatic : LogRecorderExecutionBase<Logger, Log4jLogRecord>() {
-    override val loggerFromKClass = { source: KClass<*> -> LogManager.getLogger(source.java) }
-    override val loggerFromName = { name: String -> LogManager.getLogger(name) }
+    override fun loggerFromKClass(kClass: KClass<*>): Logger = LogManager.getLogger(kClass.java)
+    override fun loggerFromName(name: String): Logger = LogManager.getLogger(name)
     override fun createLogRecord() = Log4jLogRecord()
     override fun createLogRecorder(logger: Logger, logRecord: Log4jLogRecord) = Log4jLogRecorder(logger, logRecord)
 }

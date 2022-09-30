@@ -39,8 +39,8 @@ class LogbackRecorderKotestExtension(
     classes: Array<out KClass<*>>,
     names: Array<out String>
 ) : AbstractLogRecorderKotestExtension<Logger, LogbackLogRecord>(classes, names) {
-    override val loggerFromKClass = { source: KClass<*> -> LoggerFactory.getLogger(source.java) as Logger }
-    override val loggerFromName = { name: String -> LoggerFactory.getLogger(name) as Logger }
+    override fun loggerFromKClass(kClass: KClass<*>): Logger = LoggerFactory.getLogger(kClass.java) as Logger
+    override fun loggerFromName(name: String): Logger = LoggerFactory.getLogger(name) as Logger
     override fun createLogRecord() = LogbackLogRecord()
     override fun createLogRecorder(logger: Logger, logRecord: LogbackLogRecord) = LogbackLogRecorder(logger, logRecord)
 }
