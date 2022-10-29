@@ -39,7 +39,8 @@ class JulLogRecord : MutableLogRecord<LogRecord> {
                 Level.SEVERE -> LogLevel.ERROR
                 else -> LogLevel.UNKNOWN
             },
-            message = value.message
+            message = value.message,
+            throwable = value.thrown
         )
         recordedLogEntries.add(logEntry)
     }

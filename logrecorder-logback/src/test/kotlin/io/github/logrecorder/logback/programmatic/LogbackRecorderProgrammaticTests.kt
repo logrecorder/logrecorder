@@ -3,8 +3,6 @@ package io.github.logrecorder.logback.programmatic
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord.Companion.logger
-import io.github.logrecorder.common.kotest.logRecord
-import io.github.logrecorder.logback.kotest.recordLogs
 import io.github.logrecorder.logback.util.TestServiceA
 import io.github.logrecorder.logback.util.TestServiceB
 import io.kotest.core.spec.style.FunSpec
@@ -126,34 +124,36 @@ class LogbackRecorderProgrammaticTests : FunSpec({
         }
     }
 
-    test("MDC properties are recorded").config(extensions = listOf(recordLogs(TestServiceA::class))) {
-        MDC.put("custom#1", "foo")
-        MDC.put("custom#2", "bar")
-        testServiceA.logSingleInfo()
-        MDC.remove("custom#2")
-        testServiceA.logSingleInfo()
+    test("MDC properties are recorded") {
+        recordLoggers(TestServiceA::class) { log ->
+            MDC.put("custom#1", "foo")
+            MDC.put("custom#2", "bar")
+            testServiceA.logSingleInfo()
+            MDC.remove("custom#2")
+            testServiceA.logSingleInfo()
 
-        logRecord.entries.shouldContainExactly(
-            LogEntry(
-                logger = logger(TestServiceA::class),
-                level = LogLevel.INFO,
-                message = "info message a",
-                marker = "marker a",
-                properties = mapOf(
-                    "custom#1" to "foo",
-                    "custom#2" to "bar"
-                )
-            ),
-            LogEntry(
-                logger = logger(TestServiceA::class),
-                level = LogLevel.INFO,
-                message = "info message a",
-                marker = "marker a",
-                properties = mapOf(
-                    "custom#1" to "foo"
+            log.entries.shouldContainExactly(
+                LogEntry(
+                    logger = logger(TestServiceA::class),
+                    level = LogLevel.INFO,
+                    message = "info message a",
+                    marker = "marker a",
+                    properties = mapOf(
+                        "custom#1" to "foo",
+                        "custom#2" to "bar"
+                    )
+                ),
+                LogEntry(
+                    logger = logger(TestServiceA::class),
+                    level = LogLevel.INFO,
+                    message = "info message a",
+                    marker = "marker a",
+                    properties = mapOf(
+                        "custom#1" to "foo"
+                    )
                 )
             )
-        )
+        }
     }
 
     test("log messages are recorded for String logger") {
@@ -171,6 +171,22 @@ class LogbackRecorderProgrammaticTests : FunSpec({
                 LogEntry("custom-logger", LogLevel.INFO, "info message c", "marker c"),
                 LogEntry("custom-logger", LogLevel.WARN, "warn message c", "marker c"),
                 LogEntry("custom-logger", LogLevel.ERROR, "error message c", "marker c")
+            )
+        }
+    }
+
+    test("Throwables are recorded for logger") {
+        recordLoggers(TestServiceA::class) { log ->
+            val throwable = RuntimeException("error")
+            testServiceA.logError(throwable)
+
+            log.entries.shouldContainExactly(
+                LogEntry(
+                    logger = logger(TestServiceA::class),
+                    level = LogLevel.ERROR,
+                    message = "error message a",
+                    throwable = throwable
+                )
             )
         }
     }

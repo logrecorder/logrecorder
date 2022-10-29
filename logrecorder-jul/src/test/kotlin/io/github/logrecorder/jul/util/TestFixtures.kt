@@ -1,5 +1,6 @@
 package io.github.logrecorder.jul.util
 
+import java.util.logging.Level
 import java.util.logging.Logger
 
 class TestServiceA {
@@ -10,6 +11,10 @@ class TestServiceA {
         log.info("info message a")
         log.warning("warn message a")
         log.severe("error message a")
+    }
+
+    fun logError(exception: Throwable) {
+        log.log(Level.SEVERE, "error message a", exception)
     }
 }
 

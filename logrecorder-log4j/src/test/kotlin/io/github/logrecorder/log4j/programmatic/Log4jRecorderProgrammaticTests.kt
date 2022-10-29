@@ -168,6 +168,22 @@ class Log4jRecorderProgrammaticTests : FunSpec({
             )
         }
     }
+
+    test("Throwables are recorded for logger") {
+        recordLoggers(TestServiceA::class) { log ->
+            val throwable = RuntimeException("error")
+            testServiceA.logError(throwable)
+
+            log.entries.shouldContainExactly(
+                LogEntry(
+                    logger = logger(TestServiceA::class),
+                    level = ERROR,
+                    message = "error message a",
+                    throwable = throwable
+                )
+            )
+        }
+    }
 })
 
 

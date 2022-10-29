@@ -18,6 +18,10 @@ class TestServiceA {
     fun logSingleInfo() {
         log.info(marker, "info message a")
     }
+
+    fun logError(exception: Throwable) {
+        log.error("error message a", exception)
+    }
 }
 
 class TestServiceB {
