@@ -2,13 +2,14 @@
 
 # LogRecorder
 
-JUnit 5 extension(s) for recording and asserting logged messages in tests.
+JUnit5/Kotest extension(s) as well as pure programmatic for recording and asserting logged messages in tests.
 
 Features:
 
-- Junit 5 extension for recording [Logback](https://logback.qos.ch) loggers
-- Junit 5 extension for recording [Log4j 2](https://logging.apache.org/log4j/2.x/index.html) loggers
-- Junit 5 extension for recording Java Util Logging (JUL) loggers
+- Junit5 and Kotest extensions as well as pure programmatic usage for recording:
+  - [Logback](https://logback.qos.ch) loggers
+  - [Log4j 2](https://logging.apache.org/log4j/2.x/index.html) loggers
+  - Java Util Logging (JUL) loggers
 - Assertion DSL for validating recorded log messages
 
 See [Documentation](documentation) for more details.
