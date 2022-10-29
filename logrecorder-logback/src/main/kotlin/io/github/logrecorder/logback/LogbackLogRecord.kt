@@ -17,6 +17,7 @@ package io.github.logrecorder.logback
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.classic.spi.ThrowableProxy
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.MutableLogRecord
@@ -41,9 +42,9 @@ class LogbackLogRecord : MutableLogRecord<ILoggingEvent> {
             },
             message = value.formattedMessage,
             marker = value.marker?.toString(),
-            properties = value.mdcPropertyMap.toMap()
+            properties = value.mdcPropertyMap.toMap(),
+            throwable = (value.throwableProxy as? ThrowableProxy)?.throwable
         )
         recordedLogEntries.add(logEntry)
     }
-
 }

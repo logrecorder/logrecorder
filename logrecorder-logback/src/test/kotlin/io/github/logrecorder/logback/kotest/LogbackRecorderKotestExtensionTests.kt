@@ -168,5 +168,19 @@ class LogbackRecorderKotestExtensionTests : FunSpec({
             LogEntry("custom-logger", LogLevel.ERROR, "error message c", "marker c")
         )
     }
+
+    test("Throwables are recorded for logger").config(extensions = listOf(recordLogs(TestServiceA::class))) {
+        val throwable = RuntimeException("error")
+        testServiceA.logError(throwable)
+
+        logRecord.entries.shouldContainExactly(
+            LogEntry(
+                logger = logger(TestServiceA::class),
+                level = LogLevel.ERROR,
+                message = "error message a",
+                throwable = throwable
+            )
+        )
+    }
 })
 

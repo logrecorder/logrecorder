@@ -41,7 +41,8 @@ class Log4jLogRecord : MutableLogRecord<LogEvent> {
             },
             message = value.message.formattedMessage,
             marker = value.marker?.toString(),
-            properties = value.contextData.toMap()
+            properties = value.contextData.toMap(),
+            throwable = value.thrown
         )
         recordedLogEntries.add(logEntry)
     }

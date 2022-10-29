@@ -2,7 +2,7 @@ package io.github.logrecorder.log4j.kotest
 
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
-import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.api.LogRecord.Companion.logger
 import io.github.logrecorder.common.kotest.logRecord
 import io.github.logrecorder.log4j.util.TestServiceA
 import io.github.logrecorder.log4j.util.TestServiceB
@@ -34,26 +34,26 @@ class Log4jRecorderKotestExtensionTests : FunSpec({
 
         testServiceA.logSomething()
         logRecord.entries.shouldContainExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
 
         testServiceB.logSomething()
         logRecord.entries.shouldContainExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
 
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.INFO, "info message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.ERROR, "error message b")
+            LogEntry(logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.INFO, "info message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.ERROR, "error message b")
         )
 
         customLogger.trace("trace message c")
@@ -63,17 +63,17 @@ class Log4jRecorderKotestExtensionTests : FunSpec({
         customLogger.error("error message c")
 
         logRecord.entries.shouldContainExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
 
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.INFO, "info message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.ERROR, "error message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.INFO, "info message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.ERROR, "error message b"),
 
             LogEntry("custom-logger", LogLevel.TRACE, "trace message c"),
             LogEntry("custom-logger", LogLevel.DEBUG, "debug message c"),
@@ -88,20 +88,20 @@ class Log4jRecorderKotestExtensionTests : FunSpec({
 
         testServiceA.logSomething()
         logRecord.entries.shouldContainExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
 
         testServiceB.logSomething()
         logRecord.entries.shouldContainExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
 
         customLogger.trace("trace message c")
@@ -111,11 +111,11 @@ class Log4jRecorderKotestExtensionTests : FunSpec({
         customLogger.error("error message c")
 
         logRecord.entries.shouldContainExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
     }
 
@@ -128,7 +128,7 @@ class Log4jRecorderKotestExtensionTests : FunSpec({
 
         logRecord.entries.shouldContainExactly(
             LogEntry(
-                logger = LogRecord.logger(TestServiceA::class),
+                logger = logger(TestServiceA::class),
                 level = LogLevel.INFO,
                 message = "info message a",
                 properties = mapOf(
@@ -137,7 +137,7 @@ class Log4jRecorderKotestExtensionTests : FunSpec({
                 )
             ),
             LogEntry(
-                logger = LogRecord.logger(TestServiceA::class),
+                logger = logger(TestServiceA::class),
                 level = LogLevel.INFO,
                 message = "info message a",
                 properties = mapOf(
@@ -160,6 +160,20 @@ class Log4jRecorderKotestExtensionTests : FunSpec({
             LogEntry("custom-logger", LogLevel.INFO, "info message c"),
             LogEntry("custom-logger", LogLevel.WARN, "warn message c"),
             LogEntry("custom-logger", LogLevel.ERROR, "error message c")
+        )
+    }
+
+    test("Throwables are recorded for logger").config(extensions = listOf(recordLogs(TestServiceA::class))) {
+        val throwable = RuntimeException("error")
+        testServiceA.logError(throwable)
+
+        logRecord.entries.shouldContainExactly(
+            LogEntry(
+                logger = logger(TestServiceA::class),
+                level = LogLevel.ERROR,
+                message = "error message a",
+                throwable = throwable
+            )
         )
     }
 })

@@ -21,6 +21,7 @@ import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.api.LogRecord.Companion.logger
 import io.github.logrecorder.logback.util.TestServiceA
 import io.github.logrecorder.logback.util.TestServiceB
+import io.kotest.matchers.collections.shouldContainExactly
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -174,4 +175,19 @@ internal class LogbackRecorderExtensionTest {
         )
     }
 
+    @Test
+    @RecordLoggers(TestServiceA::class)
+    internal fun `Throwables are recorded`(log: LogRecord) {
+        val throwable = RuntimeException("error")
+        testServiceA.logError(throwable)
+
+        log.entries.shouldContainExactly(
+            LogEntry(
+                logger = logger(TestServiceA::class),
+                level = LogLevel.ERROR,
+                message = "error message a",
+                throwable = throwable
+            )
+        )
+    }
 }

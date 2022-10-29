@@ -18,8 +18,10 @@ package io.github.logrecorder.log4j.junit5
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.api.LogRecord.Companion.logger
 import io.github.logrecorder.log4j.util.TestServiceA
 import io.github.logrecorder.log4j.util.TestServiceB
+import io.kotest.matchers.collections.shouldContainExactly
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.ThreadContext
 import org.assertj.core.api.Assertions.assertThat
@@ -52,26 +54,26 @@ internal class Log4jRecorderExtensionTest {
 
         testServiceA.logSomething()
         assertThat(log.entries).containsExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
 
         testServiceB.logSomething()
         assertThat(log.entries).containsExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
 
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.INFO, "info message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.ERROR, "error message b")
+            LogEntry(logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.INFO, "info message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.ERROR, "error message b")
         )
 
         customLogger.trace("trace message c")
@@ -81,17 +83,17 @@ internal class Log4jRecorderExtensionTest {
         customLogger.error("error message c")
 
         assertThat(log.entries).containsExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a"),
 
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.INFO, "info message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
-            LogEntry(LogRecord.logger(TestServiceB::class), LogLevel.ERROR, "error message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.TRACE, "trace message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.DEBUG, "debug message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.INFO, "info message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.WARN, "warn message b"),
+            LogEntry(logger(TestServiceB::class), LogLevel.ERROR, "error message b"),
 
             LogEntry("custom-logger", LogLevel.TRACE, "trace message c"),
             LogEntry("custom-logger", LogLevel.DEBUG, "debug message c"),
@@ -108,20 +110,20 @@ internal class Log4jRecorderExtensionTest {
 
         testServiceA.logSomething()
         assertThat(log.entries).containsExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
 
         testServiceB.logSomething()
         assertThat(log.entries).containsExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
 
         customLogger.trace("trace message c")
@@ -131,11 +133,11 @@ internal class Log4jRecorderExtensionTest {
         customLogger.error("error message c")
 
         assertThat(log.entries).containsExactly(
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(LogRecord.logger(TestServiceA::class), LogLevel.ERROR, "error message a")
+            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
+            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
         )
     }
 
@@ -150,7 +152,7 @@ internal class Log4jRecorderExtensionTest {
 
         assertThat(log.entries).containsExactly(
             LogEntry(
-                logger = LogRecord.logger(TestServiceA::class),
+                logger = logger(TestServiceA::class),
                 level = LogLevel.INFO,
                 message = "info message a",
                 properties = mapOf(
@@ -159,7 +161,7 @@ internal class Log4jRecorderExtensionTest {
                 )
             ),
             LogEntry(
-                logger = LogRecord.logger(TestServiceA::class),
+                logger = logger(TestServiceA::class),
                 level = LogLevel.INFO,
                 message = "info message a",
                 properties = mapOf(
@@ -169,4 +171,19 @@ internal class Log4jRecorderExtensionTest {
         )
     }
 
+    @Test
+    @RecordLoggers(TestServiceA::class)
+    internal fun `Throwables are recorded`(log: LogRecord) {
+        val throwable = RuntimeException("error")
+        testServiceA.logError(throwable)
+
+        log.entries.shouldContainExactly(
+            LogEntry(
+                logger = logger(TestServiceA::class),
+                level = LogLevel.ERROR,
+                message = "error message a",
+                throwable = throwable
+            )
+        )
+    }
 }
