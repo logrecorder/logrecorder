@@ -40,6 +40,7 @@
         <module>logrecorder-jul</module>
         <module>logrecorder-log4j</module>
         <module>logrecorder-logback</module>
+        <module>logrecorder-inttest</module>
     </modules>
 
     <properties>
