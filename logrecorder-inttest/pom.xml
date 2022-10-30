@@ -43,7 +43,12 @@
 		</dependency>
 		<dependency>
 			<groupId>io.github.logrecorder</groupId>
-			<artifactId>logrecorder-common-kotest</artifactId>
+			<artifactId>logrecorder-kotest</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.github.logrecorder</groupId>
+			<artifactId>logrecorder-junit5</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -110,6 +115,13 @@
 						<phase>integration-test</phase>
 						<goals>
 							<goal>integration-test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>verify</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>verify</goal>
 						</goals>
 					</execution>
 				</executions>
