@@ -10,9 +10,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>logrecorder-common-kotest</artifactId>
+	<artifactId>logrecorder-kotest</artifactId>
 	<packaging>jar</packaging>
-	<name>LogRecorder - Common Kotest</name>
+	<name>LogRecorder - Kotest</name>
 
 	<dependencies>
 		<dependency>

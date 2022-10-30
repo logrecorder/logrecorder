@@ -32,7 +32,7 @@ testImplementation("io.github.logrecorder:logrecorder-api:${logrecorder.version}
 .Gradle
 [source,groovy]
 ----
-testImplementation("io.github.logrecorder:logrecorder-common-junit5:${logrecorder.version}")
+testImplementation("io.github.logrecorder:logrecorder-junit5:${logrecorder.version}")
 ----
 
 .Maven
@@ -40,7 +40,7 @@ testImplementation("io.github.logrecorder:logrecorder-common-junit5:${logrecorde
 ----
 <dependency>
     <groupId>io.github.logrecorder</groupId>
-    <artifactId>logrecorder-common-junit5</artifactId>
+    <artifactId>logrecorder-junit5</artifactId>
     <version>${logrecorder.version}</version>
     <scope>test</scope>
 </dependency>
@@ -51,7 +51,7 @@ testImplementation("io.github.logrecorder:logrecorder-common-junit5:${logrecorde
 .Gradle
 [source,groovy]
 ----
-testImplementation("io.github.logrecorder:logrecorder-common-kotest:${logrecorder.version}")
+testImplementation("io.github.logrecorder:logrecorder-kotest:${logrecorder.version}")
 ----
 
 .Maven
@@ -59,7 +59,7 @@ testImplementation("io.github.logrecorder:logrecorder-common-kotest:${logrecorde
 ----
 <dependency>
     <groupId>io.github.logrecorder</groupId>
-    <artifactId>logrecorder-common-kotest</artifactId>
+    <artifactId>logrecorder-kotest</artifactId>
     <version>${logrecorder.version}</version>
     <scope>test</scope>
 </dependency>

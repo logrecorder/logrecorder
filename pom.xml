@@ -34,8 +34,8 @@
     <modules>
         <module>logrecorder-api</module>
         <module>logrecorder-common</module>
-        <module>logrecorder-common-junit5</module>
-        <module>logrecorder-common-kotest</module>
+        <module>logrecorder-junit5</module>
+        <module>logrecorder-kotest</module>
         <module>logrecorder-assertions</module>
         <module>logrecorder-jul</module>
         <module>logrecorder-log4j</module>
@@ -116,12 +116,12 @@
             </dependency>
             <dependency>
                 <groupId>io.github.logrecorder</groupId>
-                <artifactId>logrecorder-common-junit5</artifactId>
+                <artifactId>logrecorder-junit5</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.logrecorder</groupId>
-                <artifactId>logrecorder-common-kotest</artifactId>
+                <artifactId>logrecorder-kotest</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
