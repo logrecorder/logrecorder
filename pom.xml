@@ -33,14 +33,14 @@
 
     <modules>
         <module>logrecorder-api</module>
+        <module>logrecorder-assertions</module>
         <module>logrecorder-common</module>
+        <module>logrecorder-inttest</module>
+        <module>logrecorder-jul</module>
         <module>logrecorder-junit5</module>
         <module>logrecorder-kotest</module>
-        <module>logrecorder-assertions</module>
-        <module>logrecorder-jul</module>
         <module>logrecorder-log4j</module>
         <module>logrecorder-logback</module>
-        <module>logrecorder-inttest</module>
     </modules>
 
     <properties>
@@ -111,7 +111,22 @@
             </dependency>
             <dependency>
                 <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-assertions</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
                 <artifactId>logrecorder-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-inttest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-jul</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -122,6 +137,16 @@
             <dependency>
                 <groupId>io.github.logrecorder</groupId>
                 <artifactId>logrecorder-kotest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-log4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-logback</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
