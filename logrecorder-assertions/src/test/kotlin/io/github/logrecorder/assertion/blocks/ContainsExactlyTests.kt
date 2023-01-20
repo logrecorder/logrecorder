@@ -125,10 +125,10 @@ internal class ContainsExactlyTests {
 
         val ex = assertThrows<AssertionError> {
             assertThat(log) containsExactly {
-                info(message = "message #1", exception = listOf(noException()))
-                error(message = "message #2", exception = listOf(equalTo(exception1)))
-                info(message = "message #3", exception = listOf(noException()))
-                info(message = "message #4", exception = listOf(equalTo(exception2)))
+                info(message = "message #1", exception = hasNoException())
+                error(message = "message #2", exception = isEqualTo(exception1))
+                info(message = "message #3", exception = hasNoException())
+                info(message = "message #4", exception = isEqualTo(exception2))
             }
         }
 
