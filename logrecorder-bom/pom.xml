@@ -18,42 +18,42 @@
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
 				<artifactId>logrecorder-api</artifactId>
-				<version>${project.version}</version>
+				<version>${version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
 				<artifactId>logrecorder-assertions</artifactId>
-				<version>${project.version}</version>
+				<version>${version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
 				<artifactId>logrecorder-common</artifactId>
-				<version>${project.version}</version>
+				<version>${version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
 				<artifactId>logrecorder-jul</artifactId>
-				<version>${project.version}</version>
+				<version>${version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
 				<artifactId>logrecorder-junit5</artifactId>
-				<version>${project.version}</version>
+				<version>${version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
 				<artifactId>logrecorder-kotest</artifactId>
-				<version>${project.version}</version>
+				<version>${version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
 				<artifactId>logrecorder-log4j</artifactId>
-				<version>${project.version}</version>
+				<version>${version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.github.logrecorder</groupId>
 				<artifactId>logrecorder-logback</artifactId>
-				<version>${project.version}</version>
+				<version>${version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
