@@ -34,6 +34,7 @@
     <modules>
         <module>logrecorder-api</module>
         <module>logrecorder-assertions</module>
+        <module>logrecorder-bom</module>
         <module>logrecorder-common</module>
         <module>logrecorder-inttest</module>
         <module>logrecorder-jul</module>
