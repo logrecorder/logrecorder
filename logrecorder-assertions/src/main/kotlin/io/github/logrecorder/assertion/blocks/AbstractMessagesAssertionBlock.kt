@@ -18,6 +18,7 @@ package io.github.logrecorder.assertion.blocks
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.assertion.LogRecordAssertion
+import io.github.logrecorder.assertion.matchers.ExceptionMatcher
 import io.github.logrecorder.assertion.matchers.LogLevelMatcher
 import io.github.logrecorder.assertion.matchers.MessageMatcher
 import io.github.logrecorder.assertion.matchers.PropertyMatcher
@@ -34,9 +35,10 @@ abstract class AbstractMessagesAssertionBlock : MessagesAssertionBlock {
     override fun addExpectation(
         logLevelMatcher: LogLevelMatcher,
         messageMatchers: List<MessageMatcher>,
-        propertyMatchers: List<PropertyMatcher>
+        propertyMatchers: List<PropertyMatcher>,
+        exceptionMatchers: List<ExceptionMatcher>
     ) {
-        expectations.add(ExpectedLogEntry(logLevelMatcher, messageMatchers, propertyMatchers))
+        expectations.add(ExpectedLogEntry(logLevelMatcher, messageMatchers, propertyMatchers, exceptionMatchers))
     }
 
     override fun check(logRecord: LogRecord) {
@@ -65,12 +67,13 @@ abstract class AbstractMessagesAssertionBlock : MessagesAssertionBlock {
     private fun StringBuilder.appendActualLogEntries(entries: List<LogEntry>) =
         apply {
             entries.forEach { entry ->
-                val details = listOf(
+                val details = listOfNotNull(
                     entry.level.toString(),
                     entry.message,
-                    entry.properties.takeIf { it.isNotEmpty() }?.toString()
+                    entry.properties.takeIf { it.isNotEmpty() }?.toString(),
+                    entry.throwable?.let { format(it) }
                 )
-                appendLine(details.filterNotNull().joinToString(separator = " | "))
+                appendLine(details.joinToString(separator = " | "))
             }
         }
 
