@@ -23,9 +23,29 @@ interface ExceptionMatcherFactory {
     /**
      * Will match if the actual exception is equal to the expected exception.
      *
+     * This returns a list and is intended to be used as a DSL element where only one condition is declared.
+     * (no need to wrap it in `listOf(equalTo(..))`)
+     *
+     * @see EqualExceptionMatcher
+     */
+    fun isEqualTo(exception: Throwable): List<ExceptionMatcher> = listOf(equalTo(exception))
+
+    /**
+     * Will match if the actual exception is equal to the expected exception.
+     *
      * @see EqualExceptionMatcher
      */
     fun equalTo(exception: Throwable): ExceptionMatcher = EqualExceptionMatcher(exception)
+
+    /**
+     * Will match if there is no actual exception
+     *
+     * This returns a list and is intended to be used as a DSL element where only one condition is declared.
+     * (no need to wrap it in `listOf(noException())`)
+     *
+     * @see NoExceptionMatcher
+     */
+    fun hasNoException(): List<ExceptionMatcher> = listOf(noException())
 
     /**
      * Will match if there is no actual exception
