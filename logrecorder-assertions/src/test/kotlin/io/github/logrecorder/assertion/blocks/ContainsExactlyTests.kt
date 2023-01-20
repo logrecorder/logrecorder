@@ -112,6 +112,48 @@ internal class ContainsExactlyTests {
     }
 
     @Test
+    fun `throws assertion error if at least one expectation was not matched - exception matching`() {
+        val exception1 = RuntimeException("oops 1")
+        val exception2 = RuntimeException("oops 2")
+
+        val log = logRecord(
+            logEntry(level = INFO, message = "message #1", throwable = null),
+            logEntry(level = ERROR, message = "message #2", throwable = exception1),
+            logEntry(level = INFO, message = "message #3", throwable = exception2),
+            logEntry(level = INFO, message = "message #4", throwable = null)
+        )
+
+        val ex = assertThrows<AssertionError> {
+            assertThat(log) containsExactly {
+                info(message = "message #1", exception = listOf(noException()))
+                error(message = "message #2", exception = listOf(equalTo(exception1)))
+                info(message = "message #3", exception = listOf(noException()))
+                info(message = "message #4", exception = listOf(equalTo(exception2)))
+            }
+        }
+
+        assertThat(ex).hasMessage(
+            """
+            Log entries do not match expectation:
+            ---
+            [✓] INFO | message #1
+            [✓] ERROR | message #2 | RuntimeException("oops 1")
+            [✗] INFO | message #3 | [no exception] >> RuntimeException("oops 2")
+            [✗] INFO | message #4 | [equal to RuntimeException("oops 2")] >> no exception
+            ---
+            
+            The actual log entries were:
+            ---
+            INFO | message #1
+            ERROR | message #2 | RuntimeException("oops 1")
+            INFO | message #3 | RuntimeException("oops 2")
+            INFO | message #4
+            ---
+            """.trimIndent()
+        )
+    }
+
+    @Test
     fun `size difference between actual and expected log throws assertion error - too few messages`() {
         val log = logRecord(
             logEntry(message = "message #1"),

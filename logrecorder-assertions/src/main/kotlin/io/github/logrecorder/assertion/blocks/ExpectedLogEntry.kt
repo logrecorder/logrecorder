@@ -17,6 +17,7 @@ package io.github.logrecorder.assertion.blocks
 
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
+import io.github.logrecorder.assertion.matchers.ExceptionMatcher
 import io.github.logrecorder.assertion.matchers.LogLevelMatcher
 import io.github.logrecorder.assertion.matchers.MessageMatcher
 import io.github.logrecorder.assertion.matchers.PropertyMatcher
@@ -24,11 +25,12 @@ import io.github.logrecorder.assertion.matchers.PropertyMatcher
 class ExpectedLogEntry(
     val logLevelMatcher: LogLevelMatcher,
     val messageMatchers: List<MessageMatcher> = emptyList(),
-    val propertyMatchers: List<PropertyMatcher> = emptyList()
+    val propertyMatchers: List<PropertyMatcher> = emptyList(),
+    val exceptionMatchers: List<ExceptionMatcher> = emptyList()
 ) {
 
     infix fun matches(actual: LogEntry): Boolean =
-        matches(actual.level) && matches(actual.message) && matches(actual.properties)
+        matches(actual.level) && matches(actual.message) && matches(actual.properties) && matches(actual.throwable)
 
     infix fun matches(actual: LogLevel): Boolean =
         logLevelMatcher matches actual
@@ -38,5 +40,8 @@ class ExpectedLogEntry(
 
     infix fun matches(actual: Map<String, String>): Boolean =
         propertyMatchers.all { it matches actual }
+
+    infix fun matches(actual: Throwable?): Boolean =
+        exceptionMatchers.all { it matches actual }
 
 }

@@ -21,31 +21,37 @@ import io.github.logrecorder.api.LogLevel.INFO
 import io.github.logrecorder.api.LogLevel.TRACE
 import io.github.logrecorder.api.LogLevel.WARN
 import io.github.logrecorder.assertion.DslContext
+import io.github.logrecorder.assertion.matchers.ExceptionMatcher
 import io.github.logrecorder.assertion.matchers.LogLevelMatcher
 import io.github.logrecorder.assertion.matchers.MessageMatcher
 import io.github.logrecorder.assertion.matchers.PropertyMatcher
+import io.github.logrecorder.assertion.matchers.exception.ExceptionMatcherFactory
 import io.github.logrecorder.assertion.matchers.level.LogLevelMatcherFactory
 import io.github.logrecorder.assertion.matchers.message.MessageMatcherFactory
 import io.github.logrecorder.assertion.matchers.properties.PropertyMatcherFactory
 
 @DslContext
 interface MessagesAssertionBlock : AssertionBlock,
-    MessageMatcherFactory, PropertyMatcherFactory, LogLevelMatcherFactory {
+    MessageMatcherFactory, PropertyMatcherFactory, LogLevelMatcherFactory, ExceptionMatcherFactory {
 
     fun addExpectation(
         logLevelMatcher: LogLevelMatcher,
         messageMatchers: List<MessageMatcher> = emptyList(),
-        propertyMatchers: List<PropertyMatcher> = emptyList()
+        propertyMatchers: List<PropertyMatcher> = emptyList(),
+        exceptionMatchers: List<ExceptionMatcher> = emptyList()
     )
 
     // TRACE
 
     /**
-     * Define the expectation of a [TRACE] message equal to the provided `message`
-     * and properties matching the given [PropertyMatcher].
+     * Define the expectation of a [TRACE] message equal to the provided `message`, that complies
+     * with _all_ specified [PropertyMatcher] and [ExceptionMatcher].
      */
-    fun trace(message: String, properties: List<PropertyMatcher> = emptyList()) =
-        trace(message = listOf(equalTo(message)), properties = properties)
+    fun trace(
+        message: String,
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = trace(message = listOf(equalTo(message)), properties = properties, exception = exception)
 
     /**
      * Define the expectation of a [TRACE] message that complies with _all_ specified [MessageMatcher].
@@ -55,22 +61,28 @@ interface MessagesAssertionBlock : AssertionBlock,
     fun trace(vararg messageMatchers: MessageMatcher) = trace(message = messageMatchers.toList())
 
     /**
-     * Define the expectation of a [TRACE] message that complies with _all_ specified [MessageMatcher]
-     * and [PropertyMatcher].
+     * Define the expectation of a [TRACE] message that complies with _all_ specified [MessageMatcher],
+     * [PropertyMatcher] and [ExceptionMatcher].
      *
-     * Will match any [TRACE] if not at least one [MessageMatcher] or [PropertyMatcher] is specified.
+     * Will match any [TRACE] if not at least one [MessageMatcher], [PropertyMatcher] or [ExceptionMatcher] is specified.
      */
-    fun trace(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
-        addExpectation(equalTo(TRACE), message, properties)
+    fun trace(
+        message: List<MessageMatcher> = emptyList(),
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = addExpectation(equalTo(TRACE), message, properties, exception)
 
     // DEBUG
 
     /**
-     * Define the expectation of a [DEBUG] message equal to the provided `message`
-     * and properties matching the given [PropertyMatcher].
+     * Define the expectation of a [DEBUG] message equal to the provided `message`, that complies
+     * with _all_ specified [PropertyMatcher] and [ExceptionMatcher].
      */
-    fun debug(message: String, properties: List<PropertyMatcher> = emptyList()) =
-        debug(message = listOf(equalTo(message)), properties = properties)
+    fun debug(
+        message: String,
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = debug(message = listOf(equalTo(message)), properties = properties, exception = exception)
 
     /**
      * Define the expectation of a [DEBUG] message that complies with _all_ specified [MessageMatcher].
@@ -80,22 +92,28 @@ interface MessagesAssertionBlock : AssertionBlock,
     fun debug(vararg messageMatchers: MessageMatcher) = debug(message = messageMatchers.toList())
 
     /**
-     * Define the expectation of a [DEBUG] message that complies with _all_ specified [MessageMatcher]
-     * and [PropertyMatcher].
+     * Define the expectation of a [DEBUG] message that complies with _all_ specified [MessageMatcher],
+     * [PropertyMatcher] and [ExceptionMatcher].
      *
-     * Will match any [DEBUG] if not at least one [MessageMatcher] or [PropertyMatcher] is specified.
+     * Will match any [DEBUG] if not at least one [MessageMatcher], [PropertyMatcher] or [ExceptionMatcher] is specified.
      */
-    fun debug(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
-        addExpectation(equalTo(DEBUG), message, properties)
+    fun debug(
+        message: List<MessageMatcher> = emptyList(),
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = addExpectation(equalTo(DEBUG), message, properties, exception)
 
     // INFO
 
     /**
-     * Define the expectation of a [INFO] message equal to the provided `message`
-     * and properties matching the given [PropertyMatcher].
+     * Define the expectation of a [INFO] message equal to the provided `message`, that complies
+     * with _all_ specified [PropertyMatcher] and [ExceptionMatcher].
      */
-    fun info(message: String, properties: List<PropertyMatcher> = emptyList()) =
-        info(message = listOf(equalTo(message)), properties = properties)
+    fun info(
+        message: String,
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = info(message = listOf(equalTo(message)), properties = properties, exception = exception)
 
     /**
      * Define the expectation of a [INFO] message that complies with _all_ specified [MessageMatcher].
@@ -105,22 +123,28 @@ interface MessagesAssertionBlock : AssertionBlock,
     fun info(vararg messageMatchers: MessageMatcher) = info(message = messageMatchers.toList())
 
     /**
-     * Define the expectation of a [INFO] message that complies with _all_ specified [MessageMatcher]
-     * and [PropertyMatcher].
+     * Define the expectation of a [INFO] message that complies with _all_ specified [MessageMatcher],
+     * [PropertyMatcher] and [ExceptionMatcher].
      *
-     * Will match any [INFO] if not at least one [MessageMatcher] or [PropertyMatcher] is specified.
+     * Will match any [INFO] if not at least one [MessageMatcher], [PropertyMatcher] or [ExceptionMatcher] is specified.
      */
-    fun info(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
-        addExpectation(equalTo(INFO), message, properties)
+    fun info(
+        message: List<MessageMatcher> = emptyList(),
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = addExpectation(equalTo(INFO), message, properties, exception)
 
     // WARN
 
     /**
-     * Define the expectation of a [WARN] message equal to the provided `message`
-     * and properties matching the given [PropertyMatcher].
+     * Define the expectation of a [WARN] message equal to the provided `message`, that complies
+     * with _all_ specified [PropertyMatcher] and [ExceptionMatcher].
      */
-    fun warn(message: String, properties: List<PropertyMatcher> = emptyList()) =
-        warn(message = listOf(equalTo(message)), properties = properties)
+    fun warn(
+        message: String,
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = warn(message = listOf(equalTo(message)), properties = properties, exception = exception)
 
     /**
      * Define the expectation of a [WARN] message that complies with _all_ specified [MessageMatcher].
@@ -130,22 +154,28 @@ interface MessagesAssertionBlock : AssertionBlock,
     fun warn(vararg messageMatchers: MessageMatcher) = warn(message = messageMatchers.toList())
 
     /**
-     * Define the expectation of a [WARN] message that complies with _all_ specified [MessageMatcher]
-     * and [PropertyMatcher].
+     * Define the expectation of a [WARN] message that complies with _all_ specified [MessageMatcher],
+     * [PropertyMatcher] and [ExceptionMatcher].
      *
-     * Will match any [WARN] if not at least one [MessageMatcher] or [PropertyMatcher] is specified.
+     * Will match any [WARN] if not at least one [MessageMatcher], [PropertyMatcher] or [ExceptionMatcher] is specified.
      */
-    fun warn(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
-        addExpectation(equalTo(WARN), message, properties)
+    fun warn(
+        message: List<MessageMatcher> = emptyList(),
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = addExpectation(equalTo(WARN), message, properties, exception)
 
     // ERROR
 
     /**
-     * Define the expectation of a [ERROR] message equal to the provided `message`
-     * and properties matching the given [PropertyMatcher].
+     * Define the expectation of a [ERROR] message equal to the provided `message`, that complies
+     * with _all_ specified [PropertyMatcher] and [ExceptionMatcher].
      */
-    fun error(message: String, properties: List<PropertyMatcher> = emptyList()) =
-        error(message = listOf(equalTo(message)), properties = properties)
+    fun error(
+        message: String,
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = error(message = listOf(equalTo(message)), properties = properties, exception = exception)
 
     /**
      * Define the expectation of a [ERROR] message that complies with _all_ specified [MessageMatcher].
@@ -155,22 +185,28 @@ interface MessagesAssertionBlock : AssertionBlock,
     fun error(vararg messageMatchers: MessageMatcher) = error(message = messageMatchers.toList())
 
     /**
-     * Define the expectation of a [ERROR] message that complies with _all_ specified [MessageMatcher]
-     * and [PropertyMatcher].
+     * Define the expectation of a [ERROR] message that complies with _all_ specified [MessageMatcher],
+     * [PropertyMatcher] and [ExceptionMatcher].
      *
-     * Will match any [ERROR] if not at least one [MessageMatcher] or [PropertyMatcher] is specified.
+     * Will match any [ERROR] if not at least one [MessageMatcher], [PropertyMatcher] or [ExceptionMatcher] is specified.
      */
-    fun error(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
-        addExpectation(equalTo(ERROR), message, properties)
+    fun error(
+        message: List<MessageMatcher> = emptyList(),
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = addExpectation(equalTo(ERROR), message, properties, exception)
 
     // ANY
 
     /**
-     * Define the expectation of a message, with any log level, a value equal to the provided `message`
-     * and properties matching the given [PropertyMatcher].
+     * Define the expectation of a message, with any log level, a value equal to the provided `message`,
+     * that complies with _all_ specified [PropertyMatcher] and [ExceptionMatcher].
      */
-    fun any(message: String, properties: List<PropertyMatcher> = emptyList()) =
-        any(message = listOf(equalTo(message)), properties = properties)
+    fun any(
+        message: String,
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = any(message = listOf(equalTo(message)), properties = properties, exception = exception)
 
     /**
      * Define the expectation of a message, with any log level, that complies with _all_ specified [MessageMatcher].
@@ -180,13 +216,16 @@ interface MessagesAssertionBlock : AssertionBlock,
     fun any(vararg messageMatchers: MessageMatcher) = any(message = messageMatchers.toList())
 
     /**
-     * Define the expectation of a message, with any log level, that complies with _all_ specified [MessageMatcher]
-     * and [PropertyMatcher].
+     * Define the expectation of a message, with any log level, that complies with _all_ specified [MessageMatcher],
+     * [PropertyMatcher] and [ExceptionMatcher].
      *
-     * Will match any message if not at least one [MessageMatcher] or [PropertyMatcher] is specified.
+     * Will match any message if not at least one [MessageMatcher], [PropertyMatcher] or [ExceptionMatcher] is specified.
      */
-    fun any(message: List<MessageMatcher> = emptyList(), properties: List<PropertyMatcher> = emptyList()) =
-        addExpectation(anyLogLevel(), message, properties)
+    fun any(
+        message: List<MessageMatcher> = emptyList(),
+        properties: List<PropertyMatcher> = emptyList(),
+        exception: List<ExceptionMatcher> = emptyList()
+    ) = addExpectation(anyLogLevel(), message, properties, exception)
 
     /**
      * This matcher can be used to skip log messages, that are not of any interest.

@@ -29,5 +29,6 @@ fun logEntry(
     message: String = "message",
     logger: String = "logger",
     marker: String? = null,
-    properties: Map<String, String> = emptyMap()
-) = LogEntry(logger, level, message, marker, properties)
+    properties: Map<String, String> = emptyMap(),
+    throwable: Throwable? = null
+) = LogEntry(logger, level, message, marker, properties, throwable)

@@ -25,7 +25,8 @@ internal fun describeMatch(actual: LogEntry): String {
     val details = listOf(
         actual.level.toString(),
         actual.message,
-        actual.properties.takeIf { it.isNotEmpty() }?.toString()
+        actual.properties.takeIf { it.isNotEmpty() }?.toString(),
+        actual.throwable?.let { format(it) }
     )
     return "[$MATCH_SYMBOL] ${join(details)}"
 }
@@ -34,7 +35,8 @@ internal fun describeNothingMatches(expected: ExpectedLogEntry): String {
     val details = listOf(
         expected.logLevelMatcher.toString(),
         expected.messageMatchers.toString(),
-        expected.propertyMatchers.takeIf { it.isNotEmpty() }?.toString()
+        expected.propertyMatchers.takeIf { it.isNotEmpty() }?.toString(),
+        expected.exceptionMatchers.takeIf { it.isNotEmpty() }?.toString()
     )
     return "[$MISMATCH_SYMBOL] did not find entry matching: ${join(details)}"
 }
@@ -43,7 +45,8 @@ internal fun describeMismatch(actual: LogEntry, expected: ExpectedLogEntry): Str
     val details = listOf(
         levelPart(actual, expected),
         messagePart(actual, expected),
-        propertiesPart(actual, expected)
+        propertiesPart(actual, expected),
+        exceptionPart(actual, expected)
     )
     return "[$MISMATCH_SYMBOL] ${join(details)}"
 }
@@ -75,4 +78,29 @@ private fun propertiesPart(actual: LogEntry, expected: ExpectedLogEntry): String
     return null
 }
 
+private fun exceptionPart(actual: LogEntry, expected: ExpectedLogEntry): String? {
+    val matches = expected matches actual.throwable
+    val hasException = actual.throwable != null
+    val hasExceptionMatchers = expected.exceptionMatchers.isNotEmpty()
+
+    if (matches && hasException) {
+        return format(actual.throwable!!)
+    } else if (!matches && hasExceptionMatchers) {
+        return """${expected.exceptionMatchers} >> ${formatNullable(actual.throwable)}"""
+    }
+    return null
+}
+
 private fun join(data: List<String?>) = data.filterNotNull().joinToString(separator = " | ")
+
+internal fun formatNullable(exception: Throwable?): String {
+    if (exception == null) return "no exception"
+    return format(exception)
+}
+
+internal fun format(exception: Throwable): String {
+    val name = exception::class.simpleName ?: "unknown-exception"
+    val message = exception.message?.let { "\"$it\"" } ?: ""
+
+    return """$name($message)"""
+}
