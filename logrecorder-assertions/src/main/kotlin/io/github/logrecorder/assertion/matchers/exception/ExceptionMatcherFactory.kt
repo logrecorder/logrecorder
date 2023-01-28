@@ -17,8 +17,26 @@
 package io.github.logrecorder.assertion.matchers.exception
 
 import io.github.logrecorder.assertion.matchers.ExceptionMatcher
+import kotlin.reflect.KClass
 
 interface ExceptionMatcherFactory {
+
+    /**
+     * Will match if the actual exception is an instance of the expected exception type.
+     *
+     * This returns a list and is intended to be used as a DSL element where only one condition is declared.
+     * (no need to wrap it in `listOf(equalTo(..))`)
+     *
+     * @see InstanceOfExceptionMatcher
+     */
+    fun isInstanceOf(exceptionType: KClass<*>): List<ExceptionMatcher> = listOf(instanceOf(exceptionType))
+
+    /**
+     * Will match if the actual exception is an instance of the expected exception type.
+     *
+     * @see InstanceOfExceptionMatcher
+     */
+    fun instanceOf(exceptionType: KClass<*>): ExceptionMatcher = InstanceOfExceptionMatcher(exceptionType)
 
     /**
      * Will match if the actual exception is equal to the expected exception.
