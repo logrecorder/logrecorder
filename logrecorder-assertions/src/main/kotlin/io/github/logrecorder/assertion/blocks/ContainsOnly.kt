@@ -16,21 +16,25 @@
 package io.github.logrecorder.assertion.blocks
 
 import io.github.logrecorder.api.LogEntry
-import io.github.logrecorder.assertion.LogRecordAssertion
 
 /**
- * Custom assertion block for the [LogRecordAssertion] DSL.
+ * [AssertionBlock] for the different assertion DSL styles.
  *
  * This assertion block requires only the specified expected message to be found.
  * But it does not care about the order the messages are in.
  *
- * **Example:**
+ * **Examples:**
  * ```
- * assertThat(log) {
- *     containsOnly {
- *          info("hello world")
- *          debug(startsWith("foo") // might have been logged come before the previous message
- *     }
+ * // AssertJ style
+ * assertThat(log).containsOnly {
+ *     info("hello world")
+ *     debug(startsWith("foo") // might have been logged come before the previous message
+ * }
+ *
+ * // Kotest style
+ * log shouldContainOnly {
+ *     info("hello world")
+ *     debug(startsWith("foo") // might have been logged come before the previous message
  * }
  * ```
  *
