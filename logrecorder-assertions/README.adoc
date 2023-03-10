@@ -1,5 +1,58 @@
 = LogRecorder - Assertions
 
+== Assertions
+
+LogRecorder assertions can be written in multiple styles, depending on your preference.
+
+== AssertJ Style
+
+AssertJ uses a fluent `assertThat(value).isEqualTo(otherValue)` style for their assertions.
+Based on this style, we provide the `LogRecordAssertion` class and its starting method `assertThat(log: LogRecord)`.
+
+This allows for assertions to be written like:
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.containsExactly
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    assertThat(log).containsExactly {
+        info("some info message")
+        warn("and then some warning")
+    }
+}
+----
+
+== Kotest Style
+
+Kotest Assertions use an infix function `value shouldBe otherValue` style for their assertions.
+Based on this style, we provide several `LogRecord` extension functions.
+
+This allows for assertions to be written like:
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.shouldContainExactly
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    log shouldContainExactly {
+        info("some info message")
+        warn("and then some warning")
+    }
+}
+----
+
 == Extension Points
 
 The assertion DSL is implemented in a way that allows for a lot of customization / extension of functionality.
@@ -19,25 +72,93 @@ import org.junit.jupiter.api.Test
 @Test
 @RecordLoggers(MyService::class)
 fun someTest(log: LogRecord) {
-    assertThat(log) {
-        containsExactly {
-            info(ofLength(42))
-        }
+    assertThat(log).containsExactly {
+        info(ofLength(42))
     }
 }
 
 // --- simple implementation | usually for one-off assertions inside a single test class ---
 
-fun MessagesAssertionBlock.ofLength(messageLength: Int) =
-    MessageMatcher { actual -> actual.length == messageLength }
+fun MessagesAssertionBlock.ofLength(length: Int) =
+    MessageMatcher { actual -> actual.length == length }
 
 // --- alternative | for reuse in multiple test classes --
 
-fun MessagesAssertionBlock.ofLengthA(length: Int) = OfLengthMessageMatcher(length)
+fun MessagesAssertionBlock.ofLength(length: Int) = OfLengthMessageMatcher(length)
 
 class OfLengthMessageMatcher(private val length: Int) : MessageMatcher {
     override fun matches(actual: String): Boolean = actual.length == length
     override fun toString(): String = "lengthOf [$length]"
+}
+----
+
+=== Custom Exception Matchers
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.blocks.MessagesAssertionBlock
+import io.github.logrecorder.assertion.containsExactly
+import io.github.logrecorder.assertion.matchers.ExceptionMatcher
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    assertThat(log).containsExactly {
+        warn(exception = listOf(isRuntimeException()))
+    }
+}
+
+// --- simple implementation | usually for one-off assertions inside a single test class ---
+
+fun MessagesAssertionBlock.isRuntimeException() =
+    ExceptionMatcher { actual -> actual is RuntimeException }
+
+// --- alternative | for reuse in multiple test classes --
+
+fun MessagesAssertionBlock.isRuntimeException() = IsRuntimeExceptionMatcher()
+
+class IsRuntimeExceptionMatcher() : ExceptionMatcher {
+    override fun matches(actual: Throwable?): Boolean = actual is RuntimeException
+    override fun toString(): String = "is RuntimeException"
+}
+----
+
+=== Custom Property Matchers
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.blocks.MessagesAssertionBlock
+import io.github.logrecorder.assertion.containsExactly
+import io.github.logrecorder.assertion.matchers.PropertyMatcher
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    assertThat(log).containsExactly {
+        warn(properties = listOf(containsUsername("test-user")))
+    }
+}
+
+// --- simple implementation | usually for one-off assertions inside a single test class ---
+
+fun MessagesAssertionBlock.containsUsername(username: String) =
+    PropertyMatcher { actual -> actual["username"] == username }
+
+// --- alternative | for reuse in multiple test classes --
+
+fun MessagesAssertionBlock.containsUsername(username: String) = ContainsUsernamePropertyMatcher()
+
+class ContainsUsernamePropertyMatcher(private val username: String) : PropertyMatcher {
+    override fun matches(actual: Map<String, String>): Boolean = actual["username"] == username
+    override fun toString(): String = "username property equal to '$username'"
 }
 ----
 
@@ -54,8 +175,8 @@ import org.junit.jupiter.api.Test
 
 @Test
 @RecordLoggers(MyService::class)
-fun someTest2(log: LogRecord) {
-    assertThat(log) { isEmpty() }
+fun someTest(log: LogRecord) {
+    assertThat(log).isEmpty()
 }
 
 fun LogRecordAssertion.isEmpty() = assertBlock(IsEmptyAssertionBlock())
