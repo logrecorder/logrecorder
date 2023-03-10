@@ -16,21 +16,25 @@
 package io.github.logrecorder.assertion.blocks
 
 import io.github.logrecorder.api.LogEntry
-import io.github.logrecorder.assertion.LogRecordAssertion
 
 /**
- * Custom assertion block for the [LogRecordAssertion] DSL.
+ * [AssertionBlock] for the different assertion DSL styles.
  *
  * This assertion block requires all expected messages to be specified with an expectation in the correct order.
  * As an example, it will fail if 5 messages where expected, but only 4 were actually logged.
  *
  * **Example:**
  * ```
- * assertThat(log) {
- *     containsExactly {
- *          info("hello world")
- *          debug(startsWith("foo")
- *     }
+ * // AssertJ style
+ * assertThat(log).containsExactly {
+ *     info("hello world")
+ *     debug(startsWith("foo")
+ * }
+ *
+ * // Kotest style
+ * log shouldContainExactly {
+ *     info("hello world")
+ *     debug(startsWith("foo")
  * }
  * ```
  *

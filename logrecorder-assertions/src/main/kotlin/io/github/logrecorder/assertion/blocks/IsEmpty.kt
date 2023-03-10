@@ -16,18 +16,19 @@
 package io.github.logrecorder.assertion.blocks
 
 import io.github.logrecorder.api.LogRecord
-import io.github.logrecorder.assertion.LogRecordAssertion
 
 /**
- * Custom assertion block for the [LogRecordAssertion] DSL.
+ * [AssertionBlock] for the different assertion DSL styles.
  *
  * This assertion block requires the log to be empty.
  *
- * **Example:**
+ * **Examples:**
  * ```
- * assertThat(log) {
- *     isEmpty()
- * }
+ * // AssertJ style
+ * assertThat(log).isEmpty()
+ *
+ * // Kotest style
+ * log shouldBe empty
  * ```
  *
  * @since 1.5.0
