@@ -42,6 +42,13 @@ interface MessageMatcherFactory {
     fun contains(vararg parts: String): MessageMatcher = ContainsMessageMatcher(parts.toList())
 
     /**
+     * Will match if the actual message does not contain any the provided parts.
+     *
+     * @see DoesNotContainMessageMatcher
+     */
+    fun doesNotContain(vararg parts: String): MessageMatcher = DoesNotContainMessageMatcher(parts.toList())
+
+    /**
      * Will match if the actual message contains all the provided parts in that _exact order_.
      *
      * @see ContainsInOrderMessageMatcher
