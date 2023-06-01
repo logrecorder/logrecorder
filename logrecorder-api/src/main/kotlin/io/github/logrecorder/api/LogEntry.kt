@@ -19,14 +19,12 @@ package io.github.logrecorder.api
 /**
  * Contains the data of a single entry of the recorded log.
  *
- * Includes the following data:
- *
- * - the name of the logger ([logger])
- * - the [level][LogLevel] on which the entry was logged ([level])
- * - the (formatted) message ([message])
- * - the optional log marker ([marker])
- * - the optional MDC context [properties]
- * - the optional Throwable context [throwable]
+ * @param logger the name of the logger
+ * @param level the [level][LogLevel] on which the entry was logged
+ * @param message the (formatted) message
+ * @param marker an optional log marker if the underlying log framework has such a concept
+ * @param properties the properties (e.g. MDC context), if there are any
+ * @param throwable the attached [Throwable], if there is one
  *
  * @since 1.0
  * @see LogLevel
