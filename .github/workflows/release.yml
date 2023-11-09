@@ -30,8 +30,8 @@ jobs:
           TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
           VERSION=$(echo $TAG_NAME | cut -d 'v' -f 2)
-          mvn --no-transfer-progress --batch-mode versions:set versions:commit \
-            -DnewVersion=$VERSION 
+          mvn --no-transfer-progress --batch-mode versions:set versions:commit -DnewVersion=$VERSION 
+          mvn --no-transfer-progress --batch-mode -pl logrecorder-bom versions:set versions:commit -DnewVersion=$VERSION 
 
       - id: publish-to-central
         name: Publish to Central Repository
