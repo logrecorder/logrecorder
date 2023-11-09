@@ -134,4 +134,17 @@
 		</profile>
 	</profiles>
 
+	<developers>
+		<developer>
+			<id>slu</id>
+			<name>Stefan Ludwig</name>
+			<email>stefan.ludwig@novatec-gmbh.de</email>
+			<organization>Novatec Consulting GmbH</organization>
+			<organizationUrl>http://www.novatec-gmbh.de</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
 </project>
