@@ -7,7 +7,29 @@
 	<artifactId>logrecorder-bom</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
 	<name>LogRecorder - BOM</name>
+	<url>https://github.com/logrecorder/logrecorder</url>
+	<description>Library for recording logging behaviour during tests.</description>
+	<inceptionYear>2017</inceptionYear>
+
+	<organization>
+		<name>Novatec Consulting GmbH</name>
+		<url>http://www.novatec-gmbh.de</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git@github.com:logrecorder/logrecorder.git</connection>
+		<developerConnection>scm:git:git@github.com:logrecorder/logrecorder.git</developerConnection>
+		<url>git@github.com:logrecorder/logrecorder.git</url>
+	</scm>
 
 	<dependencyManagement>
 		<dependencies>
@@ -53,5 +75,23 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>ossrh</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
