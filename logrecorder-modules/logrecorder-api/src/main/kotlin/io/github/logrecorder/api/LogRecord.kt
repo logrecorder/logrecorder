@@ -158,15 +158,6 @@ interface LogRecord {
     fun getMarkers(logger: String?, level: LogLevel?): List<String> = getEntries(logger, level)
         .mapNotNull { it.marker }
 
-    @Deprecated("use getEntries(..)", ReplaceWith("getEntries(logger, level)"))
-    fun entries(logger: String? = null, level: LogLevel? = null): List<LogEntry> = getEntries(logger, level)
-
-    @Deprecated("use getMessages(..)", ReplaceWith("getMessages(logger, level)"))
-    fun messages(logger: String? = null, level: LogLevel? = null): List<String> = getMessages(logger, level)
-
-    @Deprecated("use getMarkers(..)", ReplaceWith("getMarkers(logger, level)"))
-    fun markers(logger: String? = null, level: LogLevel? = null): List<String> = getMarkers(logger, level)
-
     companion object {
         /**
          * Generates the logger name of the given [KClass] to be used when filtering

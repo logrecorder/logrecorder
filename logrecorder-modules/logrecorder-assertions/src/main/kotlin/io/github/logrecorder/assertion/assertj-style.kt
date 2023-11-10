@@ -30,11 +30,6 @@ class LogRecordAssertion private constructor(
     private val logRecord: LogRecord
 ) {
 
-    @Deprecated("replaced with assertBlock(..)", ReplaceWith("assertBlock(block)"))
-    fun addAssertionBlock(block: AssertionBlock) {
-        assertBlock(block)
-    }
-
     fun assertBlock(block: AssertionBlock): LogRecordAssertion {
         block.check(logRecord)
         return this
