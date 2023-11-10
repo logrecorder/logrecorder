@@ -46,16 +46,14 @@ class Log4jLogRecorder(
         configuration.addAppender(appender)
         val loggerConfig = getLoggerConfig()
         if (!loggerConfig.name.equals(loggerName)) {
-            val newLoggerConfig = LoggerConfig.createLogger(
-                false,
-                Level.ALL,
-                loggerName,
-                "true",
-                appenderRefs,
-                null,
-                configuration,
-                null
-            )
+            val newLoggerConfig = LoggerConfig.newBuilder()
+                .withAdditivity(false)
+                .withLevel(Level.ALL)
+                .withLoggerName(loggerName)
+                .withIncludeLocation("true")
+                .withRefs(appenderRefs)
+                .withConfig(configuration)
+                .build()
             newLoggerConfig.addAppender(appender, null, null)
             configuration.addLogger(loggerName, newLoggerConfig)
             newCreatedLogger = true
