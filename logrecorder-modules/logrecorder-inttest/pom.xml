@@ -15,6 +15,7 @@
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <staging.skip>true</staging.skip>
     </properties>
 
     <dependencies>
@@ -75,22 +76,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>ossrh</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <configuration>
-                            <skipStaging>true</skipStaging>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
