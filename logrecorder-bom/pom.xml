@@ -1,150 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>io.github.logrecorder</groupId>
-	<artifactId>logrecorder-bom</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
+    <parent>
+        <artifactId>logrecorder</artifactId>
+        <groupId>io.github.logrecorder</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-	<name>LogRecorder - BOM</name>
-	<url>https://github.com/logrecorder/logrecorder</url>
-	<description>Library for recording logging behaviour during tests.</description>
-	<inceptionYear>2017</inceptionYear>
+    <artifactId>logrecorder-bom</artifactId>
+    <packaging>pom</packaging>
+    <name>LogRecorder - BOM</name>
 
-	<organization>
-		<name>Novatec Consulting GmbH</name>
-		<url>http://www.novatec-gmbh.de</url>
-	</organization>
-
-	<licenses>
-		<license>
-			<name>The Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
-
-	<scm>
-		<connection>scm:git:git@github.com:logrecorder/logrecorder.git</connection>
-		<developerConnection>scm:git:git@github.com:logrecorder/logrecorder.git</developerConnection>
-		<url>git@github.com:logrecorder/logrecorder.git</url>
-	</scm>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-assertions</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-jul</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-junit5</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-kotest</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-log4j</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.github.logrecorder</groupId>
-				<artifactId>logrecorder-logback</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-	<build>
-		<pluginManagement>
-			<plugins>
-				<!-- signing jars plugin -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-gpg-plugin</artifactId>
-					<version>3.0.1</version>
-					<executions>
-						<execution>
-							<id>sign-artifacts</id>
-							<phase>verify</phase>
-							<goals>
-								<goal>sign</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<gpgArguments>
-							<arg>--pinentry-mode</arg>
-							<arg>loopback</arg>
-						</gpgArguments>
-					</configuration>
-				</plugin>
-				<!-- maven central release plugin -->
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>1.6.12</version>
-					<extensions>true</extensions>
-					<configuration>
-						<serverId>ossrh</serverId>
-						<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-						<autoReleaseAfterClose>true</autoReleaseAfterClose>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
-	<profiles>
-		<profile>
-			<id>ossrh</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-					</plugin>
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
-	<developers>
-		<developer>
-			<id>slu</id>
-			<name>Stefan Ludwig</name>
-			<email>stefan.ludwig@novatec-gmbh.de</email>
-			<organization>Novatec Consulting GmbH</organization>
-			<organizationUrl>http://www.novatec-gmbh.de</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-		</developer>
-	</developers>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-assertions</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-jul</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-junit5</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-kotest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-log4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.logrecorder</groupId>
+                <artifactId>logrecorder-logback</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
