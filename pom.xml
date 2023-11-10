@@ -41,7 +41,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <staging.skip>false</staging.skip>
 
         <!-- Dependency and language versions are aligned with the latest Spring Boot 2.x release as a baseline. -->
 
@@ -189,7 +188,6 @@
                     <version>1.6.13</version>
                     <extensions>true</extensions>
                     <configuration>
-                        <skipStaging>${staging.skip}</skipStaging>
                         <serverId>ossrh</serverId>
                         <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
