@@ -8,7 +8,7 @@ The `logrecorder-api` artifacts provides the basic components and interfaces for
 On its own this artifact does not provide any functionality.
 It must be coupled with an actual implementation.
 Programmatic usage is provided with the chosen implementation.
-Testframework support requires an additional optional artifact
+Test framework support requires an additional optional artifact
 
 .Gradle
 [source,groovy]
@@ -151,9 +151,202 @@ testImplementation("io.github.logrecorder:logrecorder-assertions:${logrecorder.v
 
 == Usage Examples
 
-=== Kotlin
+You can and should use the Kotlin-optimized `logrecorder-assertions` library.
+In case that is not possible / to your taste you can also use the raw `logrecorder-api` classes and assert them however
+you like.
 
-.Example how to use LogRecorder with Junit5 in Kotlin
+=== Assertions Library
+
+LogRecorder assertions can be written in multiple styles, depending on your preference.
+For these examples we'll be using JUnit.
+Examples on how to us other test frameworks are located further down.
+
+==== AssertJ Style
+
+AssertJ uses a fluent `assertThat(value).isEqualTo(otherValue)` style for their assertions.
+Based on this style, we provide the `LogRecordAssertion` class and its starting method `assertThat(log: LogRecord)`.
+
+This allows for assertions to be written like:
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.containsExactly
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    assertThat(log).containsExactly {
+        info("some info message")
+        warn("and then some warning")
+    }
+}
+----
+
+==== Kotest Style
+
+Kotest Assertions use an infix function `value shouldBe otherValue` style for their assertions.
+Based on this style, we provide several `LogRecord` extension functions.
+
+This allows for assertions to be written like:
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.shouldContainExactly
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    log shouldContainExactly {
+        info("some info message")
+        warn("and then some warning")
+    }
+}
+----
+
+==== Extension Points
+
+The assertion DSL is implemented in a way that allows for a lot of customization / extension of functionality.
+
+===== Custom Message Matchers
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.blocks.MessagesAssertionBlock
+import io.github.logrecorder.assertion.containsExactly
+import io.github.logrecorder.assertion.matchers.MessageMatcher
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    assertThat(log).containsExactly {
+        info(ofLength(42))
+    }
+}
+
+// --- simple implementation | usually for one-off assertions inside a single test class ---
+
+fun MessagesAssertionBlock.ofLength(length: Int) =
+    MessageMatcher { actual -> actual.length == length }
+
+// --- alternative | for reuse in multiple test classes --
+
+fun MessagesAssertionBlock.ofLength(length: Int) = OfLengthMessageMatcher(length)
+
+class OfLengthMessageMatcher(private val length: Int) : MessageMatcher {
+    override fun matches(actual: String): Boolean = actual.length == length
+    override fun toString(): String = "lengthOf [$length]"
+}
+----
+
+===== Custom Exception Matchers
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.blocks.MessagesAssertionBlock
+import io.github.logrecorder.assertion.containsExactly
+import io.github.logrecorder.assertion.matchers.ExceptionMatcher
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    assertThat(log).containsExactly {
+        warn(exception = listOf(isRuntimeException()))
+    }
+}
+
+// --- simple implementation | usually for one-off assertions inside a single test class ---
+
+fun MessagesAssertionBlock.isRuntimeException() =
+    ExceptionMatcher { actual -> actual is RuntimeException }
+
+// --- alternative | for reuse in multiple test classes --
+
+fun MessagesAssertionBlock.isRuntimeException() = IsRuntimeExceptionMatcher()
+
+class IsRuntimeExceptionMatcher() : ExceptionMatcher {
+    override fun matches(actual: Throwable?): Boolean = actual is RuntimeException
+    override fun toString(): String = "is RuntimeException"
+}
+----
+
+===== Custom Property Matchers
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.blocks.MessagesAssertionBlock
+import io.github.logrecorder.assertion.containsExactly
+import io.github.logrecorder.assertion.matchers.PropertyMatcher
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    assertThat(log).containsExactly {
+        warn(properties = listOf(containsUsername("test-user")))
+    }
+}
+
+// --- simple implementation | usually for one-off assertions inside a single test class ---
+
+fun MessagesAssertionBlock.containsUsername(username: String) =
+    PropertyMatcher { actual -> actual["username"] == username }
+
+// --- alternative | for reuse in multiple test classes --
+
+fun MessagesAssertionBlock.containsUsername(username: String) = ContainsUsernamePropertyMatcher()
+
+class ContainsUsernamePropertyMatcher(private val username: String) : PropertyMatcher {
+    override fun matches(actual: Map<String, String>): Boolean = actual["username"] == username
+    override fun toString(): String = "username property equal to '$username'"
+}
+----
+
+===== Custom Assertion Blocks
+
+[source,kotlin]
+----
+import io.github.logrecorder.api.LogRecord
+import io.github.logrecorder.assertion.LogRecordAssertion
+import io.github.logrecorder.assertion.LogRecordAssertion.Companion.assertThat
+import io.github.logrecorder.assertion.blocks.AssertionBlock
+import io.github.logrecorder.logback.junit5.RecordLoggers
+import org.junit.jupiter.api.Test
+
+@Test
+@RecordLoggers(MyService::class)
+fun someTest(log: LogRecord) {
+    assertThat(log).isEmpty()
+}
+
+fun LogRecordAssertion.isEmpty() = assertBlock(IsEmptyAssertionBlock())
+
+class IsEmptyAssertionBlock : AssertionBlock {
+    override fun check(logRecord: LogRecord) {
+        if (logRecord.entries.isNotEmpty()) throw AssertionError("...")
+    }
+}
+----
+
+=== JUnit
+
 [source,kotlin]
 ----
 import io.github.logrecorder.api.LogEntry
@@ -173,52 +366,15 @@ internal class LogRecorderExtensionTest {
     @Test
     @RecordLoggers(TestServiceA::class) // define from which class you want to test log messages
     fun `extension is registered and log messages are recorded`(log: LogRecord) {
-        assertThat(log.entries).isEmpty()
-
         testServiceA.logSomething()
-
-        // check only messages
-        assertThat(log.messages).containsExactly(
-            "trace message a",
-            "debug message a",
-            "info message a",
-            "warn message a",
-            "error message a"
-        )
-
-        //check only markers
-        assertThat(log.markers).containsExactly(
-            "trace marker a",
-            null,
-            null,
-            null,
-            null
-        )
-
-        //check for throwable
-        testServiceA.logError()
-        assertThat(log.entries).anySatisfy(Consumer {
-            assertThat(it.throwable)
-                .isInstanceOf(RuntimeException::class.java)
-                .hasMessage("error")
-        })
-
-        // check message, log level and markers
-        // the next example will show how this can be done a lot easier using the assertion DSL
-        assertThat(log.entries).containsExactly(
-            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "trace marker a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", null),
-            // null is default value for markers
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
-        )
+        // assert using one of the provided styles / DSL or manually access the LogRecord's content
     }
 }
 
 ----
 
-.Example for LogRecorder with Kotest in Kotlin
+=== Kotest
+
 [source,kotlin]
 ----
 import io.github.logrecorder.api.LogEntry
@@ -237,20 +393,14 @@ internal class LogRecorderExtensionTest : FunSpec({
     test("extension is registered and log messages are recorded").config(
         extensions = listOf(recordLogs(TestServiceA::class))
     ) {
-        assertThat(logRecord.entries).isEmpty()
-
-        assertThat(logRecord.entries).containsExactly(
-            LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "trace marker a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", null),
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
-        )
+        testServiceA.logSomething()
+        // assert using one of the provided styles / DSL or manually access the LogRecord's content
     }
 })
 ----
 
-.Example for LogRecorder purely programmatic in Kotlin (using Junit5)
+=== Programmatic
+
 [source,kotlin]
 ----
 import io.github.logrecorder.api.LogEntry
@@ -268,53 +418,23 @@ internal class LogRecorderProgrammatic {
     @Test
     internal fun `log messages are recorded in lamda an returned`() {
         val logRecord = recordLoggers(TestServiceA::class) { log ->
-            assertThat(log.entries).isEmpty()
-
             testServiceA.logSomething()
-
-            assertThat(log.entries).contains(
-                LogEntry(logger(TestServiceA::class), LogLevel.TRACE, "trace message a", "marker a"),
-                LogEntry(logger(TestServiceA::class), LogLevel.DEBUG, "debug message a", null),
-            )
             log
         }
-        assertThat(logRecord.entries).contains(
-            LogEntry(logger(TestServiceA::class), LogLevel.INFO, "info message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.WARN, "warn message a"),
-            LogEntry(logger(TestServiceA::class), LogLevel.ERROR, "error message a")
-        )
-    }
-}
-----
-
-.Example for LogRecorder assertions in Kotlin
-[source,kotlin]
-----
-import io.github.logrecorder.api.LogRecord
-import io.github.logrecorder.assertion.LogRecordAssertion.assertThat
-import io.github.logrecorder.logback.junit5.RecordLoggers
-
-...
-
-@Test
-@RecordLoggers(MyService::class)
-fun `failures are logged correctly`(log: LogRecord) {
-    doSomethingFailing()
-
-    assertThat(log) {
-        containsExactly {
-            any("trying to do something")
-            debug("debug message")
-            info("info message")
-            error(startsWith("something failed with exception:"))
-        }
+        // assert using one of the provided styles / DSL or manually access the LogRecord's content
     }
 }
 ----
 
 === Java
 
-.Example for LogRecorder in native Java
+LogRecorder is written in and for Kotlin.
+We did our best to make it as comfortable as possible to use in Java.
+But things like our assertions are just not translating.
+
+The main API classes and general test framework and log library integration combined with manual assertions of the
+`LogRecord` will work.
+
 [source,java]
 ----
 package io.github.logrecorder.example;
@@ -351,20 +471,10 @@ public class LogRecorderExtensionTest {
         "error message a"
     );
 
-    //check only markers
-    assertThat(log.markers).containsExactly(
-        "trace marker a",
-        null,
-        null,
-        null,
-        null
-    );
-
     // check message, log level and markers
     assertThat(log.getEntries()).containsExactly(
-        new LogEntry(logger(TestServiceA.class), LogLevel.TRACE, "trace message a", "trace marker a"),
-        new LogEntry(logger(TestServiceA.class), LogLevel.DEBUG, "debug message a", null),
-        // null is default value for markers
+        new LogEntry(logger(TestServiceA.class), LogLevel.TRACE, "trace message a"),
+        new LogEntry(logger(TestServiceA.class), LogLevel.DEBUG, "debug message a"),
         new LogEntry(logger(TestServiceA.class), LogLevel.INFO, "info message a"),
         new LogEntry(logger(TestServiceA.class), LogLevel.WARN, "warn message a"),
         new LogEntry(logger(TestServiceA.class), LogLevel.ERROR, "error message a")
