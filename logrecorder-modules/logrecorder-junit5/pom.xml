@@ -16,10 +16,6 @@
     <dependencies>
         <dependency>
             <groupId>io.github.logrecorder</groupId>
-            <artifactId>logrecorder-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.logrecorder</groupId>
             <artifactId>logrecorder-common</artifactId>
         </dependency>
 

@@ -16,16 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.logrecorder</groupId>
-            <artifactId>logrecorder-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.logrecorder</groupId>
             <artifactId>logrecorder-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.logrecorder</groupId>
-            <artifactId>logrecorder-kotest</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -42,6 +33,11 @@
         <dependency>
             <groupId>io.github.logrecorder</groupId>
             <artifactId>logrecorder-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.logrecorder</groupId>
+            <artifactId>logrecorder-kotest</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

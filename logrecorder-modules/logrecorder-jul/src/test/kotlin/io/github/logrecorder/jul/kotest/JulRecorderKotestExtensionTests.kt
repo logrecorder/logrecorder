@@ -3,9 +3,10 @@ package io.github.logrecorder.jul.kotest
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord.Companion.logger
-import io.github.logrecorder.common.kotest.logRecord
 import io.github.logrecorder.jul.util.TestServiceA
 import io.github.logrecorder.jul.util.TestServiceB
+import io.github.logrecorder.kotest.logRecord
+import io.github.logrecorder.kotest.recordLogs
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
