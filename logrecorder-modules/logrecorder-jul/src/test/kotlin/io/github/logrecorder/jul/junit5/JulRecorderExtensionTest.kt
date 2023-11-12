@@ -21,6 +21,7 @@ import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.api.LogRecord.Companion.logger
 import io.github.logrecorder.jul.util.TestServiceA
 import io.github.logrecorder.jul.util.TestServiceB
+import io.github.logrecorder.junit5.RecordLoggers
 import io.kotest.matchers.collections.shouldContainExactly
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -42,8 +43,8 @@ internal class JulRecorderExtensionTest {
         customLogger.level = Level.WARNING
     }
 
-    @RecordLoggers(TestServiceA::class, TestServiceB::class, names = ["custom-logger"])
     @Test
+    @RecordLoggers(TestServiceA::class, TestServiceB::class, names = ["custom-logger"])
     fun `extension is registered and log messages are recorded`(log: LogRecord) {
         assertThat(log.entries).isEmpty()
 
@@ -98,8 +99,8 @@ internal class JulRecorderExtensionTest {
         )
     }
 
-    @RecordLoggers(TestServiceA::class)
     @Test
+    @RecordLoggers(TestServiceA::class)
     fun `extension is registered and log messages are recorded from ServiceA`(log: LogRecord) {
         assertThat(log.entries).isEmpty()
 

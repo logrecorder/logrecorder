@@ -15,6 +15,7 @@
  */
 package io.github.logrecorder.log4j.junit5
 
+import io.github.logrecorder.junit5.LogRecorderExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.reflect.KClass
 
@@ -31,8 +32,15 @@ import kotlin.reflect.KClass
  * @since 1.0
  */
 @Retention
+@Deprecated(
+    message = "replaced with new central annotation",
+    replaceWith = ReplaceWith(
+        "RecordLoggers",
+        "io.github.logrecorder.junit5.RecordLoggers"
+    )
+)
 @Target(AnnotationTarget.FUNCTION)
-@ExtendWith(Log4jRecorderExtension::class)
+@ExtendWith(LogRecorderExtension::class)
 annotation class RecordLoggers(
 
     /**
