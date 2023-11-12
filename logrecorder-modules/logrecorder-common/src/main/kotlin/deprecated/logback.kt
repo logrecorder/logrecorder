@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
     message = "replaced wth central implementation",
     replaceWith = ReplaceWith(
         "recordLoggers",
-        "io.github.logrecorder.programmatic.recordLoggers"
+        "io.github.logrecorder.common.recordLoggers"
     )
 )
 fun <T : Any> recordLoggers(
@@ -38,7 +38,7 @@ fun <T : Any> recordLoggers(
     message = "replaced wth central implementation",
     replaceWith = ReplaceWith(
         "recordLoggers",
-        "io.github.logrecorder.programmatic.recordLoggers"
+        "io.github.logrecorder.common.recordLoggers"
     )
 )
 fun <T : Any> recordLoggers(
