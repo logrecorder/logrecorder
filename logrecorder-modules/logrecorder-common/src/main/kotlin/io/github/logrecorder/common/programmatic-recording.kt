@@ -1,7 +1,6 @@
-package io.github.logrecorder.programmatic
+package io.github.logrecorder.common
 
 import io.github.logrecorder.api.LogRecord
-import io.github.logrecorder.common.LogRecorderContextFactory
 import java.util.ServiceLoader
 import kotlin.reflect.KClass
 

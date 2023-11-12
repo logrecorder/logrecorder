@@ -3,7 +3,7 @@ package integration
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord.Companion.logger
-import io.github.logrecorder.programmatic.recordLoggers
+import io.github.logrecorder.common.recordLoggers
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
