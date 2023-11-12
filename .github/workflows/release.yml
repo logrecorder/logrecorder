@@ -40,7 +40,6 @@ jobs:
           GPG_PASSWORD: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         run: |
           mvn --no-transfer-progress --batch-mode \
-            -pl '!:logrecorder-inttest' \
             clean deploy \
             -Dgpg.passphrase=$GPG_PASSWORD \
             -Dossrh.username=$OSSRH_USERNAME \

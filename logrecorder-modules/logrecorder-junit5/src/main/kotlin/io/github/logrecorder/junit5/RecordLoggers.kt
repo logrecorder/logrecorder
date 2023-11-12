@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.logrecorder.logback.junit5
+package io.github.logrecorder.junit5
 
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.reflect.KClass
@@ -28,11 +28,11 @@ import kotlin.reflect.KClass
  *
  * @see value
  * @see names
- * @since 1.0
+ * @since 2.9
  */
 @Retention
 @Target(AnnotationTarget.FUNCTION)
-@ExtendWith(LogbackRecorderExtension::class)
+@ExtendWith(LogRecorderExtension::class)
 annotation class RecordLoggers(
 
     /**

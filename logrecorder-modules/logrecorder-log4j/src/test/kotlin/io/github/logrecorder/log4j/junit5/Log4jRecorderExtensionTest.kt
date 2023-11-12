@@ -19,6 +19,7 @@ import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.api.LogRecord.Companion.logger
+import io.github.logrecorder.junit5.RecordLoggers
 import io.github.logrecorder.log4j.util.TestServiceA
 import io.github.logrecorder.log4j.util.TestServiceB
 import io.kotest.matchers.collections.shouldContainExactly
