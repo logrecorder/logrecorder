@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  * This extension will record the loggers specified by the parameters save the [LogRecord] into the CoroutineContext
  * for retrieval by logRecord
  *
- * Recording a logger will set its log level to [org.apache.logging.log4j.Level.ALL] for the duration of the test.
+ * Recording a logger will set its log level to include everything for the duration of the test.
  * After the test was executed, the log level will be restored to whatever it was before.
  *
  * @param classes [KClass] whose name should be used to identify loggers to record.

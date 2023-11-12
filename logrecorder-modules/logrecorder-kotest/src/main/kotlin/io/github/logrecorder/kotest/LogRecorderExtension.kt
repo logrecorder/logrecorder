@@ -31,7 +31,7 @@ val TestScope.logRecord: LogRecord
  */
 fun recordLogs(
     vararg names: String,
-) = LogRecorderExtension(classes = emptySet(), names = names.toSet())
+): TestCaseExtension = LogRecorderExtension(classes = emptySet(), names = names.toSet())
 
 /**
  * @see recordLogs
@@ -39,7 +39,7 @@ fun recordLogs(
  */
 fun recordLogs(
     vararg classes: KClass<*>,
-) = LogRecorderExtension(classes = classes.toSet(), names = emptySet())
+): TestCaseExtension = LogRecorderExtension(classes = classes.toSet(), names = emptySet())
 
 /**
  * Convenience Method to instantiate [LogRecorderExtension]
@@ -57,9 +57,9 @@ fun recordLogs(
 fun recordLogs(
     classes: Collection<KClass<*>> = emptySet(),
     names: Collection<String> = emptySet()
-) = LogRecorderExtension(classes = classes, names = names)
+): TestCaseExtension = LogRecorderExtension(classes = classes, names = names)
 
-class LogRecorderExtension(
+internal class LogRecorderExtension(
     private val classes: Collection<KClass<*>>,
     private val names: Collection<String>
 ) : TestCaseExtension, BeforeInvocationListener, AfterInvocationListener {
