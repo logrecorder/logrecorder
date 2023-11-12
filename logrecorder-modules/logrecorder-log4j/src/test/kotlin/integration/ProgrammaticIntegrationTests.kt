@@ -3,7 +3,7 @@ package integration
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel.*
 import io.github.logrecorder.api.LogRecord.Companion.logger
-import io.github.logrecorder.log4j.programmatic.recordLoggers
+import io.github.logrecorder.programmatic.recordLoggers
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
@@ -29,7 +29,7 @@ class ProgrammaticIntegrationTests : FunSpec({
     }
 
     test("log messages are recorded") {
-        recordLoggers(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")) { log ->
+        recordLoggers(setOf(TestServiceA::class, TestServiceB::class), setOf("custom-logger")) { log ->
             log.entries.shouldBeEmpty()
 
             testServiceA.logSomething()

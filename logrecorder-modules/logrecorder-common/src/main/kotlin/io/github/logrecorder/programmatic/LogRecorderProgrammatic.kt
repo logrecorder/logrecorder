@@ -1,36 +1,60 @@
 package io.github.logrecorder.programmatic
 
 import io.github.logrecorder.api.LogRecord
-import io.github.logrecorder.api.MutableLogRecord
-import io.github.logrecorder.common.LogRecorderExecutionBase
+import io.github.logrecorder.common.LogRecorderContextFactory
+import java.util.ServiceLoader
 import kotlin.reflect.KClass
 
 /**
- * With record loggers is the base function for programmatic wrapping of record logging
+ * Records the specified loggers while executing the given [block].
  *
  * @param T Return type of the execution block
- * @param L Type of the Logger (specific to logging implementation) to record
- * @param LR Type of the mutable [LogRecord] as recording of the logging
  * @param classes [KClass] whose name should be used to identify loggers to record.
- * @param names String names of the Logger (specific to logging implementation) instances to record
- * @param executionBase Logger implementation of [LogRecorderExecutionBase]
  * @param block code block to execute
  * @return optional return of the executed code block
+ * @since 2.9
  */
-inline fun <T : Any, L : Any, LR : MutableLogRecord<*>> withRecordLoggers(
-    classes: Array<out KClass<*>>,
-    names: Array<out String>,
-    executionBase: LogRecorderExecutionBase<L, LR>,
+fun <T> recordLoggers(
+    vararg classes: KClass<*>,
+    block: (LogRecord) -> T
+) = recordLoggers(classes.toSet(), emptySet(), block)
+
+/**
+ * Records the specified loggers while executing the given [block].
+ *
+ * @param T Return type of the execution block
+ * @param names String names of the Logger (specific to logging implementation) instances to record
+ * @param block code block to execute
+ * @return optional return of the executed code block
+ * @since 2.9
+ */
+fun <T> recordLoggers(
+    vararg names: String,
+    block: (LogRecord) -> T
+) = recordLoggers(emptySet(), names.toSet(), block)
+
+/**
+ * Records the specified loggers while executing the given [block].
+ *
+ * @param T Return type of the execution block
+ * @param classes [KClass] whose name should be used to identify loggers to record.
+ * @param names String names of the Logger (specific to logging implementation) instances to record
+ * @param block code block to execute
+ * @return optional return of the executed code block
+ * @since 2.9
+ */
+fun <T> recordLoggers(
+    classes: Collection<KClass<*>> = emptySet(),
+    names: Collection<String> = emptySet(),
     block: (LogRecord) -> T
 ): T {
-    val logRecord = executionBase.createLogRecord()
-    val recorders = executionBase.getLoggers(classes, names)
-        .map { executionBase.createLogRecorder(it, logRecord) }
-        .onEach { it.start() }
+    val factory = ServiceLoader.load(LogRecorderContextFactory::class.java).single()
+    val context = factory.create(classes.toSet(), names.toSet())
 
     try {
-        return block(logRecord)
+        context.start()
+        return block(context.record)
     } finally {
-        recorders.forEach { it.stop() }
+        context.stop()
     }
 }
