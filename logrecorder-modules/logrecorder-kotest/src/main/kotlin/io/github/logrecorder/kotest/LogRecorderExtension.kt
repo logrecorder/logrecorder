@@ -26,6 +26,22 @@ val TestScope.logRecord: LogRecord
     get() = coroutineContext.logRecorderContext.record
 
 /**
+ * @see recordLogs
+ * @since 2.9
+ */
+fun recordLogs(
+    vararg names: String,
+) = LogRecorderExtension(classes = emptySet(), names = names.toSet())
+
+/**
+ * @see recordLogs
+ * @since 2.9
+ */
+fun recordLogs(
+    vararg classes: KClass<*>,
+) = LogRecorderExtension(classes = classes.toSet(), names = emptySet())
+
+/**
  * Convenience Method to instantiate [LogRecorderExtension]
  * This extension will record the loggers specified by the parameters save the [LogRecord] into the CoroutineContext
  * for retrieval by logRecord
@@ -39,21 +55,13 @@ val TestScope.logRecord: LogRecord
  * @since 2.9
  */
 fun recordLogs(
-    vararg classes: KClass<*>,
-    names: Array<out String> = emptyArray()
+    classes: Collection<KClass<*>> = emptySet(),
+    names: Collection<String> = emptySet()
 ) = LogRecorderExtension(classes = classes, names = names)
 
-/**
- * @see recordLogs
- * @since 2.9
- */
-fun recordLogs(
-    vararg names: String,
-) = LogRecorderExtension(classes = emptyArray(), names = names)
-
 class LogRecorderExtension(
-    private val classes: Array<out KClass<*>> = emptyArray(),
-    private val names: Array<out String> = emptyArray()
+    private val classes: Collection<KClass<*>>,
+    private val names: Collection<String>
 ) : TestCaseExtension, BeforeInvocationListener, AfterInvocationListener {
 
     private val factory = ServiceLoader.load(LogRecorderContextFactory::class.java).single()
