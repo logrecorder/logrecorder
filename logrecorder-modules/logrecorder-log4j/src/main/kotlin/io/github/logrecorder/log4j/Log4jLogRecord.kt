@@ -21,6 +21,11 @@ import io.github.logrecorder.api.LogRecord
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.core.LogEvent
 
+/**
+ * [LogRecord] for Log4j.
+ *
+ * Allows for the [recording][record] of a [LogEvent] as a [LogEntry].
+ */
 internal class Log4jLogRecord : LogRecord {
 
     private val recordedLogEntries: MutableList<LogEntry> = mutableListOf()

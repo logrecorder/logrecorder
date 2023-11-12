@@ -24,6 +24,11 @@ import org.apache.logging.log4j.core.config.AppenderRef
 import org.apache.logging.log4j.core.config.LoggerConfig
 import org.apache.logging.log4j.core.layout.PatternLayout
 
+/**
+ * [LogRecorder] for Log4j.
+ *
+ * Allows for the recording of a single [Logger] to be [started][start] and [stopped][stop].
+ */
 internal class Log4jLogRecorder(
     logger: Logger,
     logRecord: Log4jLogRecord

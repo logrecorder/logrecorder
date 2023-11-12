@@ -19,6 +19,11 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import io.github.logrecorder.common.LogRecorder
 
+/**
+ * [LogRecorder] for Logback.
+ *
+ * Allows for the recording of a single [Logger] to be [started][start] and [stopped][stop].
+ */
 internal class LogbackLogRecorder(
     private val logger: Logger,
     logRecord: LogbackLogRecord
