@@ -30,7 +30,7 @@ class KotestIntegrationTests : FunSpec({
     }
 
     test("log messages are recorded").config(
-        extensions = listOf(recordLogs(TestServiceA::class, TestServiceB::class, names = arrayOf("custom-logger")))
+        extensions = listOf(recordLogs(setOf(TestServiceA::class, TestServiceB::class) , setOf("custom-logger")))
     ) {
         logRecord.entries.shouldBeEmpty()
 

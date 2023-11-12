@@ -2,6 +2,7 @@ package io.github.logrecorder.logback.kotest
 
 import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.kotest.LogRecorderExtension
+import io.github.logrecorder.kotest.recordLogs
 import kotlin.reflect.KClass
 
 /**
@@ -27,7 +28,7 @@ import kotlin.reflect.KClass
 fun recordLogs(
     vararg classes: KClass<*>,
     names: Array<out String> = emptyArray()
-) = LogRecorderExtension(classes = classes, names = names)
+) = recordLogs(classes = classes.toSet(), names = names.toSet())
 
 /**
  * @see recordLogs
@@ -42,4 +43,4 @@ fun recordLogs(
 )
 fun recordLogs(
     vararg names: String,
-) = LogRecorderExtension(classes = emptyArray(), names = names)
+) = recordLogs(classes = emptySet(), names = names.toSet())
