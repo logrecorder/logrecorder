@@ -22,6 +22,11 @@ import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
 
+/**
+ * [LogRecord] for Logback.
+ *
+ * Allows for the [recording][record] of an [ILoggingEvent] as a [LogEntry].
+ */
 internal class LogbackLogRecord : LogRecord {
 
     private val recordedLogEntries: MutableList<LogEntry> = mutableListOf()

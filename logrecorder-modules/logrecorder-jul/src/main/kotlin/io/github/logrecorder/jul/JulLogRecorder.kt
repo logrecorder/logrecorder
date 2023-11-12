@@ -19,6 +19,11 @@ import io.github.logrecorder.common.LogRecorder
 import java.util.logging.Level
 import java.util.logging.Logger
 
+/**
+ * [LogRecorder] for JUL.
+ *
+ * Allows for the recording of a single [Logger] to be [started][start] and [stopped][stop].
+ */
 internal class JulLogRecorder(
     private val logger: Logger,
     private val julLogRecord: JulLogRecord

@@ -20,6 +20,11 @@ import io.github.logrecorder.api.LogLevel
 import java.util.logging.Level
 import java.util.logging.LogRecord
 
+/**
+ * [LogRecord][io.github.logrecorder.api.LogRecord] for JUL.
+ *
+ * Allows for the [recording][record] of a [LogRecord] as a [LogEntry].
+ */
 internal class JulLogRecord : io.github.logrecorder.api.LogRecord {
 
     private val recordedLogEntries: MutableList<LogEntry> = mutableListOf()
