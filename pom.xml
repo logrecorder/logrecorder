@@ -157,6 +157,9 @@
                                 <goal>javadoc</goal>
                                 <goal>javadocJar</goal>
                             </goals>
+                            <configuration>
+                                <skipIfEmpty>false</skipIfEmpty>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
