@@ -6,7 +6,7 @@ import io.github.logrecorder.common.LogRecorderContextFactory
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 
-class LogbackLogRecorderContextFactory : LogRecorderContextFactory {
+internal class LogbackLogRecorderContextFactory : LogRecorderContextFactory {
 
     override fun create(byClasses: Set<KClass<*>>, byNames: Set<String>): LogRecorderContext {
         val fromClasses = byClasses.map(::loggerFromKClass)

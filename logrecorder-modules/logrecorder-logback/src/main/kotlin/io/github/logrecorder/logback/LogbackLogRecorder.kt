@@ -19,7 +19,7 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import io.github.logrecorder.common.LogRecorder
 
-class LogbackLogRecorder(
+internal class LogbackLogRecorder(
     private val logger: Logger,
     logRecord: LogbackLogRecord
 ) : LogRecorder {

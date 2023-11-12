@@ -19,7 +19,7 @@ import io.github.logrecorder.common.LogRecorder
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class JulLogRecorder(
+internal class JulLogRecorder(
     private val logger: Logger,
     private val julLogRecord: JulLogRecord
 ) : LogRecorder {

@@ -3,7 +3,7 @@ package io.github.logrecorder.logback
 import ch.qos.logback.classic.Logger
 import io.github.logrecorder.common.LogRecorderContext
 
-class LogbackLogRecorderContext(loggers: Collection<Logger>) : LogRecorderContext {
+internal class LogbackLogRecorderContext(loggers: Collection<Logger>) : LogRecorderContext {
 
     override val record = LogbackLogRecord()
     private val recorders = loggers.map { LogbackLogRecorder(it, record) }
