@@ -148,7 +148,7 @@
                 <plugin>
                     <groupId>org.jetbrains.dokka</groupId>
                     <artifactId>dokka-maven-plugin</artifactId>
-                    <version>1.9.10</version>
+                    <version>1.6.21</version>
                     <executions>
                         <execution>
                             <phase>prepare-package</phase>
@@ -158,7 +158,7 @@
                                 <goal>javadocJar</goal>
                             </goals>
                             <configuration>
-                                <skipIfEmpty>false</skipIfEmpty>
+                                <skipEmptyPackages>false</skipEmptyPackages>
                             </configuration>
                         </execution>
                     </executions>
