@@ -22,7 +22,7 @@ import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.MutableLogRecord
 
-class LogbackLogRecord : MutableLogRecord<ILoggingEvent> {
+internal class LogbackLogRecord : MutableLogRecord<ILoggingEvent> {
 
     private val recordedLogEntries: MutableList<LogEntry> = mutableListOf()
 

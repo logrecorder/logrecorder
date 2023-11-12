@@ -24,7 +24,7 @@ import org.apache.logging.log4j.core.config.AppenderRef
 import org.apache.logging.log4j.core.config.LoggerConfig
 import org.apache.logging.log4j.core.layout.PatternLayout
 
-class Log4jLogRecorder(
+internal class Log4jLogRecorder(
     logger: Logger,
     logRecord: Log4jLogRecord
 ) : LogRecorder {
