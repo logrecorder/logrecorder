@@ -149,6 +149,10 @@ testImplementation("io.github.logrecorder:logrecorder-assertions:${logrecorder.v
 </dependency>
 ----
 
+== Dependencies
+
+image::dependencies.png[]
+
 == Usage Examples
 
 You can and should use the Kotlin-optimized `logrecorder-assertions` library.

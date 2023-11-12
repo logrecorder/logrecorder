@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+package "Modules" {
+  [logrecorder-api] as api
+  [logrecorder-assertions] as assertions
+  [logrecorder-common] as common
+  package "Test Frameworks" {
+    [logrecorder-junit5] as junit5
+    [logrecorder-kotest] as kotest
+  }
+  package "Logging Frameworks" {
+    [logrecorder-jul] as jul
+    [logrecorder-log4j] as log4j
+    [logrecorder-logback] as logback
+  }
+}
+
+assertions ---> api
+common ---> api
+jul --> common
+junit5 --> common
+kotest --> common
+log4j --> common
+logback --> common
+
+@enduml
