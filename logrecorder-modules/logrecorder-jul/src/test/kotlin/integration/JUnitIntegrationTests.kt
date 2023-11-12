@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.logrecorder.jul.junit5
+package integration
 
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord
 import io.github.logrecorder.api.LogRecord.Companion.logger
-import io.github.logrecorder.jul.util.TestServiceA
-import io.github.logrecorder.jul.util.TestServiceB
 import io.github.logrecorder.junit5.RecordLoggers
 import io.kotest.matchers.collections.shouldContainExactly
 import org.assertj.core.api.Assertions.assertThat
@@ -29,7 +27,7 @@ import org.junit.jupiter.api.Test
 import java.util.logging.Level
 import java.util.logging.Logger
 
-internal class JulRecorderExtensionTest {
+internal class JUnitIntegrationTests {
 
     private val customLogger = Logger.getLogger("custom-logger")
 

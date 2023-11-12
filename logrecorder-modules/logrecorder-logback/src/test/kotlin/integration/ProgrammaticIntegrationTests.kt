@@ -1,18 +1,19 @@
-package io.github.logrecorder.logback.programmatic
+package integration
 
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord.Companion.logger
-import io.github.logrecorder.logback.util.TestServiceA
-import io.github.logrecorder.logback.util.TestServiceB
+import io.github.logrecorder.logback.programmatic.recordLoggers
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
+import org.junit.platform.commons.annotation.Testable
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.slf4j.helpers.BasicMarkerFactory
 
-class LogbackRecorderProgrammaticTests : FunSpec({
+@Testable
+class ProgrammaticIntegrationTests : FunSpec({
 
     val customLogger = LoggerFactory.getLogger("custom-logger")
 

@@ -1,19 +1,19 @@
-package io.github.logrecorder.log4j.kotest
+package integration
 
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord.Companion.logger
 import io.github.logrecorder.kotest.logRecord
 import io.github.logrecorder.kotest.recordLogs
-import io.github.logrecorder.log4j.util.TestServiceA
-import io.github.logrecorder.log4j.util.TestServiceB
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.ThreadContext
+import org.junit.platform.commons.annotation.Testable
 
-class Log4jRecorderKotestExtensionTests : FunSpec({
+@Testable
+class KotestIntegrationTests : FunSpec({
     val customLogger = LogManager.getLogger("custom-logger")
 
     val testServiceA = TestServiceA()

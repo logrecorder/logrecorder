@@ -1,4 +1,4 @@
-package io.github.logrecorder.logback.util
+package integration
 
 import org.slf4j.LoggerFactory
 import org.slf4j.helpers.BasicMarkerFactory

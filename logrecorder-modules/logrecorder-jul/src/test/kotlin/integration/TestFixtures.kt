@@ -1,4 +1,4 @@
-package io.github.logrecorder.jul.util
+package integration
 
 import java.util.logging.Level
 import java.util.logging.Logger

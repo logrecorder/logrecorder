@@ -1,4 +1,4 @@
-package io.github.logrecorder.log4j.util
+package integration
 
 import org.apache.logging.log4j.LogManager
 
