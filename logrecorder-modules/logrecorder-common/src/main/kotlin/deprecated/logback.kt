@@ -1,7 +1,7 @@
-package io.github.logrecorder.jul.programmatic
+package io.github.logrecorder.logback.programmatic
 
 import io.github.logrecorder.api.LogRecord
-import io.github.logrecorder.programmatic.recordLoggers
+import io.github.logrecorder.common.recordLoggers
 import kotlin.reflect.KClass
 
 /**
