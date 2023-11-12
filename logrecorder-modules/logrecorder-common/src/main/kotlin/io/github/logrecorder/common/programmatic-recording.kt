@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  * @param T Return type of the execution block
  * @param classes [KClass] whose name should be used to identify loggers to record.
  * @param block code block to execute
- * @return optional return of the executed code block
+ * @return optional return of the executed code block's result
  * @since 2.9
  */
 fun <T> recordLoggers(
@@ -24,7 +24,7 @@ fun <T> recordLoggers(
  * @param T Return type of the execution block
  * @param names String names of the Logger (specific to logging implementation) instances to record
  * @param block code block to execute
- * @return optional return of the executed code block
+ * @return optional return of the executed code block's result
  * @since 2.9
  */
 fun <T> recordLoggers(
@@ -39,7 +39,7 @@ fun <T> recordLoggers(
  * @param classes [KClass] whose name should be used to identify loggers to record.
  * @param names String names of the Logger (specific to logging implementation) instances to record
  * @param block code block to execute
- * @return optional return of the executed code block
+ * @return optional return of the executed code block's result
  * @since 2.9
  */
 fun <T> recordLoggers(
