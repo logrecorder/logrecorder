@@ -1,19 +1,20 @@
-package io.github.logrecorder.log4j.programmatic
+package integration
 
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel.*
 import io.github.logrecorder.api.LogRecord.Companion.logger
-import io.github.logrecorder.log4j.util.TestServiceA
-import io.github.logrecorder.log4j.util.TestServiceB
+import io.github.logrecorder.jul.programmatic.recordLoggers
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.ThreadContext
+import org.junit.platform.commons.annotation.Testable
+import java.util.logging.Level
+import java.util.logging.Logger
 
-class Log4jRecorderProgrammaticTests : FunSpec({
+@Testable
+class ProgrammaticIntegrationTests : FunSpec({
 
-    val customLogger = LogManager.getLogger("custom-logger")
+    val customLogger = Logger.getLogger("custom-logger")
 
     val testServiceA = TestServiceA()
     val testServiceB = TestServiceB()
@@ -21,10 +22,7 @@ class Log4jRecorderProgrammaticTests : FunSpec({
     beforeEach {
         testServiceA.logSomething()
         testServiceB.logSomething()
-    }
-
-    afterEach {
-        ThreadContext.clearAll()
+        customLogger.level = Level.WARNING
     }
 
     test("log messages are recorded") {
@@ -55,11 +53,11 @@ class Log4jRecorderProgrammaticTests : FunSpec({
                 LogEntry(logger(TestServiceB::class), ERROR, "error message b")
             )
 
-            customLogger.trace("trace message c")
-            customLogger.debug("debug message c")
+            customLogger.finer("trace message c")
+            customLogger.fine("debug message c")
             customLogger.info("info message c")
-            customLogger.warn("warn message c")
-            customLogger.error("error message c")
+            customLogger.warning("warn message c")
+            customLogger.severe("error message c")
 
             log.entries.shouldContainExactly(
                 LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
@@ -105,11 +103,11 @@ class Log4jRecorderProgrammaticTests : FunSpec({
                 LogEntry(logger(TestServiceA::class), ERROR, "error message a")
             )
 
-            customLogger.trace("trace message c")
-            customLogger.debug("debug message c")
+            customLogger.finer("trace message c")
+            customLogger.fine("debug message c")
             customLogger.info("info message c")
-            customLogger.warn("warn message c")
-            customLogger.error("error message c")
+            customLogger.warning("warn message c")
+            customLogger.severe("error message c")
 
             log.entries.shouldContainExactly(
                 LogEntry(logger(TestServiceA::class), TRACE, "trace message a"),
@@ -121,43 +119,13 @@ class Log4jRecorderProgrammaticTests : FunSpec({
         }
     }
 
-    test("MDC properties are recorded") {
-        recordLoggers(TestServiceA::class) { log ->
-            ThreadContext.put("custom#1", "foo")
-            ThreadContext.put("custom#2", "bar")
-            testServiceA.logSingleInfo()
-            ThreadContext.remove("custom#2")
-            testServiceA.logSingleInfo()
-
-            log.entries.shouldContainExactly(
-                LogEntry(
-                    logger = logger(TestServiceA::class),
-                    level = INFO,
-                    message = "info message a",
-                    properties = mapOf(
-                        "custom#1" to "foo",
-                        "custom#2" to "bar"
-                    )
-                ),
-                LogEntry(
-                    logger = logger(TestServiceA::class),
-                    level = INFO,
-                    message = "info message a",
-                    properties = mapOf(
-                        "custom#1" to "foo"
-                    )
-                )
-            )
-        }
-    }
-
     test("log messages are recorded for String logger") {
         recordLoggers("custom-logger") { log ->
-            customLogger.trace("trace message c")
-            customLogger.debug("debug message c")
+            customLogger.finer("trace message c")
+            customLogger.fine("debug message c")
             customLogger.info("info message c")
-            customLogger.warn("warn message c")
-            customLogger.error("error message c")
+            customLogger.warning("warn message c")
+            customLogger.severe("error message c")
 
             log.entries.shouldContainExactly(
                 LogEntry("custom-logger", TRACE, "trace message c"),
