@@ -3,7 +3,8 @@ package io.github.logrecorder.log4j.kotest
 import io.github.logrecorder.api.LogEntry
 import io.github.logrecorder.api.LogLevel
 import io.github.logrecorder.api.LogRecord.Companion.logger
-import io.github.logrecorder.common.kotest.logRecord
+import io.github.logrecorder.kotest.logRecord
+import io.github.logrecorder.kotest.recordLogs
 import io.github.logrecorder.log4j.util.TestServiceA
 import io.github.logrecorder.log4j.util.TestServiceB
 import io.kotest.core.spec.style.FunSpec
