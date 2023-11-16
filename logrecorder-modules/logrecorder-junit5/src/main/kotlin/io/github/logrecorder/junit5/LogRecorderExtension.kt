@@ -63,8 +63,20 @@ internal class LogRecorderExtension : BeforeTestExecutionCallback, AfterTestExec
 
     private fun getClassesToLog(testMethod: Method): Pair<Set<KClass<*>>, Set<String>> {
         val annotation = testMethod.getAnnotation(RecordLoggers::class.java)
-            ?: error("no @RecordLoggers annotation found on test method!")
-        return annotation.value.toSet() to annotation.names.toSet()
+        if (annotation != null) {
+            return annotation.value.toSet() to annotation.names.toSet()
+        }
+        
+        // deprecated annotations
+        val annotationJul = testMethod.getAnnotation(io.github.logrecorder.jul.junit5.RecordLoggers::class.java)
+        val annotationLog4j = testMethod.getAnnotation(io.github.logrecorder.log4j.junit5.RecordLoggers::class.java)
+        val annotationLogback = testMethod.getAnnotation(io.github.logrecorder.logback.junit5.RecordLoggers::class.java)
+        return when {
+            annotationJul != null -> annotationJul.value.toSet() to annotationJul.names.toSet()
+            annotationLog4j != null -> annotationLog4j.value.toSet() to annotationLog4j.names.toSet()
+            annotationLogback != null -> annotationLogback.value.toSet() to annotationLogback.names.toSet()
+            else -> error("no @RecordLoggers annotation found on test method!")
+        }
     }
 
     private var ExtensionContext.logRecorderContext: LogRecorderContext
