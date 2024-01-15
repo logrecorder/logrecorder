@@ -47,7 +47,7 @@ internal class LogbackLogRecord : LogRecord {
             },
             message = value.formattedMessage,
             marker = value.marker?.toString(),
-            properties = value.mdcPropertyMap.toMap(),
+            properties = value.mdcPropertyMap.toMap() + value.keyValuePairs.orEmpty().associate { kvp -> kvp.key to kvp.value.toString() },
             throwable = (value.throwableProxy as? ThrowableProxy)?.throwable
         )
         recordedLogEntries.add(logEntry)
