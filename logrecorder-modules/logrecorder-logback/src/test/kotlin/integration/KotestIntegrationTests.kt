@@ -123,6 +123,22 @@ class KotestIntegrationTests : FunSpec({
         )
     }
 
+    test("key values from message are recorded as properties").config(extensions = listOf(recordLogs(TestServiceA::class))) {
+        testServiceA.logInfoWithKeyValue()
+
+        logRecord.entries.shouldContainExactly(
+            LogEntry(
+                logger = logger(TestServiceA::class),
+                level = LogLevel.INFO,
+                message = "Payload message",
+                properties = mapOf(
+                    "key" to "value",
+                    "keyInt" to 1,
+                )
+            ),
+        )
+    }
+
     test("MDC properties are recorded").config(extensions = listOf(recordLogs(TestServiceA::class))) {
         MDC.put("custom#1", "foo")
         MDC.put("custom#2", "bar")
