@@ -22,6 +22,14 @@ class TestServiceA {
     fun logError(exception: Throwable) {
         log.error("error message a", exception)
     }
+
+    fun logWithPayload() {
+        log
+            .atInfo()
+            .setMessage("Payload message")
+            .addKeyValue("a", "b")
+            .log()
+    }
 }
 
 class TestServiceB {
