@@ -2,6 +2,7 @@ package integration
 
 import org.slf4j.LoggerFactory
 import org.slf4j.helpers.BasicMarkerFactory
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class TestServiceA {
     private val log = LoggerFactory.getLogger(javaClass)
@@ -21,6 +22,16 @@ class TestServiceA {
 
     fun logError(exception: Throwable) {
         log.error("error message a", exception)
+    }
+
+    fun logInfoWithKeyValue() {
+        log
+            .atInfo()
+            .setMessage("Payload message")
+            .addKeyValue("key", "value")
+            .addKeyValue("keyInt", 1)
+            .addKeyValue("keyNull", null as Any?)
+            .log()
     }
 }
 
