@@ -25,7 +25,7 @@ interface PropertyMatcherFactory {
      *
      * @see ContainsPropertyMatcher
      */
-    fun containsProperty(key: String, value: String): PropertyMatcher = ContainsPropertyMatcher(key, value)
+    fun containsProperty(key: String, value: Any): PropertyMatcher = ContainsPropertyMatcher(key, value)
 
     /**
      * Will match if the actual properties does not contain any value with the given key.

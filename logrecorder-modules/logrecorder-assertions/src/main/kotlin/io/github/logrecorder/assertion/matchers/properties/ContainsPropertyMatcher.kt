@@ -19,8 +19,8 @@ import io.github.logrecorder.assertion.matchers.PropertyMatcher
 
 internal class ContainsPropertyMatcher(
     private val key: String,
-    private val value: String
+    private val value: Any
 ) : PropertyMatcher {
-    override fun matches(actual: Map<String, String>) = actual[key] == value
+    override fun matches(actual: Map<String, Any>) = actual[key] == value
     override fun toString(): String = """contains property [$key=$value]"""
 }

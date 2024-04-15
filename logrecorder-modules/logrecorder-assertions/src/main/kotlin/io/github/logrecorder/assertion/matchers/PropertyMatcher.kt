@@ -16,5 +16,5 @@
 package io.github.logrecorder.assertion.matchers
 
 fun interface PropertyMatcher {
-    infix fun matches(actual: Map<String, String>): Boolean
+    infix fun matches(actual: Map<String, Any>): Boolean
 }

@@ -20,6 +20,6 @@ import io.github.logrecorder.assertion.matchers.PropertyMatcher
 internal class DoesNotContainPropertyMatcher(
     private val key: String
 ) : PropertyMatcher {
-    override fun matches(actual: Map<String, String>) = !actual.containsKey(key)
+    override fun matches(actual: Map<String, Any>) = !actual.containsKey(key)
     override fun toString(): String = """does not contain property with key [$key]"""
 }
