@@ -34,6 +34,6 @@ data class LogEntry @JvmOverloads constructor(
     val level: LogLevel,
     val message: String,
     val marker: String? = null,
-    val properties: Map<String, String> = emptyMap(),
+    val properties: Map<String, Any> = emptyMap(),
     val throwable: Throwable? = null
 )

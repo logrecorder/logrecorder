@@ -38,7 +38,7 @@ class ExpectedLogEntry(
     infix fun matches(actual: String): Boolean =
         messageMatchers.all { it matches actual }
 
-    infix fun matches(actual: Map<String, String>): Boolean =
+    infix fun matches(actual: Map<String, Any>): Boolean =
         propertyMatchers.all { it matches actual }
 
     infix fun matches(actual: Throwable?): Boolean =
