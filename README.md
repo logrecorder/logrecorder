@@ -62,8 +62,3 @@ dependencyManagement {
 ## Licensing
 
 LogRecorder is licensed under [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
-
-## Sponsoring
-
-LogRecorder is mainly developed by [Novatec Consulting GmbH](http://www.novatec-gmbh.de/), a German consultancy firm
-that drives quality in software development projects.
