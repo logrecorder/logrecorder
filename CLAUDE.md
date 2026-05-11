@@ -4,21 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build & Test Commands
 
+Always pass `-q -ntp` to Maven to suppress verbose output (`-q` shows errors only, `-ntp` suppresses download/upload progress).
+
 ```bash
 # Build and verify (includes license header check)
-./mvnw clean verify
+./mvnw -q -ntp clean verify
 
 # Run all tests
-./mvnw test
+./mvnw -q -ntp test
 
 # Run a single test class
-./mvnw test -Dtest=ClassName
+./mvnw -q -ntp test -Dtest=ClassName
 
 # Run a single test method
-./mvnw test -Dtest=ClassName#methodName
+./mvnw -q -ntp test -Dtest=ClassName#methodName
 
 # Run tests in a specific module
-./mvnw test -pl logrecorder-modules/logrecorder-logback
+./mvnw -q -ntp test -pl logrecorder-modules/logrecorder-logback
 ```
 
 ## Architecture
