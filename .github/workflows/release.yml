@@ -30,7 +30,7 @@ jobs:
           TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
           VERSION=$(echo $TAG_NAME | cut -d 'v' -f 2)
-          mvn --no-transfer-progress --batch-mode versions:set versions:commit -DnewVersion=$VERSION 
+          ./mvnw --no-transfer-progress --batch-mode versions:set versions:commit -DnewVersion=$VERSION
 
       - id: publish-to-central
         name: Publish to Central Repository
@@ -39,7 +39,7 @@ jobs:
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_PASSWORD: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         run: |
-          mvn --no-transfer-progress --batch-mode \
+          ./mvnw --no-transfer-progress --batch-mode \
             clean deploy \
             -Dgpg.passphrase=$GPG_PASSWORD \
             -Dossrh.username=$OSSRH_USERNAME \

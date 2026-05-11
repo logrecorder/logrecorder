@@ -6,19 +6,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Build and verify (includes license header check)
-mvn clean verify
+./mvnw clean verify
 
 # Run all tests
-mvn test
+./mvnw test
 
 # Run a single test class
-mvn test -Dtest=ClassName
+./mvnw test -Dtest=ClassName
 
 # Run a single test method
-mvn test -Dtest=ClassName#methodName
+./mvnw test -Dtest=ClassName#methodName
 
 # Run tests in a specific module
-mvn test -pl logrecorder-modules/logrecorder-logback
+./mvnw test -pl logrecorder-modules/logrecorder-logback
 ```
 
 ## Architecture
